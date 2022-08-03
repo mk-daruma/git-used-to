@@ -50,7 +50,7 @@ jobs:
   frontend_test:
     docker:
       - image: cimg/node:16.16.0-browsers
-    working_directory: ~/git-used-to/frontend
+    working_directory: ~/git-used-to/frontend/app
     steps:
       - checkout:
           path: ~/git-used-to
