@@ -55,10 +55,10 @@ jobs:
       - checkout:
           path: ~/git-used-to
       - run:
-          name: install dependencies
+          name: Install dependencies
           command: yarn install
       - run:
-          name: unit test
+          name: Unit test
           command: yarn test
 
 workflows:
