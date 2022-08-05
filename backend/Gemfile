@@ -31,6 +31,9 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'rubocop-airbnb'
   gem 'factory_bot_rails'
+  gem 'devise'
+  gem 'carrierwave', '~> 2.0'
+  gem 'mini_magick'
 end
 
 group :development do
