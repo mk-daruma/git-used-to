@@ -1,0 +1,74 @@
+version: 2.1
+
+orbs:
+  ruby: circleci/ruby@1.1.1
+  node: circleci/node@4.0.0
+
+jobs:
+  build:
+    docker:
+      - image: cimg/ruby:3.0.4
+    environment:
+      BUNDLE_JOBS: "3"
+      BUNDLE_RETRY: "3"
+    working_directory: ~/git-used-to/backend
+    steps:
+      - checkout:
+          path: ~/git-used-to
+      - ruby/install-deps:
+          bundler-version: 2.2.33
+
+  backend_test:
+    docker:
+      - image: cimg/ruby:3.0.4-node
+      - image: circleci/mysql:5.5
+        environment:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: git_used_to_test
+          MYSQL_USER: root
+    environment:
+      BUNDLE_JOBS: "3"
+      BUNDLE_RETRY: "3"
+      APP_DATABASE_HOST: "127.0.0.1"
+      RAILS_ENV: test
+    working_directory: ~/git-used-to/backend
+    steps:
+      - checkout:
+          path: ~/git-used-to
+      - ruby/install-deps:
+          bundler-version: 2.2.33
+      - run:
+          name: Database setup
+          command: bundle exec rails db:create
+      - run:
+          name: Run rspec
+          command: bundle exec rspec
+      - run:
+          name: Run rubocop
+          command: bundle exec rubocop --require rubocop-airbnb
+
+  frontend_test:
+    docker:
+      - image: cimg/node:16.16.0-browsers
+    working_directory: ~/git-used-to/frontend/app
+    steps:
+      - checkout:
+          path: ~/git-used-to
+      - run:
+          name: Install dependencies
+          command: yarn install
+      - run:
+          name: Unit test
+          command: yarn test
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - backend_test:
+          requires:
+            - build
+      - frontend_test:
+          requires:
+            - backend_test
