@@ -31,6 +31,8 @@ jobs:
       BUNDLE_RETRY: "3"
       APP_DATABASE_HOST: "127.0.0.1"
       RAILS_ENV: test
+      TWITTER_KEY: $TWITTER_KEY
+      TWITTER_SECRET: $TWITTER_SECRET
     working_directory: ~/git-used-to/backend
     steps:
       - checkout:
