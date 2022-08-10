@@ -42,6 +42,7 @@ jobs:
       - run:
           name: Database setup
           command: bundle exec rails db:create
+          command: bundle exec rails db:migrate
       - run:
           name: Run rspec
           command: bundle exec rspec
