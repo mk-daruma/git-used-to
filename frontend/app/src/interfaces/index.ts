@@ -3,7 +3,6 @@ export interface SignUpParams {
   email: string
   password: string
   passwordConfirmation: string
-  user_self_introduction: string
 }
 
 export interface SignInParams {
