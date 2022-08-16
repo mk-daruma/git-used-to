@@ -1,5 +1,5 @@
 export interface SignUpParams {
-  user_name: string
+  userName: string
   email: string
   password: string
   passwordConfirmation: string
@@ -15,8 +15,8 @@ export interface User {
   uid: string
   provider: string
   email: string
-  user_name: string
-  user_self_introduction: string
+  userName: string
+  userSelfIntroduction: string
   nickname?: string
   image?: string
   allowPasswordChange: boolean
