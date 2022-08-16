@@ -35,7 +35,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./frontend:/usr/src/app
-    command: sh -c "cd app && yarn && yarn start && yarn add @material-ui/core @material-ui/icons @material-ui/lab axios axios-case-converter js-cookie react-router-dom && yarn add -D @types/axios @types/js-cookie @types/react-router-dom"
+    command: sh -c "cd app && yarn && yarn start"
     ports:
       - "4000:3000"
 
