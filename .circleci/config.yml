@@ -39,7 +39,9 @@ jobs:
           bundler-version: 2.2.33
       - run:
           name: Database setup
-          command: bundle exec rails db:create
+          command: |
+            bundle exec rails db:create
+            bundle exec rails db:migrate
       - run:
           name: Run rspec
           command: bundle exec rspec
@@ -47,19 +49,20 @@ jobs:
           name: Run rubocop
           command: bundle exec rubocop --require rubocop-airbnb
 
-  frontend_test:
-    docker:
-      - image: cimg/node:16.16.0-browsers
-    working_directory: ~/git-used-to/frontend/app
-    steps:
-      - checkout:
-          path: ~/git-used-to
-      - run:
-          name: Install dependencies
-          command: yarn install
-      - run:
-          name: Unit test
-          command: yarn test
+  # jestのテストは優先度を下げたため、一旦コメントアウトをしている
+  # frontend_test:
+  #   docker:
+  #     - image: cimg/node:16.16.0-browsers
+  #   working_directory: ~/git-used-to/frontend/app
+  #   steps:
+  #     - checkout:
+  #         path: ~/git-used-to
+  #     - run:
+  #         name: Install dependencies
+  #         command: yarn install
+  #     - run:
+  #         name: Unit test
+  #         command: yarn test
 
 workflows:
   version: 2
@@ -69,6 +72,6 @@ workflows:
       - backend_test:
           requires:
             - build
-      - frontend_test:
-          requires:
-            - backend_test
+      # - frontend_test:
+      #     requires:
+      #       - backend_test
