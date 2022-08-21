@@ -23,7 +23,6 @@ services:
       - ./backend/vendor/bundle:/git-used-to/vendor/bundle
     environment:
       TZ: Asia/Tokyo
-      RAILS_ENV: development
     ports:
       - 3001:3000
     depends_on:
