@@ -1,5 +1,5 @@
 import React, { useContext } from "react"
-import { useHistory, Link } from "react-router-dom"
+import { Link } from "react-router-dom"
 
 import { makeStyles, Theme } from "@material-ui/core/styles"
 
@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Header: React.FC = () => {
   const { loading, isSignedIn } = useContext(AuthContext)
   const classes = useStyles()
-  const histroy = useHistory()
 
   const AuthButtons = () => {
     if (!loading) {
