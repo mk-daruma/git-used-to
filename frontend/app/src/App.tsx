@@ -1,10 +1,11 @@
 import React, { useState, useEffect, createContext } from "react"
-import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom"
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom"
 
 import CommonLayout from "components/layouts/CommonLayout"
 import Home from "components/pages/Home"
 import SignUp from "components/pages/SignUp"
 import SignIn from "components/pages/SignIn"
+
 
 import { getCurrentUser } from "lib/api/auth"
 import { User } from "interfaces/index"
@@ -59,19 +60,21 @@ const App: React.FC = () => {
   }
 
   return (
-    <Router>
+    <BrowserRouter>
       <AuthContext.Provider value={{ loading, setLoading, isSignedIn, setIsSignedIn, currentUser, setCurrentUser}}>
         <CommonLayout>
           <Switch>
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/signin" component={SignIn} />
             <Private>
-              <Route exact path="/" component={Home} />
+              <Switch>
+                <Route exact path="/" component={Home} />
+              </Switch>
             </Private>
           </Switch>
         </CommonLayout>
       </AuthContext.Provider>
-    </Router>
+    </BrowserRouter>
   )
 }
 
