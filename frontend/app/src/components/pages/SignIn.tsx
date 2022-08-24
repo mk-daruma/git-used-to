@@ -137,7 +137,7 @@ const SignIn: React.FC = () => {
         open={alertMessageOpen}
         setOpen={setAlertMessageOpen}
         severity="error"
-        message="Invalid emai or password"
+        message="Invalid email or password"
       />
     </>
   )
