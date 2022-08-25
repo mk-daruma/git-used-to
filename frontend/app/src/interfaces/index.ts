@@ -16,10 +16,20 @@ export interface User {
   provider: string
   email: string
   userName: string
-  userSelfIntroduction: string
+  userSelfIntroduction?: string
   nickname?: string
   image?: string
   allowPasswordChange: boolean
   created_at: Date
   updated_at: Date
+}
+
+export interface UpdateUserData {
+  id: number | undefined | null
+  userName?: string
+  userSelfIntroduction?: string
+}
+
+export interface UpdateUserFormData extends FormData {
+  append(name: keyof UpdateUserData, value: String | Blob, fileName?: string): any
 }
