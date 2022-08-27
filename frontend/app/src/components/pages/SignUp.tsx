@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react"
+import React, { useState, useContext, useCallback } from "react"
 import { useHistory } from "react-router-dom"
 import Cookies from "js-cookie"
 
@@ -12,7 +12,11 @@ import Button from "@material-ui/core/Button"
 import { AuthContext } from "App"
 import AlertMessage from "components/utils/AlertMessage"
 import { signUp } from "lib/api/auth"
-import { SignUpParams } from "interfaces/index"
+import { SignUpFormData } from "interfaces/index"
+import { IconButton } from "@material-ui/core"
+import { PhotoCamera } from "@material-ui/icons"
+import Box from "@material-ui/core/Box"
+import CancelIcon from "@material-ui/icons/Cancel"
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -29,6 +33,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   card: {
     padding: theme.spacing(2),
     maxWidth: 400
+  },
+  imageUploadBtn: {
+    textAlign: "right"
+  },
+  input: {
+    display: "none"
+  },
+  box: {
+    marginBottom: "1.5rem"
+  },
+  preview: {
+    width: "100%"
   }
 }))
 
@@ -42,20 +58,39 @@ const SignUp: React.FC = () => {
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>("")
+  const [image, setImage] = useState<string>("")
+  const [preview, setPreview] = useState<string>("")
   const [alertMessageOpen, setAlertMessageOpen] = useState<boolean>(false)
+
+    const uploadImage = useCallback((e :any) => {
+      const file = e.target.files[0]
+      setImage(file)
+    }, [])
+
+    const previewImage = useCallback((e :any) => {
+      const file = e.target.files[0]
+      setPreview(window.URL.createObjectURL(file))
+    }, [])
+
+    const createFormData = (): SignUpFormData => {
+      const formData = new FormData()
+
+      formData.append("userName", name)
+      formData.append("email", email)
+      formData.append("password", password)
+      formData.append("passwordConfirmation", passwordConfirmation)
+      formData.append("image", image)
+
+      return formData
+    }
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
 
-    const params: SignUpParams = {
-      userName: name,
-      email: email,
-      password: password,
-      passwordConfirmation: passwordConfirmation
-    }
+    const data = createFormData()
 
     try {
-      const res = await signUp(params)
+      const res = await signUp(data)
       console.log(res)
 
       if (res.status === 200) {
@@ -67,6 +102,11 @@ const SignUp: React.FC = () => {
         setCurrentUser(res.data.data)
 
         histroy.push("/")
+
+        setName("")
+        setEmail("")
+        setPassword("")
+        setPasswordConfirmation("")
 
         console.log("Signed in successfully!")
       } else {
