@@ -1,8 +1,13 @@
-export interface SignUpParams {
+export interface SignUpData {
   userName: string
   email: string
   password: string
   passwordConfirmation: string
+  image: string
+}
+
+export interface SignUpFormData extends FormData {
+  append(name: keyof SignUpData, value: String | Blob, fileName?: string): any
 }
 
 export interface SignInParams {
@@ -28,6 +33,7 @@ export interface UpdateUserData {
   id: number | undefined | null
   userName?: string
   userSelfIntroduction?: string
+  image?: string
 }
 
 export interface UpdateUserFormData extends FormData {
