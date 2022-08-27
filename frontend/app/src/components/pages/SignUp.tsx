@@ -164,6 +164,46 @@ const SignUp: React.FC = () => {
               autoComplete="current-password"
               onChange={event => setPasswordConfirmation(event.target.value)}
             />
+            <div className={classes.imageUploadBtn}>
+              <input
+                accept="image/*"
+                className={classes.input}
+                id="icon-button-file"
+                type="file"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  uploadImage(e)
+                  previewImage(e)
+                }}
+              />
+              <label htmlFor="icon-button-file">
+                <IconButton
+                  color="primary"
+                  aria-label="upload picture"
+                  component="span"
+                >
+                    <PhotoCamera />
+                </IconButton>
+              </label>
+            </div>
+            {
+              preview ? (
+                <Box
+                  className={classes.box}
+                >
+                  <IconButton
+                    color="inherit"
+                    onClick={() => setPreview("")}
+                  >
+                    <CancelIcon />
+                  </IconButton>
+                  <img
+                    src={preview}
+                    alt="preview img"
+                    className={classes.preview}
+                  />
+                </Box>
+              ) : null
+            }
             <Button
               type="submit"
               variant="contained"
