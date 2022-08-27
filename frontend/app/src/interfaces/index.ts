@@ -23,7 +23,9 @@ export interface User {
   userName: string
   userSelfIntroduction?: string
   nickname?: string
-  image?: string
+  image: {
+    url: string
+  }
   allowPasswordChange: boolean
   created_at: Date
   updated_at: Date
