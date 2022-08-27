@@ -1,10 +1,10 @@
 import client from "lib/api/client"
 import Cookies from "js-cookie"
 
-import { SignUpParams, SignInParams } from "interfaces/index"
+import { SignUpFormData, SignInParams } from "interfaces/index"
 
-export const signUp = (params: SignUpParams) => {
-  return client.post("auth", params)
+export const signUp = (data: SignUpFormData) => {
+  return client.post("auth", data)
 }
 
 export const signIn = (params: SignInParams)  => {
