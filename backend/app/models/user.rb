@@ -7,5 +7,5 @@ class User < ActiveRecord::Base
           :recoverable, :rememberable, :trackable, :validatable
   include DeviseTokenAuth::Concerns::User
 
-  mount_uploder :image, ImageUploader
+  mount_uploader :image, ImageUploader
 end
