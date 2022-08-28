@@ -9,6 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
+import Avatar from "@material-ui/core/Avatar";
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
 import { AuthContext } from "App";
@@ -65,6 +66,21 @@ const HeaderMenuList: React.FC = () => {
     setOpen(false);
   };
 
+  const CheckUserImage = () => {
+    if (currentUser?.image.url) {
+      return (
+        <Avatar
+            alt="User Image"
+            src={currentUser?.image.url}
+          />
+      )
+    } else {
+      return (
+        <Avatar src="/broken-image.jpg" />
+      )
+    }
+  }
+
   function handleListKeyDown(event: React.KeyboardEvent) {
     if (event.key === 'Tab') {
       event.preventDefault();
@@ -91,7 +107,7 @@ const HeaderMenuList: React.FC = () => {
           onClick={handleToggle}
           color="inherit"
         >
-          <p>{currentUser?.userName}</p>
+          <CheckUserImage />
         </MenuListButton>
         <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
           {({ TransitionProps, placement }) => (
