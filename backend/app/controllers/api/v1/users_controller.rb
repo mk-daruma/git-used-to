@@ -7,6 +7,7 @@ class Api::V1::UsersController < ApplicationController
   def update
     @user.user_name = user_params[:user_name]
     @user.user_self_introduction = user_params[:user_self_introduction]
+    @user.image = user_params[:image] if user_params[:image] != ""
 
     if @user.save
       render json: { status: 200, data: @user }
@@ -22,6 +23,6 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def user_params
-    params.permit(:user_name, :user_self_introduction, :id)
+    params.permit(:user_name, :user_self_introduction, :image ,:id)
   end
 end
