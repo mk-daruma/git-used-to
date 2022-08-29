@@ -66,21 +66,6 @@ const HeaderMenuList: React.FC = () => {
     setOpen(false);
   };
 
-  const CheckUserImage = () => {
-    if (currentUser?.image.url) {
-      return (
-        <Avatar
-            alt="User Image"
-            src={currentUser?.image.url}
-          />
-      )
-    } else {
-      return (
-        <Avatar src="/broken-image.jpg" />
-      )
-    }
-  }
-
   function handleListKeyDown(event: React.KeyboardEvent) {
     if (event.key === 'Tab') {
       event.preventDefault();
@@ -107,7 +92,7 @@ const HeaderMenuList: React.FC = () => {
           onClick={handleToggle}
           color="inherit"
         >
-          <CheckUserImage />
+          <Avatar src={currentUser?.image.url} />
         </MenuListButton>
         <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
           {({ TransitionProps, placement }) => (
