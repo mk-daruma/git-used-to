@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       marginRight: theme.spacing(2),
     },
+    button: {
+      padding: theme.spacing(2),
+    }
   }),
 );
 
@@ -91,6 +94,7 @@ const HeaderMenuList: React.FC = () => {
           aria-haspopup="true"
           onClick={handleToggle}
           color="inherit"
+          className={classes.button}
         >
           <Avatar src={currentUser?.image.url} />
         </MenuListButton>
