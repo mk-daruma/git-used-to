@@ -4,6 +4,7 @@ export interface SignUpData {
   password: string
   passwordConfirmation: string
   image: string
+  confirmSuccessUrl: string
 }
 
 export interface SignUpFormData extends FormData {
