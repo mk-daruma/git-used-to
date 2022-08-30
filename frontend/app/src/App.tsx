@@ -6,6 +6,7 @@ import Home from "components/pages/Home"
 import SignUp from "components/pages/SignUp"
 import SignIn from "components/pages/SignIn"
 import UserEdit from "components/pages/UserEdit"
+import ChangePassword from "components/pages/ChangePassword"
 
 import { getCurrentUser } from "lib/api/auth"
 import { User } from "interfaces/index"
@@ -69,6 +70,7 @@ const App: React.FC = () => {
             <Private>
               <Switch>
                 <Route exact path="/" component={Home} />
+                <Route exact path="/password" component={ChangePassword} />
                 <Route exact path={`/users/${currentUser?.id}/edit`} component={UserEdit} />
               </Switch>
             </Private>
