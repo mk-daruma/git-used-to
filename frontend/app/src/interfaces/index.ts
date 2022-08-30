@@ -42,3 +42,12 @@ export interface UpdateUserData {
 export interface UpdateUserFormData extends FormData {
   append(name: keyof UpdateUserData, value: String | Blob, fileName?: string): any
 }
+
+export interface ChangeUserPasswordData {
+  password: string
+  passwordConfirmation: string
+}
+
+export interface ChangeUserPasswordFormData extends FormData {
+  append(name: keyof ChangeUserPasswordData, value: String | Blob, fileName?: string): any
+}
