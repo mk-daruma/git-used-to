@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback } from "react"
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 
 import TextField from "@material-ui/core/TextField";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
@@ -8,6 +8,7 @@ import { Box } from "@material-ui/core";
 import CancelIcon from "@material-ui/icons/Cancel"
 import { IconButton } from "@material-ui/core";
 import PhotoCamera from "@material-ui/icons/PhotoCamera"
+import { Typography } from "@material-ui/core";
 
 
 import { AuthContext } from "App"
@@ -33,6 +34,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     input: {
       display: "none"
+    },
+    link: {
+      textDecoration: "none"
     }
   })
 );
@@ -164,6 +168,13 @@ const UserEdit: React.FC = () => {
       >
         送信
       </Button>
+      <Box textAlign="center" className={classes.box}>
+        <Typography variant="body2">
+          <Link to="/password" className={classes.link}>
+          パスワード変更はこちら
+          </Link>
+        </Typography>
+      </Box>
     </form>
   )
 }
