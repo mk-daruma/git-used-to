@@ -28,4 +28,4 @@
 
 /.env
 
-/public/uploads/user
+/public/uploads/*
