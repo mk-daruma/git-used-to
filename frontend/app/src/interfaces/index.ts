@@ -51,3 +51,25 @@ export interface ChangeUserPasswordData {
 export interface ChangeUserPasswordFormData extends FormData {
   append(name: keyof ChangeUserPasswordData, value: String | Blob, fileName?: string): any
 }
+
+export interface ForgetUserPasswordData {
+  email: string
+  redirectUrl: string
+}
+
+export interface ForgetUserPasswordFormData extends FormData {
+  append(name: keyof ChangeUserPasswordData, value: String | Blob, fileName?: string): any
+}
+
+export interface RedirectChangeUserPasswordData {
+  password: string
+  passwordConfirmation: string
+  reset_password_token: string
+  access_token: string
+  client: string
+  uid: string
+}
+
+export interface RedirectChangeUserPasswordDataFormData extends FormData {
+  append(name: keyof RedirectChangeUserPasswordData, value: String | Blob, fileName?: string): any
+}
