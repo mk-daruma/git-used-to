@@ -128,6 +128,11 @@ const SignIn: React.FC = () => {
                   Sign Up now!
                 </Link>
               </Typography>
+              <Typography variant="body2">
+                <Link to="/password/reset" className={classes.link}>
+                  パスワードを忘れた場合はこちら
+                </Link>
+              </Typography>
             </Box>
           </CardContent>
         </Card>
