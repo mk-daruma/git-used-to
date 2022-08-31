@@ -7,6 +7,8 @@ import SignUp from "components/pages/SignUp"
 import SignIn from "components/pages/SignIn"
 import UserEdit from "components/pages/UserEdit"
 import ChangePassword from "components/pages/ChangePassword"
+import ForgetPassword from "components/pages/ForgetPassword"
+import RedirectForgetPassword from "components/pages/RedirectForgetPassword"
 
 import { getCurrentUser } from "lib/api/auth"
 import { User } from "interfaces/index"
@@ -65,8 +67,10 @@ const App: React.FC = () => {
       <AuthContext.Provider value={{ loading, setLoading, isSignedIn, setIsSignedIn, currentUser, setCurrentUser}}>
         <CommonLayout>
           <Switch>
+            <Route path="/api/v1/auth/password/reset/form" component={RedirectForgetPassword} />
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/signin" component={SignIn} />
+            <Route exact path="/password/reset" component={ForgetPassword} />
             <Private>
               <Switch>
                 <Route exact path="/" component={Home} />
