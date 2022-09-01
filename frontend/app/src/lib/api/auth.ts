@@ -53,3 +53,11 @@ export const changeCurrentUserPassword = (data: ChangeUserPasswordFormData) => {
 export const forgetCurrentUserPassword = (data: ForgetUserPasswordFormData) => {
   return client.post("auth/password", data)
 }
+
+export const deleteUser = () => {
+  return client.delete("auth", { headers: {
+    "access-token": Cookies.get("_access_token") || "",
+    "client": Cookies.get("_client") || "",
+    "uid": Cookies.get("_uid") || ""
+  }})
+}
