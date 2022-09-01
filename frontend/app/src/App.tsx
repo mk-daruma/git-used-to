@@ -9,6 +9,7 @@ import UserEdit from "components/pages/UserEdit"
 import ChangePassword from "components/pages/ChangePassword"
 import ForgetPassword from "components/pages/ForgetPassword"
 import RedirectForgetPassword from "components/pages/RedirectForgetPassword"
+import UserDelete from "components/pages/UserDelete"
 
 import { getCurrentUser } from "lib/api/auth"
 import { User } from "interfaces/index"
@@ -76,6 +77,7 @@ const App: React.FC = () => {
                 <Route exact path="/" component={Home} />
                 <Route exact path="/password" component={ChangePassword} />
                 <Route exact path={`/users/${currentUser?.id}/edit`} component={UserEdit} />
+                <Route exact path="/users/delete" component={UserDelete} />
               </Switch>
             </Private>
           </Switch>
