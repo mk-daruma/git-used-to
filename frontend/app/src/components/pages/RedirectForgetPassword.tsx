@@ -76,7 +76,9 @@ const RedirectForgetPassword: React.FC = () => {
 
       if (res.status === 200) {
 
-        alert("パスワード変更に成功しました！")
+        alert(
+          "パスワード変更に成功しました。\n新しいパスワードでログインをしてください。"
+          )
 
         history.push("/signin")
 
