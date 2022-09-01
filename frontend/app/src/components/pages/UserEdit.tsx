@@ -171,7 +171,12 @@ const UserEdit: React.FC = () => {
       <Box textAlign="center" className={classes.box}>
         <Typography variant="body2">
           <Link to="/password" className={classes.link}>
-          パスワード変更はこちら
+            パスワード変更はこちら
+          </Link>
+        </Typography>
+        <Typography>
+          <Link to="/users/delete" className={classes.link}>
+            アカウント削除はこちら
           </Link>
         </Typography>
       </Box>
