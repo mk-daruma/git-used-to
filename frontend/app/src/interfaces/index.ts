@@ -70,6 +70,6 @@ export interface RedirectChangeUserPasswordData {
   uid: string
 }
 
-export interface RedirectChangeUserPasswordDataFormData extends FormData {
+export interface RedirectChangeUserPasswordFormData extends FormData {
   append(name: keyof RedirectChangeUserPasswordData, value: String | Blob, fileName?: string): any
 }

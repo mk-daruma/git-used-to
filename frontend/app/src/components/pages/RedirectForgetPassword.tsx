@@ -8,7 +8,7 @@ import CardContent from "@material-ui/core/CardContent"
 import CardHeader from "@material-ui/core/CardHeader"
 import Button from "@material-ui/core/Button"
 
-import { RedirectChangeUserPasswordDataFormData } from "interfaces"
+import { RedirectChangeUserPasswordFormData } from "interfaces"
 // import { redirectForgetCurrentUserPassword } from "lib/api/auth" リファクタリングをして理想はauthからインポートしたい。
 import AlertMessage from "components/utils/AlertMessage"
 import client from "lib/api/client"//一時的に追加
@@ -43,7 +43,7 @@ const RedirectForgetPassword: React.FC = () => {
   const search = useLocation().search;
   const query = new URLSearchParams(search);
 
-  const RedirectForgetCurrentUserPassword = (data: RedirectChangeUserPasswordDataFormData) => {
+  const RedirectForgetCurrentUserPassword = (data: RedirectChangeUserPasswordFormData) => {
     return client.put("auth", data, { headers: {
       "access-token": query.get('access-token') || "",
       "client": query.get('client')|| "",
@@ -56,7 +56,7 @@ const RedirectForgetPassword: React.FC = () => {
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>("")
   const [alertMessageOpen, setAlertMessageOpen] = useState<boolean>(false)
 
-  const createFormData = (): RedirectChangeUserPasswordDataFormData => {
+  const createFormData = (): RedirectChangeUserPasswordFormData => {
     const formData = new FormData()
 
     formData.append("password", password)
