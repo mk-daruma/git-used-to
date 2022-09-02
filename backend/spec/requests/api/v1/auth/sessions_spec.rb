@@ -38,7 +38,7 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
         post api_v1_user_session_path, params: params
         res = JSON.parse(response.body)
         expect(res["success"]).to be_falsey
-        expect(res["errors"]).to include("Invalid login credentials. Please try again.")
+        expect(res["errors"]).to include("A confirmation email was sent to your account at '#{current_user.email}'. You must follow the instructions in the email before your account can be activated") # rubocop:disable Layout/LineLength
         expect(response.headers["uid"]).to be_blank
         expect(response.headers["access-token"]).to be_blank
         expect(response.headers["client"]).to be_blank

@@ -1,5 +1,5 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :set_user, only: %i[edit update]
+  before_action :set_user, only: [:edit, :update]
 
   def edit
   end
@@ -23,6 +23,6 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def user_params
-    params.permit(:user_name, :user_self_introduction, :image ,:id)
+    params.permit(:user_name, :user_self_introduction, :image, :id)
   end
 end
