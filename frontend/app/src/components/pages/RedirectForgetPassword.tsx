@@ -9,7 +9,6 @@ import CardHeader from "@material-ui/core/CardHeader"
 import Button from "@material-ui/core/Button"
 
 import { RedirectChangeUserPasswordFormData } from "interfaces"
-// import { redirectForgetCurrentUserPassword } from "lib/api/auth" リファクタリングをして理想はauthからインポートしたい。
 import AlertMessage from "components/utils/AlertMessage"
 import client from "lib/api/client"//一時的に追加
 
