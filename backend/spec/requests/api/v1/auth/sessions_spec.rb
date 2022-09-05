@@ -17,13 +17,13 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
     end
 
     context "未認証でメールアドレス、パスワードが正しい場合" do
-      let(:no_confirmed_current_user) { create(:user) }
-      let(:params) { { email: no_confirmed_current_user.email, password: no_confirmed_current_user.password } }
+      let(:uncertified_user) { create(:user) }
+      let(:params) { { email: uncertified_user.email, password: uncertified_user.password } }
 
       it "ログインが失敗すること" do
         post api_v1_user_session_path, params: params
         res = JSON.parse(response.body)
-        expect(res["errors"]).to include("A confirmation email was sent to your account at '#{no_confirmed_current_user.email}'. You must follow the instructions in the email before your account can be activated") # rubocop:disable Layout/LineLength
+        expect(res["errors"]).to include("A confirmation email was sent to your account at '#{uncertified_user.email}'. You must follow the instructions in the email before your account can be activated") # rubocop:disable Layout/LineLength
         expect(response).to have_http_status(401)
       end
     end
