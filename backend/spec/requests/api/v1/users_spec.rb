@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe "Api::V1::Users", type: :request do
   describe "PUT /api/v1/users#update" do
-    let(:user) { create(:user) }
-    let(:user2) { create(:user) }
+    let(:user) { create(:user, user_self_introduction: "こんにちは") }
+    let(:user2) { create(:user, user_self_introduction: "こんばんわ") }
     let(:params) do
       {
         user_name: user.user_name = user2.user_name,
