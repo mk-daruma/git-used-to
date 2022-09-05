@@ -45,6 +45,9 @@ jobs:
       - run:
           name: Run rspec
           command: bundle exec rspec
+          environment:
+            EMAIL_ADDRESS: $EMAIL_ADDRESS
+            EMAIL_PASSWORD: $EMAIL_PASSWORD
       - run:
           name: Run rubocop
           command: bundle exec rubocop --require rubocop-airbnb

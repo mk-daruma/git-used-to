@@ -1,10 +1,15 @@
 import React, { useState, useEffect, createContext } from "react"
-import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom"
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom"
 
 import CommonLayout from "components/layouts/CommonLayout"
 import Home from "components/pages/Home"
 import SignUp from "components/pages/SignUp"
 import SignIn from "components/pages/SignIn"
+import UserEdit from "components/pages/UserEdit"
+import ChangePassword from "components/pages/ChangePassword"
+import ForgetPassword from "components/pages/ForgetPassword"
+import RedirectForgetPassword from "components/pages/RedirectForgetPassword"
+import UserDelete from "components/pages/UserDelete"
 
 import { getCurrentUser } from "lib/api/auth"
 import { User } from "interfaces/index"
@@ -59,19 +64,26 @@ const App: React.FC = () => {
   }
 
   return (
-    <Router>
+    <BrowserRouter>
       <AuthContext.Provider value={{ loading, setLoading, isSignedIn, setIsSignedIn, currentUser, setCurrentUser}}>
         <CommonLayout>
           <Switch>
+            <Route path="/api/v1/auth/password/reset/form" component={RedirectForgetPassword} />
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/signin" component={SignIn} />
+            <Route exact path="/password/reset" component={ForgetPassword} />
             <Private>
-              <Route exact path="/" component={Home} />
+              <Switch>
+                <Route exact path="/" component={Home} />
+                <Route exact path="/password" component={ChangePassword} />
+                <Route exact path={`/users/${currentUser?.id}/edit`} component={UserEdit} />
+                <Route exact path="/users/delete" component={UserDelete} />
+              </Switch>
             </Private>
           </Switch>
         </CommonLayout>
       </AuthContext.Provider>
-    </Router>
+    </BrowserRouter>
   )
 }
 
