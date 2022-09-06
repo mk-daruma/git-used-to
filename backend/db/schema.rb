@@ -10,7 +10,43 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_06_095250) do
+ActiveRecord::Schema.define(version: 2022_09_06_140227) do
+
+  create_table "quiz_branches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "quiz_id", null: false
+    t.string "quiz_branch_name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["quiz_id"], name: "index_quiz_branches_on_quiz_id"
+  end
+
+  create_table "quiz_commit_messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "quiz_branch_id", null: false
+    t.text "quiz_commit_message"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["quiz_branch_id"], name: "index_quiz_commit_messages_on_quiz_branch_id"
+  end
+
+  create_table "quiz_repository_files", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "quiz_commit_message_id", null: false
+    t.string "quiz_repository_file_name"
+    t.string "quiz_repository_file_status"
+    t.string "quiz_repository_file_text_status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["quiz_commit_message_id"], name: "index_quiz_repository_files_on_quiz_commit_message_id"
+  end
+
+  create_table "quiz_worktree_files", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "quiz_branch_id", null: false
+    t.string "quiz_worktree_file_name"
+    t.string "quiz_worktree_file_status"
+    t.string "quiz_worktree_file_text_status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["quiz_branch_id"], name: "index_quiz_worktree_files_on_quiz_branch_id"
+  end
 
   create_table "quizzes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -53,5 +89,9 @@ ActiveRecord::Schema.define(version: 2022_09_06_095250) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "quiz_branches", "quizzes"
+  add_foreign_key "quiz_commit_messages", "quiz_branches"
+  add_foreign_key "quiz_repository_files", "quiz_commit_messages"
+  add_foreign_key "quiz_worktree_files", "quiz_branches"
   add_foreign_key "quizzes", "users"
 end
