@@ -1,8 +1,5 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :set_user, only: [:edit, :update]
-
-  def edit
-  end
+  before_action :set_user, only: [:update]
 
   def update
     @user.user_name = user_params[:user_name]
