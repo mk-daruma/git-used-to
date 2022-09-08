@@ -16,6 +16,11 @@ class Api::V1::QuizzesController < ApplicationController
     end
   end
 
+  def show
+    quizzes = @quiz.quiz_first_or_lasts
+    render json: { status: 'SUCCESS', message: 'Loaded quizzes', data: quizzes }
+  end
+
   def update
     if @quiz.update(quiz_params)
       render json: { status: 'SUCCESS', data: @quiz }

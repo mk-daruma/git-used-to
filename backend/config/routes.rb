@@ -10,7 +10,7 @@ Rails.application.routes.draw do
       end
 
       resources :users, only: %i[edit update]
-      resources :quizzes, only: %i[index create update destroy]
+      resources :quizzes, only: %i[index create update show destroy]
     end
   end
 end
