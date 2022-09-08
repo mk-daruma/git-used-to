@@ -11,6 +11,7 @@ Rails.application.routes.draw do
 
       resources :users, only: %i[edit update]
       resources :quizzes, only: %i[index create update show destroy]
+      resources :quiz_first_or_lasts, only: %i[create show update destroy]
     end
   end
 end
