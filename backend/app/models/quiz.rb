@@ -1,4 +1,4 @@
 class Quiz < ApplicationRecord
   belongs_to :user
-  has_many :quiz_branches
+  has_many :quiz_first_or_lasts
 end
