@@ -1,6 +1,6 @@
 class Api::V1::QuizzesController < ApplicationController
   before_action :authenticate_api_v1_user!, only: [:create, :update, :destroy]
-  before_action :set_quiz, only: [:update, :destroy]
+  before_action :set_quiz, only: [:show, :update, :destroy]
 
   def index
     quizzes = Quiz.all
@@ -20,7 +20,7 @@ class Api::V1::QuizzesController < ApplicationController
     if @quiz.update(quiz_params)
       render json: { status: 'SUCCESS', data: @quiz }
     else
-      render json: { status: 'SUCCESS', message: 'Not updated', data: quiz.errors }
+      render json: { status: 'SUCCESS', message: 'Not updated', data: @quiz.errors }
     end
   end
 
