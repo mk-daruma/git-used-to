@@ -1,6 +1,6 @@
 class Api::V1::QuizFirstOrLastsController < ApplicationController
-  before_action :set_quiz_first_or_last, only: [:update, :destroy]
-  before_action :quiz_first_or_last_params, only: [:create, :show, :update]
+  before_action :set_quiz_first_or_last, only: [:show, :update, :destroy]
+  before_action :quiz_first_or_last_params, only: [:create, :update]
 
   def create
     quiz_first_or_last = QuizFirstOrLast.new(quiz_first_or_last_params)
