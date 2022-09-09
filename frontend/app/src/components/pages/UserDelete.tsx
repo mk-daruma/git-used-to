@@ -12,7 +12,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 
 import { AuthContext } from "App";
 import AlertMessage from "components/utils/AlertMessage";
-import { deleteUser } from "lib/api/auth";
+import { deleteUser } from "lib/api/users";
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {

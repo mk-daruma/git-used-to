@@ -9,7 +9,7 @@ import CardHeader from "@material-ui/core/CardHeader"
 import Button from "@material-ui/core/Button"
 
 import { ChangeUserPasswordFormData } from "interfaces"
-import { forgetCurrentUserPassword } from "lib/api/auth"
+import { forgetCurrentUserPassword } from "lib/api/users"
 import AlertMessage from "components/utils/AlertMessage"
 
 const useStyles = makeStyles((theme: Theme) => ({
