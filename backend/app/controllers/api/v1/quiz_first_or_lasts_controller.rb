@@ -17,7 +17,7 @@ class Api::V1::QuizFirstOrLastsController < ApplicationController
   end
 
   def update
-    if @quiz_first_or_last.update(quiz_params)
+    if @quiz_first_or_last.update(quiz_first_or_last_params)
       render json: { status: 'SUCCESS', data: @quiz_first_or_last }
     else
       render json: { status: 'SUCCESS', message: 'Not updated', data: quiz_first_or_last.errors }
