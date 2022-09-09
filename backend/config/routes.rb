@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       resources :quiz_first_or_lasts, only: %i[create show update destroy]
       resources :quiz_branches, only: %i[create show update destroy]
       resources :quiz_commit_messages, only: %i[create show update destroy]
+      resources :quiz_worktree_files, only: %i[create update destroy]
     end
   end
 end
