@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       resources :quizzes, only: %i[index create update show destroy]
       resources :quiz_first_or_lasts, only: %i[create show update destroy]
       resources :quiz_branches, only: %i[create show update destroy]
+      resources :quiz_commit_messages, only: %i[create show update destroy]
     end
   end
 end
