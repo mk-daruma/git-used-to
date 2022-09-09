@@ -1,5 +1,11 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :set_user, only: [:update]
+  before_action :set_user, only: [:show, :update]
+  before_action :user_params, only: [:update]
+
+  def show
+    quizzes = @user.quizzes
+    render json: { status: 'SUCCESS', message: 'Loaded quizzes', data: quizzes }
+  end
 
   def update
     @user.user_name = user_params[:user_name]
