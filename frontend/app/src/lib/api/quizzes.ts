@@ -1,6 +1,7 @@
+import { AboutQuizData } from "interfaces"
 import client from "lib/api/client"
 
-export const createQuiz = (data: これから作成) => {
+export const createQuiz = (data: AboutQuizData) => {
   return client.post("quizzes", data)
 }
 
