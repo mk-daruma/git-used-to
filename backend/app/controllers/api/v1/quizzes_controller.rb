@@ -1,5 +1,4 @@
 class Api::V1::QuizzesController < ApplicationController
-  before_action :authenticate_api_v1_user!, only: [:create, :update, :destroy]
   before_action :set_quiz, only: [:show, :update, :destroy]
 
   def index
