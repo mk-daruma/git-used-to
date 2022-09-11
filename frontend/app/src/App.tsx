@@ -77,8 +77,8 @@ const App: React.FC = () => {
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route exact path="/password" component={ChangePassword} />
-                <Route exact path={`/users/${currentUser?.id}/edit`} component={UserEdit} />
-                <Route exact path="/users/delete" component={UserDelete} />
+                <Route exact path={`/user/${currentUser?.id}/edit`} component={UserEdit} />
+                <Route exact path="/user/delete" component={UserDelete} />
                 <Route exact path="/quiz" component={CreateQuiz} />
               </Switch>
             </Private>
