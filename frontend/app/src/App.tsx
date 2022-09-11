@@ -13,6 +13,7 @@ import UserDelete from "components/pages/UserDelete"
 
 import { getCurrentUser } from "lib/api/auth"
 import { User } from "interfaces/index"
+import CreateQuiz from "components/pages/CreateQuiz"
 
 export const AuthContext = createContext({} as {
   loading: boolean
@@ -78,6 +79,7 @@ const App: React.FC = () => {
                 <Route exact path="/password" component={ChangePassword} />
                 <Route exact path={`/users/${currentUser?.id}/edit`} component={UserEdit} />
                 <Route exact path="/users/delete" component={UserDelete} />
+                <Route exact path="/quiz" component={CreateQuiz} />
               </Switch>
             </Private>
           </Switch>
