@@ -73,3 +73,10 @@ export interface RedirectChangeUserPasswordData {
 export interface RedirectChangeUserPasswordFormData extends FormData {
   append(name: keyof RedirectChangeUserPasswordData, value: String | Blob, fileName?: string): any
 }
+
+export interface AboutQuizData {
+  quizTitle: string
+  quizIntroduction: string
+  quizType: string
+  userId: number | undefined
+}
