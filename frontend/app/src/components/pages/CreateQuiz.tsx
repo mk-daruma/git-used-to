@@ -8,6 +8,7 @@ import AboutQuiz from "./AboutQuiz";
 import { AuthContext } from "App";
 import { AboutQuizData } from "interfaces";
 import { createQuiz } from "lib/api/quizzes";
+import Terminal from "./Terminal";
 
 
 export const QuizContext = createContext({} as {
@@ -65,7 +66,7 @@ const CreateQuiz: React.FC = () => {
 
       {/* <layout 2つのコンポーネントを横並びにする> */}
         <AboutQuiz />
-        {/* <Tarminal /> */}
+        <Terminal />
       {/* </layout> */}
       <Button
         type="submit"
