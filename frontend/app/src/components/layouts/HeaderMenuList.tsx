@@ -117,7 +117,7 @@ const HeaderMenuList: React.FC = () => {
                     <MenuItem
                       onClick={handleClose}
                       component={Link}
-                      to={`/users/${currentUser?.id}/edit`}
+                      to={`/user/${currentUser?.id}/edit`}
                     >
                       My account
                     </MenuItem>

@@ -175,7 +175,7 @@ const UserEdit: React.FC = () => {
           </Link>
         </Typography>
         <Typography>
-          <Link to="/users/delete" className={classes.link}>
+          <Link to="/user/delete" className={classes.link}>
             アカウント削除はこちら
           </Link>
         </Typography>
