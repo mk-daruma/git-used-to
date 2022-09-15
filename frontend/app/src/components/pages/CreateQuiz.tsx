@@ -6,17 +6,24 @@ import Button from "@material-ui/core/Button"
 
 import AboutQuiz from "./AboutQuiz";
 import { AuthContext } from "App";
-import { AboutQuizData } from "interfaces";
+import { AboutQuizData, QuizFirtsOrLastData } from "interfaces";
 import { createQuiz } from "lib/api/quizzes";
 import Terminal from "./Terminal";
-
+import QuizBranchArea from "./QuizBranchArea";
+import { createQuizFirstOrLast } from "lib/api/quiz_first_or_lasts";
+import { createQuizBranch } from "lib/api/quiz_branches";
 
 export const QuizContext = createContext({} as {
   quizTitle: string
   setQuizTitle: React.Dispatch<React.SetStateAction<string>>
   quizIntroduction: string
   setQuizIntroduction: React.Dispatch<React.SetStateAction<string>>
+  text: string
+  setText: React.Dispatch<React.SetStateAction<string>>
+  branches: { text :string }[]
+  setBranches: React.Dispatch<React.SetStateAction<{ text :string }[]>>
 })
+
 const useStyles = makeStyles((theme: Theme) => ({
   submitBtn: {
     marginTop: theme.spacing(2),
@@ -32,9 +39,12 @@ const CreateQuiz: React.FC = () => {
 
   const [quizTitle, setQuizTitle] = useState<string>("")
   const [quizIntroduction, setQuizIntroduction] = useState<string>("")
+  const [text, setText] = useState("");
+  const [branches, setBranches] = useState([{text:"master"}])
+
   const quizType = "user"
 
-  const data: AboutQuizData = {
+  const aboutQuizData: AboutQuizData = {
     quizTitle: quizTitle,
     quizIntroduction: quizIntroduction,
     quizType: quizType,
@@ -43,10 +53,28 @@ const CreateQuiz: React.FC = () => {
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
+    const quizFirtsOrLastStatus = "last"
 
     try {
-      const res = await createQuiz(data)
-      console.log(res)
+      const aboutQuizRes = await createQuiz(aboutQuizData)
+
+      const quizFirtsOrLastData: QuizFirtsOrLastData = {
+        quizFirstOrLastStatus: quizFirtsOrLastStatus,
+        quizId: aboutQuizRes.data.data.id
+      }
+      const quizFirtsOrLastRes = await createQuizFirstOrLast(quizFirtsOrLastData)
+
+      const quizBranchData = branches.map((branch) => ({
+        quizBranchName: branch.text,
+        quizFirstOrLastId: quizFirtsOrLastRes.data.data.id
+      }
+      ))
+
+      const quizBranchRes = await createQuizBranch(quizBranchData)
+
+      console.log(aboutQuizRes)
+      console.log(quizFirtsOrLastRes)
+      console.log(quizBranchRes)
 
       console.log("create quiz success!!")
     } catch (err) {
@@ -55,13 +83,18 @@ const CreateQuiz: React.FC = () => {
   }
 
   return(
-    <QuizContext.Provider value={{ quizTitle, setQuizTitle, quizIntroduction, setQuizIntroduction}}>
+    <QuizContext.Provider
+      value={{
+        quizTitle, setQuizTitle,
+        quizIntroduction, setQuizIntroduction,
+        text, setText,
+        branches, setBranches
+        }}>
+      <QuizBranchArea />
       {/* <layout 5つのコンポーネントを横並びにする> */}
-        {/* <Worktree />
-        <Index />
-        <CommitMessage />
-        <LocalRepository />
-        <RemoteRepository /> */}
+        {/* <QuizWorktreeIndexArea />
+        <QuizCommitMessageArea />
+        <QuizRepositoryArea /> */}
       {/* </layout> */}
 
       {/* <layout 2つのコンポーネントを横並びにする> */}
