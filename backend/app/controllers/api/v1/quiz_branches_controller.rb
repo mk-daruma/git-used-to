@@ -1,14 +1,18 @@
 class Api::V1::QuizBranchesController < ApplicationController
   before_action :set_quiz_branch, only: [:show, :update, :destroy]
-  before_action :quiz_branch_params, only: [:create, :update]
+  before_action :quiz_branch_params, only: [:update]
 
   def create
-    quiz_branch = QuizBranch.new(quiz_branch_params)
-    if quiz_branch.save
-      render json: { status: 'SUCCESS', data: quiz_branch }
-    else
-      render json: quiz_branch.errors
+    quiz_branch_hash = []
+    params.require(:_json).map do |param|
+      quiz_branch = QuizBranch.new(param.permit(:quiz_branch_name, :quiz_first_or_last_id).to_h)
+      if quiz_branch.save
+        quiz_branch_hash.push(quiz_branch)
+      else
+        render json: quiz_branch.errors
+      end
     end
+    render json: { status: 'SUCCESS', data: quiz_branch_hash }
   end
 
   def show
