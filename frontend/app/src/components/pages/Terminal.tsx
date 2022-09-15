@@ -1,68 +1,67 @@
 import React, { useState, useContext } from "react";
 
-import { makeStyles, Theme } from "@material-ui/core/styles"
+import { makeStyles } from "@material-ui/core/styles"
 import { AuthContext } from "App";
 import { QuizContext } from "./CreateQuiz";
 import { Input } from "@material-ui/core";
 
-const initialState = [
-  {
-      text: 'welcome git-used-to!!',
-      addText: ''
-  },
-]
-
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   input: {
-    paddingTop: 5,
     paddingLeft: 5,
     color: "#f5f5f5"
   },
   p: {
-    margin: 5,
+    marginTop: 2,
+    marginBottom: 2
   }
 }))
-
 
 const Terminal: React.FC = () => {
   const classes = useStyles()
   const { currentUser } = useContext(AuthContext)
+  const { text, setText, setBranches } = useContext(QuizContext)
 
-  const [todos, setTodos] = useState(initialState);
-  const [text, setText] = useState("");
+  const [commands, setCommands] = useState([{text:"play with git-used-to!!", addText:""}]);
   const [addText, setAddText] = useState("");
 
   return (
     <div className="App">
-      { todos.map((todo) => (
-      <>
-        <p className={classes.p}>{ todo.addText }</p>
-        <p className={classes.p}>{currentUser?.userName} % { todo.text }</p>
-      </>
-      ))}
+      { commands.map((command) => (
+        <>
+          <p className={classes.p}>{ command.addText }</p>
+          <p className={classes.p}>{currentUser?.userName} % { command.text }</p>
+        </>
+        ))}
       <p className={classes.p}>{addText}</p>
-      {currentUser?.userName} %
-
-      <Input
-        className={classes.input}
-        disableUnderline={true}
-        value={text}
-        onChange={(event) => setText(event.target.value)}
-        onKeyPress={e =>{
-          if (e.key === 'Enter') {
-            if(text === '') return
-            e.preventDefault()
-            setAddText("")
-            setTodos(todos => [...todos,{ text, addText }])
-            if (text === "git add"){
-              setText("")
-            } else if (text === "git commit"){
-              setText("")
-            } else {
-              setAddText(`zsh: command not found: ${text}`)
-              setText("")
-          }}}}
-          />
+        {currentUser?.userName} %
+        <Input
+          className={classes.input}
+          disableUnderline={true}
+          value={text}
+          onChange={(event) => setText(event.target.value)}
+          onKeyPress={e =>{
+            if (e.key === "Enter") {
+              if(text === "") return
+              e.preventDefault()
+              setAddText("")
+              setCommands(commands => [...commands,{ text, addText }])
+              if (text.startsWith("git add")){
+                setText("")
+              } else if (text === "git commit"){
+                setText("")
+              } else if (text.startsWith("git branch ")){
+                if (text.substring(11) === "") {
+                  setAddText('Enter a name after "git branch"')
+                  setText("")
+                } else {
+                  setBranches(branches => [...branches,{ text }])
+                  setText("")
+                }
+              } else {
+                setAddText(`zsh: command not found: ${text}`)
+                setText("")
+            }}}}
+        />
     </div>
   );
 }
