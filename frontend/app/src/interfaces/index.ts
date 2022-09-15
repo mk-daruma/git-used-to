@@ -80,3 +80,13 @@ export interface AboutQuizData {
   quizType: string
   userId: number | undefined
 }
+
+export interface QuizFirtsOrLastData {
+  quizFirstOrLastStatus: string
+  quizId : number
+}
+
+export interface CreateQuizBranch {
+  quizBranchName: string
+  quizFirstOrLastId : any
+}
