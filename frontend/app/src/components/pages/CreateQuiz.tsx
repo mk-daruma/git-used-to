@@ -1,4 +1,5 @@
 import React, { useContext, useState, createContext } from "react";
+import { useHistory } from "react-router-dom";
 
 import { makeStyles, Theme } from "@material-ui/core";
 import Button from "@material-ui/core/Button"
@@ -34,6 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const CreateQuiz: React.FC = () => {
   const { currentUser } = useContext(AuthContext)
+  const history = useHistory()
   const classes = useStyles()
 
   const [quizTitle, setQuizTitle] = useState<string>("")
@@ -76,6 +78,8 @@ const CreateQuiz: React.FC = () => {
       console.log(quizBranchRes)
 
       console.log("create quiz success!!")
+
+      history.push("/")
 
     } catch (err) {
       console.log(err)
