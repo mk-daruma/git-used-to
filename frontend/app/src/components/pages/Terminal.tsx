@@ -54,7 +54,16 @@ const Terminal: React.FC = () => {
                   setAddText('Enter a name after "git branch"')
                   setText("")
                 } else {
-                  setBranches(branches => [...branches,{ text }])
+                  setBranches(branches => [...branches,{
+                    branchName: text ,
+                      worktreeFiles :{
+                        fileName :"",
+                        staus : ""
+                      },
+                      commitMessages :{
+                        message : ""
+                      }
+                    }])
                   setText("")
                 }
               } else {

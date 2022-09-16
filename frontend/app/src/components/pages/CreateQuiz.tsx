@@ -20,34 +20,60 @@ export const QuizContext = createContext({} as {
   setQuizIntroduction: React.Dispatch<React.SetStateAction<string>>
   text: string
   setText: React.Dispatch<React.SetStateAction<string>>
+
   worktreeFiles: {
     worktreeFiles: {
       fileName :string
       staus :string
     }
   }[]
+
   setWorktreeFiles:React.Dispatch<React.SetStateAction<{
     worktreeFiles :{
       fileName :string
       staus :string
     }
   }[]>>
+
   commitMessages :{
     commitMessages :{
       message :string
     }
   }[]
+
   setCommitMessages: React.Dispatch<React.SetStateAction<{
     commitMessages :{
       message :string
     }
   }[]>>
+
   branches: {
-    text :string
+    branchName :string
   }[]
+
   setBranches: React.Dispatch<React.SetStateAction<{
-    text :string
+    branchName :string
   }[]>>
+  // branches: {
+  //   branchName :string
+  //     worktreeFiles :{
+  //       fileName :string
+  //       staus :string
+  //     },
+  //     commitMessages :{
+  //       message :string
+  //     }
+  //   }[]
+  // setBranches: React.Dispatch<React.SetStateAction<{
+  //   branchName :string
+  //     worktreeFiles :{
+  //       fileName :string
+  //       staus :string
+  //     },
+  //     commitMessages :{
+  //       message :string
+  //     }
+  //   }[]>>
   })
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -79,7 +105,9 @@ const CreateQuiz: React.FC = () => {
     }
   }])
   const [branches, setBranches] = useState([{
-    text :"master",
+    branchName :"master",
+      // worktreeFiles,
+      // commitMessages
     }]
   )
 
@@ -106,7 +134,7 @@ const CreateQuiz: React.FC = () => {
       const quizFirtsOrLastRes = await createQuizFirstOrLast(quizFirtsOrLastData)
 
       const quizBranchData = branches.map((branch) => ({
-        quiztext: branch.text === "master" ? branch.text : branch.text.substring(11),
+        quizBranchName: branch.branchName === "master" ? branch.branchName : branch.branchName.substring(11),
         quizFirstOrLastId: quizFirtsOrLastRes.data.data.id
       }
       ))

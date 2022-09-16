@@ -8,7 +8,8 @@ const QuizBranchArea: React.FC = () => {
     <>
     { branches.map((branch) => (
       <>
-        {branch.text === "master" ? <>{ branch.text }</> : <>{ branch.text.substring(10) }</>}
+        {branch.branchName === "master" ? <>{ branch.branchName }</> : <>{ branch.branchName.substring(10) }</>}
+        {/* {branch.worktreeFiles.fileName != ""  ? <>{ branch.worktreeFiles.fileName }ファイルを作成しました</> : <></>} */}
       </>
       ))}
     </>
