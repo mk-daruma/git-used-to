@@ -65,7 +65,7 @@ const CreateQuiz: React.FC = () => {
       const quizFirtsOrLastRes = await createQuizFirstOrLast(quizFirtsOrLastData)
 
       const quizBranchData = branches.map((branch) => ({
-        quizBranchName: branch.text,
+        quizBranchName: branch.text === "master" ? branch.text : branch.text.substring(11),
         quizFirstOrLastId: quizFirtsOrLastRes.data.data.id
       }
       ))
@@ -77,6 +77,7 @@ const CreateQuiz: React.FC = () => {
       console.log(quizBranchRes)
 
       console.log("create quiz success!!")
+
     } catch (err) {
       console.log(err)
     }
