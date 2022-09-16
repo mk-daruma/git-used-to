@@ -20,9 +20,35 @@ export const QuizContext = createContext({} as {
   setQuizIntroduction: React.Dispatch<React.SetStateAction<string>>
   text: string
   setText: React.Dispatch<React.SetStateAction<string>>
-  branches: { text :string }[]
-  setBranches: React.Dispatch<React.SetStateAction<{ text :string }[]>>
-})
+  worktreeFiles: {
+    worktreeFiles: {
+      fileName :string
+      staus :string
+    }
+  }[]
+  setWorktreeFiles:React.Dispatch<React.SetStateAction<{
+    worktreeFiles :{
+      fileName :string
+      staus :string
+    }
+  }[]>>
+  commitMessages :{
+    commitMessages :{
+      message :string
+    }
+  }[]
+  setCommitMessages: React.Dispatch<React.SetStateAction<{
+    commitMessages :{
+      message :string
+    }
+  }[]>>
+  branches: {
+    text :string
+  }[]
+  setBranches: React.Dispatch<React.SetStateAction<{
+    text :string
+  }[]>>
+  })
 
 const useStyles = makeStyles((theme: Theme) => ({
   submitBtn: {
@@ -41,7 +67,21 @@ const CreateQuiz: React.FC = () => {
   const [quizTitle, setQuizTitle] = useState<string>("")
   const [quizIntroduction, setQuizIntroduction] = useState<string>("")
   const [text, setText] = useState("");
-  const [branches, setBranches] = useState([{text:"master"}])
+  const [worktreeFiles, setWorktreeFiles] = useState([{
+    worktreeFiles :{
+      fileName :"",
+      staus : ""
+    }
+  }])
+  const [commitMessages, setCommitMessages] = useState([{
+    commitMessages :{
+      message : ""
+    }
+  }])
+  const [branches, setBranches] = useState([{
+    text :"master",
+    }]
+  )
 
   const quizType = "user"
 
@@ -66,7 +106,7 @@ const CreateQuiz: React.FC = () => {
       const quizFirtsOrLastRes = await createQuizFirstOrLast(quizFirtsOrLastData)
 
       const quizBranchData = branches.map((branch) => ({
-        quizBranchName: branch.text === "master" ? branch.text : branch.text.substring(11),
+        quiztext: branch.text === "master" ? branch.text : branch.text.substring(11),
         quizFirstOrLastId: quizFirtsOrLastRes.data.data.id
       }
       ))
@@ -92,7 +132,9 @@ const CreateQuiz: React.FC = () => {
         quizTitle, setQuizTitle,
         quizIntroduction, setQuizIntroduction,
         text, setText,
-        branches, setBranches
+        branches, setBranches,
+        worktreeFiles, setWorktreeFiles,
+        commitMessages, setCommitMessages
         }}>
       <QuizBranchArea />
       {/* <layout 5つのコンポーネントを横並びにする> */}
