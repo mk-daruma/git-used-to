@@ -12,6 +12,7 @@ import Terminal from "./Terminal";
 import QuizBranchArea from "./QuizBranchArea";
 import { createQuizFirstOrLast } from "lib/api/quiz_first_or_lasts";
 import { createQuizBranch } from "lib/api/quiz_branches";
+import { createQuizWorktreeFile } from "lib/api/quiz_worktree_files";
 
 export const QuizContext = createContext({} as {
   quizTitle: string
@@ -25,12 +26,14 @@ export const QuizContext = createContext({} as {
 
   worktreeFiles: {
     fileName :string
-    staus :string
+    parentBranch :string
+    status :string
   }[]
 
   setWorktreeFiles:React.Dispatch<React.SetStateAction<{
     fileName :string
-    staus :string
+    parentBranch :string
+    status :string
   }[]>>
 
   commitMessages :{
@@ -70,7 +73,8 @@ const CreateQuiz: React.FC = () => {
   const [currentBranch, setCurrentBranch] = useState("master");
   const [worktreeFiles, setWorktreeFiles] = useState([{
     fileName :"sample.rb",
-    staus : ""
+    parentBranch : "master",
+    status :""
   }])
   const [commitMessages, setCommitMessages] = useState([{
     message : ""
