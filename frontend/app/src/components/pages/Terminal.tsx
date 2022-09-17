@@ -21,6 +21,7 @@ const Terminal: React.FC = () => {
   const { currentUser } = useContext(AuthContext)
   const {
     text, setText,
+    setCurrentBranch,
     branches, setBranches,
   } = useContext(QuizContext)
 
@@ -59,6 +60,14 @@ const Terminal: React.FC = () => {
                 } else {
                   setBranches(branches => [...branches,{ branchName: text }])
                   console.log(branches)
+                  setText("")
+                }
+              } else if (text.startsWith("git checkout ")) {
+                if (branches.some(branch => branch.branchName.includes(text.substring(13)))) {
+                  setCurrentBranch(text.substring(13))
+                  setText("")
+                } else {
+                  setAddText(`error: pathspec '${text}' did not match any file(s) known to git`)
                   setText("")
                 }
               } else {
