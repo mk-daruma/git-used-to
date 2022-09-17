@@ -22,29 +22,21 @@ export const QuizContext = createContext({} as {
   setText: React.Dispatch<React.SetStateAction<string>>
 
   worktreeFiles: {
-    worktreeFiles: {
-      fileName :string
-      staus :string
-    }
+    fileName :string
+    staus :string
   }[]
 
   setWorktreeFiles:React.Dispatch<React.SetStateAction<{
-    worktreeFiles :{
-      fileName :string
-      staus :string
-    }
+    fileName :string
+    staus :string
   }[]>>
 
   commitMessages :{
-    commitMessages :{
-      message :string
-    }
+    message :string
   }[]
 
   setCommitMessages: React.Dispatch<React.SetStateAction<{
-    commitMessages :{
-      message :string
-    }
+    message :string
   }[]>>
 
   branches: {
@@ -54,26 +46,6 @@ export const QuizContext = createContext({} as {
   setBranches: React.Dispatch<React.SetStateAction<{
     branchName :string
   }[]>>
-  // branches: {
-  //   branchName :string
-  //     worktreeFiles :{
-  //       fileName :string
-  //       staus :string
-  //     },
-  //     commitMessages :{
-  //       message :string
-  //     }
-  //   }[]
-  // setBranches: React.Dispatch<React.SetStateAction<{
-  //   branchName :string
-  //     worktreeFiles :{
-  //       fileName :string
-  //       staus :string
-  //     },
-  //     commitMessages :{
-  //       message :string
-  //     }
-  //   }[]>>
   })
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -94,20 +66,14 @@ const CreateQuiz: React.FC = () => {
   const [quizIntroduction, setQuizIntroduction] = useState<string>("")
   const [text, setText] = useState("");
   const [worktreeFiles, setWorktreeFiles] = useState([{
-    worktreeFiles :{
-      fileName :"",
-      staus : ""
-    }
+    fileName :"sample.rb",
+    staus : ""
   }])
   const [commitMessages, setCommitMessages] = useState([{
-    commitMessages :{
-      message : ""
-    }
+    message : ""
   }])
   const [branches, setBranches] = useState([{
-    branchName :"master",
-      // worktreeFiles,
-      // commitMessages
+    branchName :"master"
     }]
   )
 
