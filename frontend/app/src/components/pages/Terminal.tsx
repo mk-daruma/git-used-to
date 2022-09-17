@@ -21,8 +21,9 @@ const Terminal: React.FC = () => {
   const { currentUser } = useContext(AuthContext)
   const {
     text, setText,
-    setCurrentBranch,
+    currentBranch, setCurrentBranch,
     branches, setBranches,
+    worktreeFiles, setWorktreeFiles,
   } = useContext(QuizContext)
 
   const [commands, setCommands] = useState([{text:"play with git-used-to!!", addText:""}]);
@@ -70,6 +71,14 @@ const Terminal: React.FC = () => {
                   setAddText(`error: pathspec '${text}' did not match any file(s) known to git`)
                   setText("")
                 }
+              } else if (text.startsWith("touch ")) {
+                setWorktreeFiles(worktreeFile => [...worktreeFile,{
+                    fileName : text,
+                    parentBranch : currentBranch,
+                    status : ""
+                  }])
+                console.log(worktreeFiles)
+                setText("")
               } else {
                 setAddText(`zsh: command not found: ${text}`)
                 setText("")
