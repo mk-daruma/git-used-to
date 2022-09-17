@@ -114,9 +114,21 @@ const CreateQuiz: React.FC = () => {
 
       const quizBranchRes = await createQuizBranch(quizBranchData)
 
+      const quizWorktreeFileData = quizBranchRes.data.data.map((branch :any) =>(
+        worktreeFiles
+        .filter(worktreeFile => worktreeFile.parentBranch === branch.quizBranchName)
+        .map((filteredWorktreeFile :any) =>({
+          quizWorktreeFileName: filteredWorktreeFile.fileName,
+          quizBranchId: branch.id
+        }))
+      ))
+
+      const quizWorktreeFileRes = await createQuizWorktreeFile(quizWorktreeFileData.flat())
+
       console.log(aboutQuizRes)
       console.log(quizFirtsOrLastRes)
       console.log(quizBranchRes)
+      console.log(quizWorktreeFileRes)
 
       console.log("create quiz success!!")
 
