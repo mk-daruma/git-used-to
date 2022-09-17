@@ -90,3 +90,9 @@ export interface CreateQuizBranch {
   quizBranchName: string
   quizFirstOrLastId : any
 }
+
+export interface CreateQuizWortreeFileData {
+  quizWorktreeFileName: string
+  quizWorktreeFileStatus? : string
+  quizBranchId: number
+}
