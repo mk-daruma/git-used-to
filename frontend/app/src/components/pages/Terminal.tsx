@@ -19,7 +19,10 @@ const useStyles = makeStyles(() => ({
 const Terminal: React.FC = () => {
   const classes = useStyles()
   const { currentUser } = useContext(AuthContext)
-  const { text, setText, setBranches } = useContext(QuizContext)
+  const {
+    text, setText,
+    branches, setBranches,
+  } = useContext(QuizContext)
 
   const [commands, setCommands] = useState([{text:"play with git-used-to!!", addText:""}]);
   const [addText, setAddText] = useState("");
@@ -54,16 +57,8 @@ const Terminal: React.FC = () => {
                   setAddText('Enter a name after "git branch"')
                   setText("")
                 } else {
-                  setBranches(branches => [...branches,{
-                    branchName: text ,
-                      worktreeFiles :{
-                        fileName :"",
-                        staus : ""
-                      },
-                      commitMessages :{
-                        message : ""
-                      }
-                    }])
+                  setBranches(branches => [...branches,{ branchName: text }])
+                  console.log(branches)
                   setText("")
                 }
               } else {
