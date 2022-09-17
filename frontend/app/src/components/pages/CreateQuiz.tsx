@@ -20,6 +20,8 @@ export const QuizContext = createContext({} as {
   setQuizIntroduction: React.Dispatch<React.SetStateAction<string>>
   text: string
   setText: React.Dispatch<React.SetStateAction<string>>
+  currentBranch: string
+  setCurrentBranch :React.Dispatch<React.SetStateAction<string>>
 
   worktreeFiles: {
     fileName :string
@@ -65,6 +67,7 @@ const CreateQuiz: React.FC = () => {
   const [quizTitle, setQuizTitle] = useState<string>("")
   const [quizIntroduction, setQuizIntroduction] = useState<string>("")
   const [text, setText] = useState("");
+  const [currentBranch, setCurrentBranch] = useState("master");
   const [worktreeFiles, setWorktreeFiles] = useState([{
     fileName :"sample.rb",
     staus : ""
@@ -126,6 +129,7 @@ const CreateQuiz: React.FC = () => {
         quizTitle, setQuizTitle,
         quizIntroduction, setQuizIntroduction,
         text, setText,
+        currentBranch, setCurrentBranch,
         branches, setBranches,
         worktreeFiles, setWorktreeFiles,
         commitMessages, setCommitMessages
