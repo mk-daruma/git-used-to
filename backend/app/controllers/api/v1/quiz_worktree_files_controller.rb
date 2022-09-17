@@ -1,14 +1,19 @@
 class Api::V1::QuizWorktreeFilesController < ApplicationController
   before_action :set_quiz_worktree_file, only: [:update, :destroy]
-  before_action :quiz_worktree_file_params, only: [:create, :update]
+  before_action :quiz_worktree_file_params, only: [:update]
 
   def create
-    quiz_worktree_file = QuizWorktreeFile.new(quiz_worktree_file_params)
-    if quiz_worktree_file.save
-      render json: { status: 'SUCCESS', data: quiz_worktree_file }
-    else
-      render json: quiz_worktree_file.errors
+    quiz_worktree_file_hash = []
+    params.require(:_json).map do |param|
+      quiz_worktree_file = QuizWorktreeFile.new(param.permit(:quiz_worktree_file_name, :quiz_branch_id).to_h)
+      if quiz_worktree_file.save
+        quiz_worktree_file_hash.push(quiz_worktree_file)
+      else
+        render json: quiz_worktree_file.errors
+        return
+      end
     end
+    render json: { status: 'SUCCESS', data: quiz_worktree_file_hash }
   end
 
   def update
