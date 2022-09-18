@@ -74,7 +74,7 @@ const CreateQuiz: React.FC = () => {
   const [worktreeFiles, setWorktreeFiles] = useState([{
     fileName :"sample.rb",
     parentBranch : "master",
-    status :""
+    status :"worktree"
   }])
   const [commitMessages, setCommitMessages] = useState([{
     message : ""
@@ -119,6 +119,7 @@ const CreateQuiz: React.FC = () => {
         .filter(worktreeFile => worktreeFile.parentBranch === branch.quizBranchName)
         .map((filteredWorktreeFile :any) =>({
           quizWorktreeFileName: filteredWorktreeFile.fileName,
+          quizWorktreeFileStatus: filteredWorktreeFile.status,
           quizBranchId: branch.id
         }))
       ))
