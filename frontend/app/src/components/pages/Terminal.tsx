@@ -72,7 +72,7 @@ const Terminal: React.FC = () => {
                   setText("")
                 }
               } else if (text.startsWith("git checkout ")) {
-                if (branches.some(branch => branch.branchName.includes(text.substring(13)))) {
+                if (branches.some(branch => branch.branchName === text.substring(13))) {
                   setCurrentBranch(text.substring(13))
                   setText("")
                 } else {
