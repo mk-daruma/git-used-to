@@ -24,6 +24,7 @@ const Terminal: React.FC = () => {
     currentBranch, setCurrentBranch,
     branches, setBranches,
     worktreeFiles, setWorktreeFiles,
+    commitMessages, setCommitMessages
   } = useContext(QuizContext)
 
   const [commands, setCommands] = useState([{text:"play with git-used-to!!", addText:""}]);
@@ -51,8 +52,15 @@ const Terminal: React.FC = () => {
               setAddText("")
               setCommands(commands => [...commands,{ text, addText }])
               if (text.startsWith("git add")){
-                setText("")
-              } else if (text === "git commit"){
+                if (worktreeFiles.some(worktreeFile => worktreeFile.fileName === text.substring(8))){
+                  setWorktreeFiles((worktreeFile) => worktreeFile.map((worktreeFile) =>(worktreeFile.fileName === text.substring(8) ? { fileName : worktreeFile.fileName, parentBranch : worktreeFile.parentBranch, status : "index" } : worktreeFile)))
+                  setText("")
+                } else {
+                  setAddText(`error: pathspec '${text.substring(8)}' did not match any file(s) known to git`)
+                  setText("")
+                }
+              } else if (text.startsWith("git commit -m")){
+                setCommitMessages(commitMessage => [...commitMessage,{ message: text.substring(13) }])
                 setText("")
               } else if (text.startsWith("git branch ")){
                 if (text.substring(11) === "") {
@@ -73,9 +81,9 @@ const Terminal: React.FC = () => {
                 }
               } else if (text.startsWith("touch ")) {
                 setWorktreeFiles(worktreeFile => [...worktreeFile,{
-                    fileName : text,
+                    fileName : text.substring(6),
                     parentBranch : currentBranch,
-                    status : ""
+                    status : "worktree"
                   }])
                 console.log(worktreeFiles)
                 setText("")
