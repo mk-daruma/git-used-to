@@ -107,7 +107,7 @@ const CreateQuiz: React.FC = () => {
       const quizFirtsOrLastRes = await createQuizFirstOrLast(quizFirtsOrLastData)
 
       const quizBranchData = branches.map((branch) => ({
-        quizBranchName: branch.branchName === "master" ? branch.branchName : branch.branchName.substring(11),
+        quizBranchName: branch.branchName,
         quizFirstOrLastId: quizFirtsOrLastRes.data.data.id
       }
       ))

@@ -67,7 +67,7 @@ const Terminal: React.FC = () => {
                   setAddText('Enter a name after "git branch"')
                   setText("")
                 } else {
-                  setBranches(branches => [...branches,{ branchName: text }])
+                  setBranches(branches => [...branches,{ branchName: text.substring(11) }])
                   console.log(branches)
                   setText("")
                 }
@@ -76,7 +76,7 @@ const Terminal: React.FC = () => {
                   setCurrentBranch(text.substring(13))
                   setText("")
                 } else {
-                  setAddText(`error: pathspec '${text}' did not match any file(s) known to git`)
+                  setAddText(`error: pathspec '${text.substring(13)}' did not match any file(s) known to git`)
                   setText("")
                 }
               } else if (text.startsWith("touch ")) {
