@@ -5,7 +5,7 @@ class Api::V1::QuizWorktreeFilesController < ApplicationController
   def create
     quiz_worktree_file_hash = []
     params.require(:_json).map do |param|
-      quiz_worktree_file = QuizWorktreeFile.new(param.permit(:quiz_worktree_file_name, :quiz_branch_id).to_h)
+      quiz_worktree_file = QuizWorktreeFile.new(param.permit(:quiz_worktree_file_name, :quiz_worktree_file_status, :quiz_branch_id).to_h)
       if quiz_worktree_file.save
         quiz_worktree_file_hash.push(quiz_worktree_file)
       else
