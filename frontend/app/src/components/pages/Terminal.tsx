@@ -24,6 +24,7 @@ const Terminal: React.FC = () => {
     currentBranch, setCurrentBranch,
     branches, setBranches,
     worktreeFiles, setWorktreeFiles,
+    repositoryFiles, setRepositoryFiles,
     commitMessages, setCommitMessages
   } = useContext(QuizContext)
 

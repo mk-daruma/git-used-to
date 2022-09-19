@@ -36,6 +36,20 @@ export const QuizContext = createContext({} as {
     status :string
   }[]>>
 
+  repositoryFiles : {
+    fileName :string
+    parentBranch :string
+    repositoryStatus :string
+    parentCommitMessage :string
+  }[]
+
+  setRepositoryFiles:React.Dispatch<React.SetStateAction<{
+    fileName :string
+    parentBranch :string
+    repositoryStatus :string
+    parentCommitMessage :string
+  }[]>>
+
   commitMessages :{
     message :string
   }[]
@@ -75,6 +89,12 @@ const CreateQuiz: React.FC = () => {
     fileName :"sample.rb",
     parentBranch : "master",
     status :"worktree"
+  }])
+  const [repositoryFiles, setRepositoryFiles] = useState([{
+    fileName :"",
+    parentBranch :"",
+    repositoryStatus :"",
+    parentCommitMessage :""
   }])
   const [commitMessages, setCommitMessages] = useState([{
     message : ""
@@ -149,6 +169,7 @@ const CreateQuiz: React.FC = () => {
         currentBranch, setCurrentBranch,
         branches, setBranches,
         worktreeFiles, setWorktreeFiles,
+        repositoryFiles, setRepositoryFiles,
         commitMessages, setCommitMessages
         }}>
       <QuizBranchArea />
