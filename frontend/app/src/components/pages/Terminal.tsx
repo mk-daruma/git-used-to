@@ -62,6 +62,21 @@ const Terminal: React.FC = () => {
                 }
               } else if (text.startsWith("git commit -m")){
                 setCommitMessages(commitMessage => [...commitMessage,{ message: text.substring(13) }])
+                worktreeFiles
+                .filter(worktreeFile => worktreeFile.status === "index")
+                .map((worktreeFile) => (
+                  (setRepositoryFiles (repositoryFile => [...repositoryFile,{
+                    fileName :worktreeFile.fileName,
+                    parentBranch :worktreeFile.parentBranch,
+                    repositoryStatus :"local",
+                    parentCommitMessage :text.substring(13)
+                  }]))
+                ))
+                setWorktreeFiles((worktreeFile) => worktreeFile.map(
+                  (worktreeFile) =>(worktreeFile.status === "index" ? { fileName : worktreeFile.fileName, parentBranch : worktreeFile.parentBranch, status : "worktree" } : worktreeFile
+                  )))
+                console.log(commitMessages)
+                console.log(repositoryFiles)
                 setText("")
               } else if (text.startsWith("git branch ")){
                 if (text.substring(11) === "") {
