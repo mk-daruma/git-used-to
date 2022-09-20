@@ -78,6 +78,15 @@ const Terminal: React.FC = () => {
                 console.log(commitMessages)
                 console.log(repositoryFiles)
                 setText("")
+              } else if (text === `git push origin ${currentBranch}`) {
+                setRepositoryFiles((repositoryFile) => repositoryFile.map(
+                  (repositoryFile) =>({
+                    fileName : repositoryFile.fileName,
+                    parentBranch : repositoryFile.parentBranch,
+                    repositoryStatus : "remote",
+                    parentCommitMessage : repositoryFile.parentCommitMessage
+                  })))
+                console.log(repositoryFiles)
               } else if (text.startsWith("git branch ")){
                 if (text.substring(11) === "") {
                   setAddText('Enter a name after "git branch"')
