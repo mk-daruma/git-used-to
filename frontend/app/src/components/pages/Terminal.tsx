@@ -28,7 +28,10 @@ const Terminal: React.FC = () => {
     commitMessages, setCommitMessages
   } = useContext(QuizContext)
 
-  const [commands, setCommands] = useState([{text:"play with git-used-to!!", addText:""}]);
+  const [commands, setCommands] = useState([{
+    text:"play with git-used-to!!",
+    addText:""
+  }]);
   const [addText, setAddText] = useState("");
 
   return (
@@ -51,10 +54,22 @@ const Terminal: React.FC = () => {
               if(text === "") return
               e.preventDefault()
               setAddText("")
-              setCommands(commands => [...commands,{ text, addText }])
+              setCommands(commands => [...commands,{
+                text,
+                addText
+              }])
               if (text.startsWith("git add")){
                 if (worktreeFiles.some(worktreeFile => worktreeFile.fileName === text.substring(8))){
-                  setWorktreeFiles((worktreeFile) => worktreeFile.map((worktreeFile) =>(worktreeFile.fileName === text.substring(8) ? { fileName : worktreeFile.fileName, parentBranch : worktreeFile.parentBranch, status : "index" } : worktreeFile)))
+                  setWorktreeFiles((worktreeFile) => worktreeFile
+                  .map((worktreeFile) =>(
+                    worktreeFile.fileName === text.substring(8)
+                    ? {
+                      fileName: worktreeFile.fileName,
+                      parentBranch: worktreeFile.parentBranch,
+                      status: "index"
+                    }
+                    : worktreeFile
+                    )))
                   setText("")
                 } else {
                   setAddText(`error: pathspec '${text.substring(8)}' did not match any file(s) known to git`)
@@ -72,8 +87,15 @@ const Terminal: React.FC = () => {
                     parentCommitMessage :text.substring(13)
                   }]))
                 ))
-                setWorktreeFiles((worktreeFile) => worktreeFile.map(
-                  (worktreeFile) =>(worktreeFile.status === "index" ? { fileName : worktreeFile.fileName, parentBranch : worktreeFile.parentBranch, status : "worktree" } : worktreeFile
+                setWorktreeFiles((worktreeFile) => worktreeFile
+                .map((worktreeFile) =>(
+                    worktreeFile.status === "index"
+                    ? {
+                      fileName: worktreeFile.fileName,
+                      parentBranch: worktreeFile.parentBranch,
+                      status: "worktree"
+                    }
+                    : worktreeFile
                   )))
                 console.log(commitMessages)
                 console.log(repositoryFiles)
@@ -81,10 +103,10 @@ const Terminal: React.FC = () => {
               } else if (text === `git push origin ${currentBranch}`) {
                 setRepositoryFiles((repositoryFile) => repositoryFile.map(
                   (repositoryFile) =>({
-                    fileName : repositoryFile.fileName,
-                    parentBranch : repositoryFile.parentBranch,
-                    repositoryStatus : "remote",
-                    parentCommitMessage : repositoryFile.parentCommitMessage
+                    fileName: repositoryFile.fileName,
+                    parentBranch: repositoryFile.parentBranch,
+                    repositoryStatus: "remote",
+                    parentCommitMessage: repositoryFile.parentCommitMessage
                   })))
                 console.log(repositoryFiles)
               } else if (text.startsWith("git branch ")){
@@ -106,9 +128,9 @@ const Terminal: React.FC = () => {
                 }
               } else if (text.startsWith("touch ")) {
                 setWorktreeFiles(worktreeFile => [...worktreeFile,{
-                    fileName : text.substring(6),
-                    parentBranch : currentBranch,
-                    status : "worktree"
+                    fileName: text.substring(6),
+                    parentBranch: currentBranch,
+                    status: "worktree"
                   }])
                 console.log(worktreeFiles)
                 setText("")

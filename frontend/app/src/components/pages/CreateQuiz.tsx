@@ -25,45 +25,45 @@ export const QuizContext = createContext({} as {
   setCurrentBranch :React.Dispatch<React.SetStateAction<string>>
 
   worktreeFiles: {
-    fileName :string
-    parentBranch :string
-    status :string
+    fileName: string
+    parentBranch: string
+    status: string
   }[]
 
-  setWorktreeFiles:React.Dispatch<React.SetStateAction<{
-    fileName :string
-    parentBranch :string
-    status :string
+  setWorktreeFiles: React.Dispatch<React.SetStateAction<{
+    fileName: string
+    parentBranch: string
+    status: string
   }[]>>
 
-  repositoryFiles : {
-    fileName :string
-    parentBranch :string
-    repositoryStatus :string
-    parentCommitMessage :string
+  repositoryFiles: {
+    fileName: string
+    parentBranch: string
+    repositoryStatus: string
+    parentCommitMessage: string
   }[]
 
   setRepositoryFiles:React.Dispatch<React.SetStateAction<{
-    fileName :string
-    parentBranch :string
-    repositoryStatus :string
-    parentCommitMessage :string
+    fileName: string
+    parentBranch: string
+    repositoryStatus: string
+    parentCommitMessage: string
   }[]>>
 
-  commitMessages :{
-    message :string
+  commitMessages: {
+    message: string
   }[]
 
   setCommitMessages: React.Dispatch<React.SetStateAction<{
-    message :string
+    message: string
   }[]>>
 
   branches: {
-    branchName :string
+    branchName: string
   }[]
 
   setBranches: React.Dispatch<React.SetStateAction<{
-    branchName :string
+    branchName: string
   }[]>>
   })
 
@@ -86,21 +86,21 @@ const CreateQuiz: React.FC = () => {
   const [text, setText] = useState("");
   const [currentBranch, setCurrentBranch] = useState("master");
   const [worktreeFiles, setWorktreeFiles] = useState([{
-    fileName :"sample.rb",
-    parentBranch : "master",
-    status :"worktree"
+    fileName: "sample.rb",
+    parentBranch: "master",
+    status: "worktree"
   }])
   const [repositoryFiles, setRepositoryFiles] = useState([{
-    fileName :"",
-    parentBranch :"",
-    repositoryStatus :"",
-    parentCommitMessage :""
+    fileName: "",
+    parentBranch: "",
+    repositoryStatus: "",
+    parentCommitMessage: ""
   }])
   const [commitMessages, setCommitMessages] = useState([{
-    message : ""
+    message: ""
   }])
   const [branches, setBranches] = useState([{
-    branchName :"master"
+    branchName: "master"
     }]
   )
 
