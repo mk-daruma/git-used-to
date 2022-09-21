@@ -88,11 +88,16 @@ export interface QuizFirtsOrLastData {
 
 export interface CreateQuizBranch {
   quizBranchName: string
-  quizFirstOrLastId : any
+  quizFirstOrLastId : number
 }
 
 export interface CreateQuizWortreeFileData {
   quizWorktreeFileName: string
-  quizWorktreeFileStatus? : string
+  quizWorktreeFileStatus: string
+  quizBranchId: number
+}
+
+export interface CreateQuizCommitMessage {
+  quizCommitMessage: string
   quizBranchId: number
 }
