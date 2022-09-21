@@ -13,6 +13,7 @@ import QuizBranchArea from "./QuizBranchArea";
 import { createQuizFirstOrLast } from "lib/api/quiz_first_or_lasts";
 import { createQuizBranch } from "lib/api/quiz_branches";
 import { createQuizWorktreeFile } from "lib/api/quiz_worktree_files";
+import { createQuizCommitMessage } from "lib/api/quiz_commit_messages";
 
 export const QuizContext = createContext({} as {
   quizTitle: string
@@ -38,24 +39,24 @@ export const QuizContext = createContext({} as {
 
   repositoryFiles: {
     fileName: string
-    parentBranch: string
     repositoryStatus: string
     parentCommitMessage: string
   }[]
 
   setRepositoryFiles:React.Dispatch<React.SetStateAction<{
     fileName: string
-    parentBranch: string
     repositoryStatus: string
     parentCommitMessage: string
   }[]>>
 
   commitMessages: {
     message: string
+    parentBranch: string
   }[]
 
   setCommitMessages: React.Dispatch<React.SetStateAction<{
     message: string
+    parentBranch: string
   }[]>>
 
   branches: {
@@ -92,12 +93,12 @@ const CreateQuiz: React.FC = () => {
   }])
   const [repositoryFiles, setRepositoryFiles] = useState([{
     fileName: "",
-    parentBranch: "",
     repositoryStatus: "",
     parentCommitMessage: ""
   }])
   const [commitMessages, setCommitMessages] = useState([{
-    message: ""
+    message: "",
+    parentBranch: ""
   }])
   const [branches, setBranches] = useState([{
     branchName: "master"
@@ -146,10 +147,22 @@ const CreateQuiz: React.FC = () => {
 
       const quizWorktreeFileRes = await createQuizWorktreeFile(quizWorktreeFileData.flat())
 
+      const QuizCommitMessageData = quizBranchRes.data.data.map((branch :any) =>(
+        commitMessages
+        .filter(commitMessage => commitMessage.parentBranch === branch.quizBranchName)
+        .map((commitMessage :any) =>({
+          quizCommitMessage: commitMessage.message,
+          quizBranchId: branch.id
+        }))
+      ))
+
+      const QuizCommitMessageRes = await createQuizCommitMessage(QuizCommitMessageData.flat())
+
       console.log(aboutQuizRes)
       console.log(quizFirtsOrLastRes)
       console.log(quizBranchRes)
       console.log(quizWorktreeFileRes)
+      console.log(QuizCommitMessageRes)
 
       console.log("create quiz success!!")
 
