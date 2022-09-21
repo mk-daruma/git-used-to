@@ -14,6 +14,7 @@ import { createQuizFirstOrLast } from "lib/api/quiz_first_or_lasts";
 import { createQuizBranch } from "lib/api/quiz_branches";
 import { createQuizWorktreeFile } from "lib/api/quiz_worktree_files";
 import { createQuizCommitMessage } from "lib/api/quiz_commit_messages";
+import { createQuizRepositoryFile } from "lib/api/quiz_repository_files";
 
 export const QuizContext = createContext({} as {
   quizTitle: string
@@ -158,11 +159,24 @@ const CreateQuiz: React.FC = () => {
 
       const QuizCommitMessageRes = await createQuizCommitMessage(QuizCommitMessageData.flat())
 
+      const quizRepositoryFileData = QuizCommitMessageRes.data.data.map((commitMessage :any) =>(
+        repositoryFiles
+        .filter(repositoryFile => repositoryFile.parentCommitMessage === commitMessage.quizCommitMessage)
+        .map((filteredRepositoryFile :any) =>({
+          quizRepositoryFileName: filteredRepositoryFile.fileName,
+          quizRepositoryFileStatus: filteredRepositoryFile.repositoryStatus,
+          quizCommitMessageId: commitMessage.id
+        }))
+      ))
+
+      const quizRepositoryFileRes = await createQuizRepositoryFile(quizRepositoryFileData.flat())
+
       console.log(aboutQuizRes)
       console.log(quizFirtsOrLastRes)
       console.log(quizBranchRes)
       console.log(quizWorktreeFileRes)
       console.log(QuizCommitMessageRes)
+      console.log(quizRepositoryFileRes)
 
       console.log("create quiz success!!")
 
