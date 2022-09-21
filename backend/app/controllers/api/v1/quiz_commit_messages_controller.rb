@@ -1,14 +1,19 @@
 class Api::V1::QuizCommitMessagesController < ApplicationController
   before_action :set_quiz_commit_message, only: [:show, :update, :destroy]
-  before_action :quiz_commit_message_params, only: [:create, :update]
+  before_action :quiz_commit_message_params, only: [:update]
 
   def create
-    quiz_commit_message = QuizCommitMessage.new(quiz_commit_message_params)
-    if quiz_commit_message.save
-      render json: { status: 'SUCCESS', data: quiz_commit_message }
-    else
-      render json: quiz_commit_message.errors
+    quiz_commit_message_hash = []
+    params.require(:_json).map do |param|
+      quiz_commit_message = QuizCommitMessage.new(param.permit(:quiz_commit_message, :quiz_branch_id).to_h)
+      if quiz_commit_message.save
+        quiz_commit_message_hash.push(quiz_commit_message)
+      else
+        render json: quiz_commit_message.errors
+        return
+      end
     end
+    render json: { status: 'SUCCESS', data: quiz_commit_message_hash }
   end
 
   def show
