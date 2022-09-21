@@ -101,3 +101,9 @@ export interface CreateQuizCommitMessage {
   quizCommitMessage: string
   quizBranchId: number
 }
+
+export interface CreateQuizRepositoryFileData {
+  quizRepositoryFileName: string
+  quizRepositoryFileStatus: string
+  quizCommitMessageId: number
+}
