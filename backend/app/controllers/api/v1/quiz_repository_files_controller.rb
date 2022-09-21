@@ -1,14 +1,19 @@
 class Api::V1::QuizRepositoryFilesController < ApplicationController
   before_action :set_quiz_repository_file, only: [:update, :destroy]
-  before_action :quiz_repository_file_params, only: [:create, :update]
+  before_action :quiz_repository_file_params, only: [:update]
 
   def create
-    quiz_repository_file = QuizRepositoryFile.new(quiz_repository_file_params)
-    if quiz_repository_file.save
-      render json: { status: 'SUCCESS', data: quiz_repository_file }
-    else
-      render json: quiz_repository_file.errors
+    quiz_repository_file_hash = []
+    params.require(:_json).map do |param|
+      quiz_repository_file = QuizRepositoryFile.new(param.permit(:quiz_repository_file_name, :quiz_repository_file_status, :quiz_commit_message_id).to_h)
+      if quiz_repository_file.save
+        quiz_repository_file_hash.push(quiz_repository_file)
+      else
+        render json: quiz_repository_file.errors
+        return
+      end
     end
+    render json: { status: 'SUCCESS', data: quiz_repository_file_hash }
   end
 
   def update
