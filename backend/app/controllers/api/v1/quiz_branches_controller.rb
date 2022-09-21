@@ -10,6 +10,7 @@ class Api::V1::QuizBranchesController < ApplicationController
         quiz_branch_hash.push(quiz_branch)
       else
         render json: quiz_branch.errors
+        return
       end
     end
     render json: { status: 'SUCCESS', data: quiz_branch_hash }
