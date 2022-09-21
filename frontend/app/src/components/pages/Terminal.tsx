@@ -76,32 +76,37 @@ const Terminal: React.FC = () => {
                   setText("")
                 }
               } else if (text.startsWith("git commit -m")){
-                setCommitMessages(commitMessage => [...commitMessage,{
-                  message: text.substring(14),
-                  parentBranch: currentBranch
-                }])
-                worktreeFiles
-                .filter(worktreeFile => worktreeFile.status === "index")
-                .map((worktreeFile) => (
-                  (setRepositoryFiles (repositoryFile => [...repositoryFile,{
-                    fileName :worktreeFile.fileName,
-                    repositoryStatus :"local",
-                    parentCommitMessage :text.substring(13)
-                  }]))
-                ))
-                setWorktreeFiles((worktreeFile) => worktreeFile
-                .map((worktreeFile) =>(
-                    worktreeFile.status === "index"
-                    ? {
-                      fileName: worktreeFile.fileName,
-                      parentBranch: worktreeFile.parentBranch,
-                      status: "worktree"
-                    }
-                    : worktreeFile
-                  )))
-                console.log(commitMessages)
-                console.log(repositoryFiles)
-                setText("")
+                if (worktreeFiles.some(worktreeFile => worktreeFile.status.includes("index"))){
+                  setCommitMessages(commitMessage => [...commitMessage,{
+                    message: text.substring(14),
+                    parentBranch: currentBranch
+                  }])
+                  worktreeFiles
+                  .filter(worktreeFile => worktreeFile.status === "index")
+                  .map((worktreeFile) => (
+                    (setRepositoryFiles (repositoryFile => [...repositoryFile,{
+                      fileName :worktreeFile.fileName,
+                      repositoryStatus: "local",
+                      parentCommitMessage: text.substring(14)
+                    }]))
+                  ))
+                  setWorktreeFiles((worktreeFile) => worktreeFile
+                  .map((worktreeFile) =>(
+                      worktreeFile.status === "index"
+                      ? {
+                        fileName: worktreeFile.fileName,
+                        parentBranch: worktreeFile.parentBranch,
+                        status: "worktree"
+                      }
+                      : worktreeFile
+                    )))
+                  console.log(commitMessages)
+                  console.log(repositoryFiles)
+                  setText("")
+                } else {
+                  setAddText(`On branch '${currentBranch}' nothing to commit, working tree clean`)
+                  setText("")
+                }
               } else if (text === `git push origin ${currentBranch}`) {
                 setRepositoryFiles((repositoryFile) => repositoryFile.map(
                   (repositoryFile) =>({
