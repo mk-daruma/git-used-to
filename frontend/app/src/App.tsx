@@ -82,6 +82,7 @@ const App: React.FC = () => {
                 <Route exact path="/user/delete" component={UserDelete} />
                 <Route exact path="/user/quizzes" component={UserQuizzes} />
                 <Route exact path="/quiz" component={CreateQuiz} />
+                <Route path="/quiz/edit/:id" component={CreateQuiz} />
               </Switch>
             </Private>
           </Switch>
