@@ -7,6 +7,10 @@ export const updateUser = (id: number | undefined | null, data: UpdateUserFormDa
   return client.put(`/users/${id}`, data)
 }
 
+export const getUserQuizzes = (id: number | undefined | null) => {
+  return client.get(`/users/${id}`)
+}
+
 export const changeCurrentUserPassword = (data: ChangeUserPasswordFormData) => {
   return client.put("auth", data, { headers: {
     "access-token": Cookies.get("_access_token") || "",
