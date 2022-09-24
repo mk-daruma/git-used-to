@@ -66,7 +66,8 @@ const Terminal: React.FC = () => {
                     ? {
                       fileName: worktreeFile.fileName,
                       parentBranch: worktreeFile.parentBranch,
-                      status: "index"
+                      status: "index",
+                      worktreeFileId: worktreeFile.worktreeFileId
                     }
                     : worktreeFile
                     )))
@@ -79,7 +80,8 @@ const Terminal: React.FC = () => {
                 if (worktreeFiles.some(worktreeFile => worktreeFile.status.includes("index"))){
                   setCommitMessages(commitMessage => [...commitMessage,{
                     message: text.substring(14),
-                    parentBranch: currentBranch
+                    parentBranch: currentBranch,
+                    commitMessageId: ""
                   }])
                   worktreeFiles
                   .filter(worktreeFile => worktreeFile.status === "index")
@@ -87,7 +89,8 @@ const Terminal: React.FC = () => {
                     (setRepositoryFiles (repositoryFile => [...repositoryFile,{
                       fileName :worktreeFile.fileName,
                       repositoryStatus: "local",
-                      parentCommitMessage: text.substring(14)
+                      parentCommitMessage: text.substring(14),
+                      repositoryFileId: ""
                     }]))
                   ))
                   setWorktreeFiles((worktreeFile) => worktreeFile
@@ -96,7 +99,8 @@ const Terminal: React.FC = () => {
                       ? {
                         fileName: worktreeFile.fileName,
                         parentBranch: worktreeFile.parentBranch,
-                        status: "worktree"
+                        status: "worktree",
+                        worktreeFileId: worktreeFile.worktreeFileId
                       }
                       : worktreeFile
                     )))
@@ -112,7 +116,8 @@ const Terminal: React.FC = () => {
                   (repositoryFile) =>({
                     fileName: repositoryFile.fileName,
                     repositoryStatus: "remote",
-                    parentCommitMessage: repositoryFile.parentCommitMessage
+                    parentCommitMessage: repositoryFile.parentCommitMessage,
+                    repositoryFileId: repositoryFile.repositoryFileId
                   })))
                 console.log(repositoryFiles)
               } else if (text.startsWith("git branch ")){
@@ -120,7 +125,10 @@ const Terminal: React.FC = () => {
                   setAddText('Enter a name after "git branch"')
                   setText("")
                 } else {
-                  setBranches(branches => [...branches,{ branchName: text.substring(11) }])
+                  setBranches(branches => [...branches,{
+                    branchName: text.substring(11),
+                    branchId: ""
+                  }])
                   console.log(branches)
                   setText("")
                 }
@@ -136,7 +144,8 @@ const Terminal: React.FC = () => {
                 setWorktreeFiles(worktreeFile => [...worktreeFile,{
                     fileName: text.substring(6),
                     parentBranch: currentBranch,
-                    status: "worktree"
+                    status: "worktree",
+                    worktreeFileId: ""
                   }])
                 console.log(worktreeFiles)
                 setText("")
