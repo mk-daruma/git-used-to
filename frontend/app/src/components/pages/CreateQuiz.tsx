@@ -30,42 +30,50 @@ export const QuizContext = createContext({} as {
     fileName: string
     parentBranch: string
     status: string
+    worktreeFileId: string
   }[]
 
   setWorktreeFiles: React.Dispatch<React.SetStateAction<{
     fileName: string
     parentBranch: string
     status: string
+    worktreeFileId: string
   }[]>>
 
   repositoryFiles: {
     fileName: string
     repositoryStatus: string
     parentCommitMessage: string
+    repositoryFileId: string
   }[]
 
   setRepositoryFiles:React.Dispatch<React.SetStateAction<{
     fileName: string
     repositoryStatus: string
     parentCommitMessage: string
+    repositoryFileId: string
   }[]>>
 
   commitMessages: {
     message: string
     parentBranch: string
+    commitMessageId: string
   }[]
 
   setCommitMessages: React.Dispatch<React.SetStateAction<{
     message: string
     parentBranch: string
+    commitMessageId: string
   }[]>>
 
   branches: {
     branchName: string
+    branchId: string
   }[]
 
   setBranches: React.Dispatch<React.SetStateAction<{
     branchName: string
+    branchId: string
   }[]>>
   })
 
@@ -88,23 +96,26 @@ const CreateQuiz: React.FC = () => {
   const [text, setText] = useState("");
   const [currentBranch, setCurrentBranch] = useState("master");
   const [worktreeFiles, setWorktreeFiles] = useState([{
-    fileName: "sample.rb",
-    parentBranch: "master",
-    status: "worktree"
+    fileName: "",
+    parentBranch: "",
+    status: "",
+    worktreeFileId: ""
   }])
   const [repositoryFiles, setRepositoryFiles] = useState([{
     fileName: "",
     repositoryStatus: "",
-    parentCommitMessage: ""
+    parentCommitMessage: "",
+    repositoryFileId: ""
   }])
   const [commitMessages, setCommitMessages] = useState([{
     message: "",
-    parentBranch: ""
+    parentBranch: "",
+    commitMessageId: ""
   }])
   const [branches, setBranches] = useState([{
-    branchName: "master"
-    }]
-  )
+    branchName: "master",
+    branchId: ""
+    }])
 
   const quizType = "user"
 
