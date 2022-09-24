@@ -1,5 +1,5 @@
 import React, { useContext, useState, createContext } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 
 import { makeStyles, Theme } from "@material-ui/core";
 import Button from "@material-ui/core/Button"
@@ -90,6 +90,8 @@ const CreateQuiz: React.FC = () => {
   const { currentUser } = useContext(AuthContext)
   const history = useHistory()
   const classes = useStyles()
+  const location = useLocation()
+  const { id } = useParams<{ id: string }>()
 
   const [quizTitle, setQuizTitle] = useState<string>("")
   const [quizIntroduction, setQuizIntroduction] = useState<string>("")
@@ -210,29 +212,38 @@ const CreateQuiz: React.FC = () => {
         repositoryFiles, setRepositoryFiles,
         commitMessages, setCommitMessages
         }}>
-      <QuizBranchArea />
-      {/* <layout 5つのコンポーネントを横並びにする> */}
-        {/* <QuizWorktreeIndexArea />
-        <QuizCommitMessageArea />
-        <QuizRepositoryArea /> */}
-      {/* </layout> */}
+      {location.pathname === "/quiz" &&
+      <>
+        <QuizBranchArea />
+        {/* <layout 5つのコンポーネントを横並びにする> */}
+          {/* <QuizWorktreeIndexArea />
+          <QuizCommitMessageArea />
+          <QuizRepositoryArea /> */}
+        {/* </layout> */}
 
-      {/* <layout 2つのコンポーネントを横並びにする> */}
-        <AboutQuiz />
-        <Terminal />
-      {/* </layout> */}
-      <Button
-        type="submit"
-        variant="contained"
-        size="large"
-        fullWidth
-        color="default"
-        disabled={!quizTitle || !quizIntroduction || !quizType ? true : false}
-        className={classes.submitBtn}
-        onClick={handleSubmit}
-      >
-        Submit
-      </Button>
+        {/* <layout 2つのコンポーネントを横並びにする> */}
+          <AboutQuiz />
+          <Terminal />
+        {/* </layout> */}
+        <Button
+          type="submit"
+          variant="contained"
+          size="large"
+          fullWidth
+          color="default"
+          disabled={!quizTitle || !quizIntroduction || !quizType ? true : false}
+          className={classes.submitBtn}
+          onClick={handleSubmit}
+        >
+          Submit
+        </Button>
+      </>
+      }
+      {location.pathname === (`/quiz/edit/${id}`) &&
+      <>
+      ここにクイズを編集する画面を作成する
+      </>
+      }
     </QuizContext.Provider>
   )
 }
