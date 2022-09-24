@@ -8,7 +8,7 @@ export const createQuizBranch = (data :any) => {
 //   return client.post(`quiz_branches/${id}`, data)
 // }
 
-export const showQuizBranch = (id: number | undefined | null) => {
+export const getQuizBranch = (id: number | undefined | null) => {
   return client.get(`quiz_branches/${id}`)
 }
 

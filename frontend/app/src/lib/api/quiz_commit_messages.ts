@@ -9,7 +9,7 @@ export const createQuizCommitMessage = (data: CreateQuizCommitMessage) => {
 //   return client.post(`quiz_commit_messages/${id}`, data)
 // }
 
-export const showQuizCommitMessage = (id: number | undefined | null) => {
+export const getQuizCommitMessage = (id: number | undefined | null) => {
   return client.get(`quiz_commit_messages/${id}`)
 }
 

@@ -9,7 +9,7 @@ export const createQuizFirstOrLast = (data: QuizFirtsOrLastData) => {
 //   return client.post(`quiz_first_or_lasts/${id}`, data)
 // }
 
-export const showQuizFirstOrLast = (id: number | undefined | null) => {
+export const getQuizFirstOrLast = (id: number | undefined | null) => {
   return client.get(`quiz_first_or_lasts/${id}`)
 }
 

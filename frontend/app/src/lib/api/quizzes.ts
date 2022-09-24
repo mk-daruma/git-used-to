@@ -5,11 +5,11 @@ export const createQuiz = (data: AboutQuizData) => {
   return client.post("quizzes", data)
 }
 
-export const updateQuiz = (id: number | undefined | null, data: これから作成) => {
-  return client.post(`quizzes/${id}`, data)
-}
+// export const updateQuiz = (id: number | undefined | null, data: これから作成) => {
+//   return client.post(`quizzes/${id}`, data)
+// }
 
-export const showQuiz = (id: number | undefined | null) => {
+export const getQuiz = (id: number | undefined | null) => {
   return client.get(`quizzes/${id}`)
 }
 
