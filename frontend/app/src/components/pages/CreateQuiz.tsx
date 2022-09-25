@@ -1,4 +1,4 @@
-import React, { useContext, useState, createContext } from "react";
+import React, { useContext, useState, createContext, useEffect } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 
 import { makeStyles, Theme } from "@material-ui/core";
@@ -7,13 +7,13 @@ import Button from "@material-ui/core/Button"
 import AboutQuiz from "./AboutQuiz";
 import { AuthContext } from "App";
 import { AboutQuizData, QuizFirtsOrLastData } from "interfaces";
-import { createQuiz } from "lib/api/quizzes";
+import { createQuiz, getQuiz } from "lib/api/quizzes";
 import Terminal from "./Terminal";
 import QuizBranchArea from "./QuizBranchArea";
-import { createQuizFirstOrLast } from "lib/api/quiz_first_or_lasts";
-import { createQuizBranch } from "lib/api/quiz_branches";
+import { createQuizFirstOrLast, getQuizFirstOrLast } from "lib/api/quiz_first_or_lasts";
+import { createQuizBranch, getQuizBranch } from "lib/api/quiz_branches";
 import { createQuizWorktreeFile } from "lib/api/quiz_worktree_files";
-import { createQuizCommitMessage } from "lib/api/quiz_commit_messages";
+import { createQuizCommitMessage, getQuizCommitMessage } from "lib/api/quiz_commit_messages";
 import { createQuizRepositoryFile } from "lib/api/quiz_repository_files";
 
 export const QuizContext = createContext({} as {
@@ -128,7 +128,7 @@ const CreateQuiz: React.FC = () => {
     userId: currentUser?.id
   }
 
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleCreateQuizSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     const quizFirtsOrLastStatus = "last"
 
@@ -200,6 +200,63 @@ const CreateQuiz: React.FC = () => {
     }
   }
 
+  const handleGetQuizData = async () => {
+    try {
+      const resQuiz = await getQuiz(Number(id))
+
+      setQuizTitle(resQuiz.data.quizData.quizTitle)
+      setQuizIntroduction(resQuiz.data.quizData.quizIntroduction)
+
+      const ResQuizOfLast = await getQuizFirstOrLast(resQuiz.data.quizFirstOrLastsData[0].id)
+
+      const ResQuizBranches = await getQuizBranch(ResQuizOfLast.data.data[0].id)
+
+      await Promise.all(
+        await ResQuizOfLast.data.data.map(async (branch :any) => {
+        setBranches(branches => [...branches,{
+          branchName: branch.quizBranchName,
+          branchId: branch.id
+        }])
+        ResQuizBranches.data.dataWorktrees.map((wortktree :any) => {
+          setWorktreeFiles(worktreeFile => [...worktreeFile,{
+            fileName: wortktree.quizWorktreeFileName,
+            parentBranch: branch.quizBranchName,
+            status: wortktree.quizWorktreeFileStatus,
+            worktreeFileId: wortktree.id
+          }])
+        })
+        ResQuizBranches.data.dataMessages.map(async (message :any) => {
+          setCommitMessages(commitMessage => [...commitMessage,{
+            message: message.quizCommitMessage,
+            parentBranch: branch.quizBranchName,
+            commitMessageId: message.id
+          }])
+          const ResQuizRepositoryFiles = await getQuizCommitMessage(message.id)
+          await Promise.all(
+            ResQuizRepositoryFiles.data.data.map((data :any) => {
+            setRepositoryFiles(repositoryFile => [...repositoryFile,{
+              fileName: data.quizRepositoryFileName,
+              repositoryStatus: data.quizRepositoryFileStatus,
+              parentCommitMessage: message.quizCommitMessage,
+              repositoryFileId: data.id
+            }])
+          }))
+        }
+      )}))
+
+      console.log(resQuiz)
+      console.log(ResQuizOfLast)
+      console.log(ResQuizBranches)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    location.pathname === (`/quiz/edit/${id}`) && handleGetQuizData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return(
     <QuizContext.Provider
       value={{
@@ -233,7 +290,7 @@ const CreateQuiz: React.FC = () => {
           color="default"
           disabled={!quizTitle || !quizIntroduction || !quizType ? true : false}
           className={classes.submitBtn}
-          onClick={handleSubmit}
+          onClick={handleCreateQuizSubmit}
         >
           Submit
         </Button>
@@ -241,7 +298,47 @@ const CreateQuiz: React.FC = () => {
       }
       {location.pathname === (`/quiz/edit/${id}`) &&
       <>
-      ここにクイズを編集する画面を作成する
+      <QuizBranchArea />
+      <AboutQuiz />
+      <Terminal />
+      <Button
+          type="submit"
+          variant="contained"
+          size="large"
+          fullWidth
+          color="default"
+          disabled={!quizTitle || !quizIntroduction || !quizType ? true : false}
+          className={classes.submitBtn}
+          // onClick={ここに更新用の関数を作成予定。}
+        >
+          Submit
+        </Button>
+
+        {/* ↓配列の中身確認用 */}
+        <p>[branch]</p>
+        { branches.map((branch) => (
+          <p>
+            { branch.branchName }
+          </p>
+          ))}
+          <p>[work]</p>
+        { worktreeFiles.map((worktreeFile) => (
+          <p>
+            { worktreeFile.fileName }
+          </p>
+          ))}
+          <p>[repo]</p>
+        { repositoryFiles.map((repositoryFile) => (
+          <p>
+            { repositoryFile.fileName }
+          </p>
+          ))}
+          <p>[commit]</p>
+        { commitMessages.map((commitMessage) => (
+          <p>
+            { commitMessage.message }
+          </p>
+          ))}
       </>
       }
     </QuizContext.Provider>
