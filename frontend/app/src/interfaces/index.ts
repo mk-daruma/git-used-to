@@ -97,6 +97,12 @@ export interface CreateQuizWortreeFileData {
   quizBranchId: number
 }
 
+export interface CreateQuizIndexFileData {
+  quizIndexFileName: string
+  quizIndexFileStatus: string
+  quizBranchId: number
+}
+
 export interface CreateQuizCommitMessage {
   quizCommitMessage: string
   quizBranchId: number
