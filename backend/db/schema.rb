@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_08_103113) do
+ActiveRecord::Schema.define(version: 2022_09_27_053037) do
 
   create_table "quiz_branches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "quiz_branch_name"
@@ -34,6 +34,15 @@ ActiveRecord::Schema.define(version: 2022_09_08_103113) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["quiz_id"], name: "index_quiz_first_or_lasts_on_quiz_id"
+  end
+
+  create_table "quiz_index_files", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "quiz_index_file_name"
+    t.string "quiz_index_file_text_status"
+    t.bigint "quiz_branch_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["quiz_branch_id"], name: "index_quiz_index_files_on_quiz_branch_id"
   end
 
   create_table "quiz_repository_files", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -100,6 +109,7 @@ ActiveRecord::Schema.define(version: 2022_09_08_103113) do
   add_foreign_key "quiz_branches", "quiz_first_or_lasts"
   add_foreign_key "quiz_commit_messages", "quiz_branches"
   add_foreign_key "quiz_first_or_lasts", "quizzes"
+  add_foreign_key "quiz_index_files", "quiz_branches"
   add_foreign_key "quiz_repository_files", "quiz_commit_messages"
   add_foreign_key "quiz_worktree_files", "quiz_branches"
   add_foreign_key "quizzes", "users"
