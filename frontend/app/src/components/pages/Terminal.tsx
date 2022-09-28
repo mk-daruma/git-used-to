@@ -24,6 +24,7 @@ const Terminal: React.FC = () => {
     currentBranch, setCurrentBranch,
     branches, setBranches,
     worktreeFiles, setWorktreeFiles,
+    indexFiles, setIndexFiles,
     repositoryFiles, setRepositoryFiles,
     commitMessages, setCommitMessages
   } = useContext(QuizContext)
@@ -60,52 +61,45 @@ const Terminal: React.FC = () => {
               }])
               if (text.startsWith("git add")){
                 if (worktreeFiles.some(worktreeFile => worktreeFile.fileName === text.substring(8))){
-                  setWorktreeFiles((worktreeFile) => worktreeFile
-                  .map((worktreeFile) =>(
-                    worktreeFile.fileName === text.substring(8)
-                    ? {
-                      fileName: worktreeFile.fileName,
-                      parentBranch: worktreeFile.parentBranch,
-                      status: "index",
-                      worktreeFileId: worktreeFile.worktreeFileId
-                    }
-                    : worktreeFile
-                    )))
+                  worktreeFiles
+                  .filter((worktreeFile) => worktreeFile.fileName != "")
+                  .map((worktreeFile) => (
+                    (setIndexFiles (indexFile => [...indexFile,{
+                      fileName :worktreeFile.fileName,
+                      textStatus: worktreeFile.textStatus,
+                      parentBranch: currentBranch,
+                      indexFileId: ""
+                    }]))
+                  ))
                   setText("")
                 } else {
                   setAddText(`error: pathspec '${text.substring(8)}' did not match any file(s) known to git`)
                   setText("")
                 }
               } else if (text.startsWith("git commit -m")){
-                if (worktreeFiles.some(worktreeFile => worktreeFile.status.includes("index"))){
+                if (indexFiles.some(indexFile => indexFile.fileName != "")){
                   setCommitMessages(commitMessage => [...commitMessage,{
                     message: text.substring(14),
                     parentBranch: currentBranch,
                     commitMessageId: ""
                   }])
-                  worktreeFiles
-                  .filter(worktreeFile => worktreeFile.status === "index")
-                  .map((worktreeFile) => (
+                  indexFiles
+                  .filter((indexFile) => indexFile.fileName != "")
+                  .map((indexFile) => (
                     (setRepositoryFiles (repositoryFile => [...repositoryFile,{
-                      fileName :worktreeFile.fileName,
+                      fileName :indexFile.fileName,
                       repositoryStatus: "local",
+                      textStatus: indexFile.textStatus,
                       parentCommitMessage: text.substring(14),
                       repositoryFileId: ""
                     }]))
                   ))
-                  setWorktreeFiles((worktreeFile) => worktreeFile
-                  .map((worktreeFile) =>(
-                      worktreeFile.status === "index"
-                      ? {
-                        fileName: worktreeFile.fileName,
-                        parentBranch: worktreeFile.parentBranch,
-                        status: "worktree",
-                        worktreeFileId: worktreeFile.worktreeFileId
-                      }
-                      : worktreeFile
-                    )))
+                  setIndexFiles(
+                    indexFiles.filter((indexFile) => indexFile.fileName === "" )
+                  )
                   console.log(commitMessages)
                   console.log(repositoryFiles)
+                  console.log(indexFiles)
                   setText("")
                 } else {
                   setAddText(`On branch '${currentBranch}' nothing to commit, working tree clean`)
@@ -116,6 +110,7 @@ const Terminal: React.FC = () => {
                   (repositoryFile) =>({
                     fileName: repositoryFile.fileName,
                     repositoryStatus: "remote",
+                    textStatus: repositoryFile.textStatus,
                     parentCommitMessage: repositoryFile.parentCommitMessage,
                     repositoryFileId: repositoryFile.repositoryFileId
                   })))
@@ -144,7 +139,7 @@ const Terminal: React.FC = () => {
                 setWorktreeFiles(worktreeFile => [...worktreeFile,{
                     fileName: text.substring(6),
                     parentBranch: currentBranch,
-                    status: "worktree",
+                    textStatus: "おはようございます",
                     worktreeFileId: ""
                   }])
                 console.log(worktreeFiles)
