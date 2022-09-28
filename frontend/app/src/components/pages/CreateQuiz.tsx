@@ -202,14 +202,12 @@ const CreateQuiz: React.FC = () => {
 
   const handleGetQuizData = async () => {
     try {
-      const resQuiz = await getQuiz(Number(id))
+      const ResQuiz = await getQuiz(Number(id))
 
-      setQuizTitle(resQuiz.data.quizData.quizTitle)
-      setQuizIntroduction(resQuiz.data.quizData.quizIntroduction)
+      setQuizTitle(ResQuiz.data.quizData.quizTitle)
+      setQuizIntroduction(ResQuiz.data.quizData.quizIntroduction)
 
-      const ResQuizOfLast = await getQuizFirstOrLast(resQuiz.data.quizFirstOrLastsData[0].id)
-
-      const ResQuizBranches = await getQuizBranch(ResQuizOfLast.data.data[0].id)
+      const ResQuizOfLast = await getQuizFirstOrLast(ResQuiz.data.quizFirstOrLastsData[0].id)
 
       await Promise.all(
         await ResQuizOfLast.data.data.map(async (branch :any) => {
@@ -217,7 +215,8 @@ const CreateQuiz: React.FC = () => {
           branchName: branch.quizBranchName,
           branchId: branch.id
         }])
-        ResQuizBranches.data.dataWorktrees.map((wortktree :any) => {
+        const ResQuizBranches = await getQuizBranch(branch.id)
+        ResQuizBranches.data.dataWorktreeFiles.map((wortktree :any) => {
           setWorktreeFiles(worktreeFile => [...worktreeFile,{
             fileName: wortktree.quizWorktreeFileName,
             parentBranch: branch.quizBranchName,
@@ -243,10 +242,8 @@ const CreateQuiz: React.FC = () => {
           }))
         }
       )}))
-
-      console.log(resQuiz)
+      console.log(ResQuiz)
       console.log(ResQuizOfLast)
-      console.log(ResQuizBranches)
     } catch (err) {
       console.log(err)
     }
