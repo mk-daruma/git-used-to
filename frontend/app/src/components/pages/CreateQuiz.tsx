@@ -40,9 +40,24 @@ export const QuizContext = createContext({} as {
     worktreeFileId: string
   }[]>>
 
+  indexFiles: {
+    fileName: string
+    parentBranch: string
+    textStatus: string
+    indexFileId: string
+  }[]
+
+  setIndexFiles: React.Dispatch<React.SetStateAction<{
+    fileName: string
+    parentBranch: string
+    textStatus: string
+    indexFileId: string
+  }[]>>
+
   repositoryFiles: {
     fileName: string
     repositoryStatus: string
+    textStatus: string
     parentCommitMessage: string
     repositoryFileId: string
   }[]
@@ -50,6 +65,7 @@ export const QuizContext = createContext({} as {
   setRepositoryFiles:React.Dispatch<React.SetStateAction<{
     fileName: string
     repositoryStatus: string
+    textStatus: string
     parentCommitMessage: string
     repositoryFileId: string
   }[]>>
@@ -103,9 +119,16 @@ const CreateQuiz: React.FC = () => {
     textStatus: "",
     worktreeFileId: ""
   }])
+  const [indexFiles, setIndexFiles] = useState([{
+    fileName: "",
+    parentBranch: "",
+    textStatus: "",
+    indexFileId: ""
+  }])
   const [repositoryFiles, setRepositoryFiles] = useState([{
     fileName: "",
     repositoryStatus: "",
+    textStatus: "",
     parentCommitMessage: "",
     repositoryFileId: ""
   }])
@@ -236,6 +259,7 @@ const CreateQuiz: React.FC = () => {
             setRepositoryFiles(repositoryFile => [...repositoryFile,{
               fileName: data.quizRepositoryFileName,
               repositoryStatus: data.quizRepositoryFileStatus,
+              textStatus: data.quizRepositoryFileTextStatus,
               parentCommitMessage: message.quizCommitMessage,
               repositoryFileId: data.id
             }])
@@ -263,6 +287,7 @@ const CreateQuiz: React.FC = () => {
         currentBranch, setCurrentBranch,
         branches, setBranches,
         worktreeFiles, setWorktreeFiles,
+        indexFiles, setIndexFiles,
         repositoryFiles, setRepositoryFiles,
         commitMessages, setCommitMessages
         }}>
