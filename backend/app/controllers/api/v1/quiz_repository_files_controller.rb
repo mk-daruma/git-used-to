@@ -5,7 +5,7 @@ class Api::V1::QuizRepositoryFilesController < ApplicationController
   def create
     quiz_repository_file_hash = []
     params.require(:_json).map do |param|
-      quiz_repository_file = QuizRepositoryFile.new(param.permit(:quiz_repository_file_name, :quiz_repository_file_status, :quiz_commit_message_id).to_h)
+      quiz_repository_file = QuizRepositoryFile.new(param.permit(:quiz_repository_file_name, :quiz_repository_file_status, :quiz_repository_file_text_status ,:quiz_commit_message_id).to_h)
       if quiz_repository_file.save
         quiz_repository_file_hash.push(quiz_repository_file)
       else
