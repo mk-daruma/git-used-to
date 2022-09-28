@@ -29,14 +29,14 @@ export const QuizContext = createContext({} as {
   worktreeFiles: {
     fileName: string
     parentBranch: string
-    status: string
+    textStatus: string
     worktreeFileId: string
   }[]
 
   setWorktreeFiles: React.Dispatch<React.SetStateAction<{
     fileName: string
     parentBranch: string
-    status: string
+    textStatus: string
     worktreeFileId: string
   }[]>>
 
@@ -100,7 +100,7 @@ const CreateQuiz: React.FC = () => {
   const [worktreeFiles, setWorktreeFiles] = useState([{
     fileName: "",
     parentBranch: "",
-    status: "",
+    textStatus: "",
     worktreeFileId: ""
   }])
   const [repositoryFiles, setRepositoryFiles] = useState([{
@@ -154,7 +154,7 @@ const CreateQuiz: React.FC = () => {
         .filter(worktreeFile => worktreeFile.parentBranch === branch.quizBranchName)
         .map((filteredWorktreeFile :any) =>({
           quizWorktreeFileName: filteredWorktreeFile.fileName,
-          quizWorktreeFileStatus: filteredWorktreeFile.status,
+          quizWorktreeFileTextStatus: filteredWorktreeFile.textStatus,
           quizBranchId: branch.id
         }))
       ))
@@ -220,7 +220,7 @@ const CreateQuiz: React.FC = () => {
           setWorktreeFiles(worktreeFile => [...worktreeFile,{
             fileName: wortktree.quizWorktreeFileName,
             parentBranch: branch.quizBranchName,
-            status: wortktree.quizWorktreeFileStatus,
+            textStatus: wortktree.quizWorktreeFileTextStatus,
             worktreeFileId: wortktree.id
           }])
         })
@@ -306,7 +306,7 @@ const CreateQuiz: React.FC = () => {
           color="default"
           disabled={!quizTitle || !quizIntroduction || !quizType ? true : false}
           className={classes.submitBtn}
-          // onClick={ここに更新用の関数を作成予定。}
+          // onClick={handleUpdateQuizData}
         >
           Submit
         </Button>
