@@ -62,7 +62,7 @@ const Terminal: React.FC = () => {
               if (text.startsWith("git add")){
                 if (worktreeFiles.some(worktreeFile => worktreeFile.fileName === text.substring(8))){
                   worktreeFiles
-                  .filter((worktreeFile) => worktreeFile.fileName != "")
+                  .filter((worktreeFile) => worktreeFile.fileName !== "")
                   .map((worktreeFile) => (
                     (setIndexFiles (indexFile => [...indexFile,{
                       fileName :worktreeFile.fileName,
@@ -77,14 +77,14 @@ const Terminal: React.FC = () => {
                   setText("")
                 }
               } else if (text.startsWith("git commit -m")){
-                if (indexFiles.some(indexFile => indexFile.fileName != "")){
+                if (indexFiles.some(indexFile => indexFile.fileName !== "")){
                   setCommitMessages(commitMessage => [...commitMessage,{
                     message: text.substring(14),
                     parentBranch: currentBranch,
                     commitMessageId: ""
                   }])
                   indexFiles
-                  .filter((indexFile) => indexFile.fileName != "")
+                  .filter((indexFile) => indexFile.fileName !== "")
                   .map((indexFile) => (
                     (setRepositoryFiles (repositoryFile => [...repositoryFile,{
                       fileName :indexFile.fileName,
