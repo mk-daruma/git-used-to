@@ -195,15 +195,18 @@ const CreateQuiz: React.FC = () => {
 
       const QuizCommitMessageRes = await createQuizCommitMessage(QuizCommitMessageData.flat())
 
-      const quizRepositoryFileData = QuizCommitMessageRes.data.data.map((commitMessage :any) =>(
+      const quizRepositoryFileData = QuizCommitMessageRes !== undefined
+      ? QuizCommitMessageRes.data.data.map((commitMessage :any) =>(
         repositoryFiles
         .filter(repositoryFile => repositoryFile.parentCommitMessage === commitMessage.quizCommitMessage)
         .map((filteredRepositoryFile :any) =>({
           quizRepositoryFileName: filteredRepositoryFile.fileName,
           quizRepositoryFileStatus: filteredRepositoryFile.repositoryStatus,
+          quizRepositoryFileTextStatus: filteredRepositoryFile.textStatus,
           quizCommitMessageId: commitMessage.id
         }))
       ))
+      : []
 
       const quizRepositoryFileRes = await createQuizRepositoryFile(quizRepositoryFileData.flat())
 
