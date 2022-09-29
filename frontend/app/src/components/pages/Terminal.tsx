@@ -112,7 +112,6 @@ const Terminal: React.FC = () => {
                     parentCommitMessage: repositoryFile.parentCommitMessage,
                     repositoryFileId: repositoryFile.repositoryFileId
                   })))
-                console.log(repositoryFiles)
               } else if (text.startsWith("git branch ") && afterCommandStr.test(text.substring(11))){
                 if (text.substring(11) === "") {
                   setAddText('Enter a name after "git branch"')
@@ -122,7 +121,6 @@ const Terminal: React.FC = () => {
                     branchName: text.substring(11),
                     branchId: ""
                   }])
-                  console.log(branches)
                   setText("")
                 }
               } else if (text.startsWith("git checkout ")) {
@@ -140,7 +138,6 @@ const Terminal: React.FC = () => {
                     textStatus: "おはようございます",
                     worktreeFileId: ""
                   }])
-                console.log(worktreeFiles)
                 setText("")
               } else {
                 setAddText(`zsh: command not found: ${text}`)
