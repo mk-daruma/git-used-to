@@ -281,6 +281,15 @@ const CreateQuiz: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  useEffect(() => {
+    console.log("commitMessages", commitMessages)
+    console.log("repositoryFiles", repositoryFiles)
+    console.log("worktreeFiles", worktreeFiles)
+    console.log("indexFiles", indexFiles)
+    console.log("branches", branches)
+    console.log("currentBranch", currentBranch)
+  },[commitMessages, indexFiles, repositoryFiles, worktreeFiles, branches, currentBranch])
+
   return(
     <QuizContext.Provider
       value={{
