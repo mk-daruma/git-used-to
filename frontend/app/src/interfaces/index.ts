@@ -93,13 +93,13 @@ export interface CreateQuizBranch {
 
 export interface CreateQuizWortreeFileData {
   quizWorktreeFileName: string
-  quizWorktreeFileStatus: string
+  quizWorktreeFileTextStatus: string
   quizBranchId: number
 }
 
 export interface CreateQuizIndexFileData {
   quizIndexFileName: string
-  quizIndexFileStatus: string
+  quizIndexFileTextStatus: string
   quizBranchId: number
 }
 
@@ -111,5 +111,6 @@ export interface CreateQuizCommitMessage {
 export interface CreateQuizRepositoryFileData {
   quizRepositoryFileName: string
   quizRepositoryFileStatus: string
+  quizRepositoryFileTextStatus: string
   quizCommitMessageId: number
 }
