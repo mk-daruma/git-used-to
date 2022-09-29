@@ -34,6 +34,7 @@ const Terminal: React.FC = () => {
     addText:""
   }]);
   const [addText, setAddText] = useState("");
+  const afterCommandStr = /^[a-zA-Z]+$/
 
   return (
     <div className="App">
@@ -59,10 +60,10 @@ const Terminal: React.FC = () => {
                 text,
                 addText
               }])
-              if (text.startsWith("git add")){
-                if (worktreeFiles.some(worktreeFile => worktreeFile.fileName === text.substring(8))){
+              if (text.startsWith("git add ") && afterCommandStr.test(text.substring(8))){
+                if (worktreeFiles.some(worktreeFile => worktreeFile.fileName.includes(text.substring(8)))){
                   worktreeFiles
-                  .filter((worktreeFile) => worktreeFile.fileName !== "")
+                  .filter((worktreeFile) => worktreeFile.fileName === text.substring(8) )
                   .map((worktreeFile) => (
                     (setIndexFiles (indexFile => [...indexFile,{
                       fileName :worktreeFile.fileName,
@@ -77,7 +78,7 @@ const Terminal: React.FC = () => {
                   setText("")
                 }
               } else if (text.startsWith("git commit -m")){
-                if (indexFiles.some(indexFile => indexFile.fileName !== "")){
+                if (indexFiles.some(indexFile => indexFile.fileName !== "" && /[\S+]/.test(text.substring(13)))){
                   setCommitMessages(commitMessage => [...commitMessage,{
                     message: text.substring(14),
                     parentBranch: currentBranch,
@@ -97,9 +98,6 @@ const Terminal: React.FC = () => {
                   setIndexFiles(
                     indexFiles.filter((indexFile) => indexFile.fileName === "" )
                   )
-                  console.log(commitMessages)
-                  console.log(repositoryFiles)
-                  console.log(indexFiles)
                   setText("")
                 } else {
                   setAddText(`On branch '${currentBranch}' nothing to commit, working tree clean`)
@@ -115,7 +113,7 @@ const Terminal: React.FC = () => {
                     repositoryFileId: repositoryFile.repositoryFileId
                   })))
                 console.log(repositoryFiles)
-              } else if (text.startsWith("git branch ")){
+              } else if (text.startsWith("git branch ") && afterCommandStr.test(text.substring(11))){
                 if (text.substring(11) === "") {
                   setAddText('Enter a name after "git branch"')
                   setText("")
@@ -135,7 +133,7 @@ const Terminal: React.FC = () => {
                   setAddText(`error: pathspec '${text.substring(13)}' did not match any file(s) known to git`)
                   setText("")
                 }
-              } else if (text.startsWith("touch ")) {
+              } else if (text.startsWith("touch ") && afterCommandStr.test(text.substring(6))) {
                 setWorktreeFiles(worktreeFile => [...worktreeFile,{
                     fileName: text.substring(6),
                     parentBranch: currentBranch,
