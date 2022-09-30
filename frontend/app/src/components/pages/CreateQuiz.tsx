@@ -25,6 +25,8 @@ export const QuizContext = createContext({} as {
   setText: React.Dispatch<React.SetStateAction<string>>
   currentBranch: string
   setCurrentBranch :React.Dispatch<React.SetStateAction<string>>
+  addText: string
+  setAddText :React.Dispatch<React.SetStateAction<string>>
 
   worktreeFiles: {
     fileName: string
@@ -91,6 +93,16 @@ export const QuizContext = createContext({} as {
     branchName: string
     branchId: string
   }[]>>
+
+  commands: {
+    text: string
+    addText: string
+  }[]
+
+  setCommands: React.Dispatch<React.SetStateAction<{
+    text: string
+    addText: string
+  }[]>>
   })
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -112,6 +124,7 @@ const CreateQuiz: React.FC = () => {
   const [quizTitle, setQuizTitle] = useState<string>("")
   const [quizIntroduction, setQuizIntroduction] = useState<string>("")
   const [text, setText] = useState("");
+  const [addText, setAddText] = useState("");
   const [currentBranch, setCurrentBranch] = useState("master");
   const [worktreeFiles, setWorktreeFiles] = useState([{
     fileName: "",
@@ -141,6 +154,10 @@ const CreateQuiz: React.FC = () => {
     branchName: "master",
     branchId: ""
     }])
+  const [commands, setCommands] = useState([{
+    text:"play with git-used-to!!",
+    addText:""
+  }]);
 
   const quizType = "user"
 
@@ -296,12 +313,14 @@ const CreateQuiz: React.FC = () => {
         quizTitle, setQuizTitle,
         quizIntroduction, setQuizIntroduction,
         text, setText,
+        addText, setAddText,
         currentBranch, setCurrentBranch,
         branches, setBranches,
         worktreeFiles, setWorktreeFiles,
         indexFiles, setIndexFiles,
         repositoryFiles, setRepositoryFiles,
-        commitMessages, setCommitMessages
+        commitMessages, setCommitMessages,
+        commands, setCommands
         }}>
       {location.pathname === "/quiz" &&
       <>
