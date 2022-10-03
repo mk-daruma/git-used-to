@@ -15,7 +15,8 @@ const useStyles = makeStyles(() => ({
 
 const InputCommand: React.FC = () => {
   const classes = useStyles()
-  const afterCommandStr = /^[a-zA-Z]+$/
+  const afterCommandBranchName = /^[a-zA-Z]+$/
+  const afterCommandFileNames = (text :string, str :number) => text.substring(str).match(/[^\s]+/g)
 
   const {
     text, setText,
@@ -30,22 +31,25 @@ const InputCommand: React.FC = () => {
   } = useContext(QuizContext)
 
   const gitAdd = (text :string) => {
-    if (worktreeFiles.some(worktreeFile => worktreeFile.fileName.includes(text.substring(8)))){
-    worktreeFiles
-    .filter((worktreeFile) => worktreeFile.fileName === text.substring(8) )
-    .map((worktreeFile) => (
-      (setIndexFiles (indexFile => [...indexFile,{
-        fileName :worktreeFile.fileName,
-        textStatus: worktreeFile.textStatus,
-        parentBranch: currentBranch,
-        indexFileId: ""
-      }]))
-    ))
-    setText("")
-  } else {
-    setAddText(`error: pathspec '${text.substring(8)}' did not match any file(s) known to git`)
-    setText("")
-  }}
+    if (afterCommandFileNames(text, 8)?.every(afterCommandFileName => worktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandFileName))) {
+      afterCommandFileNames(text, 8)?.map((afterCommandFileName) => (
+        worktreeFiles
+        .filter((worktreeFile) => worktreeFile.fileName === afterCommandFileName )
+        .map((worktreeFile) => (
+          (setIndexFiles (indexFile => [...indexFile,{
+            fileName :worktreeFile.fileName,
+            textStatus: worktreeFile.textStatus,
+            parentBranch: currentBranch,
+            indexFileId: ""
+          }]))
+        ))
+      ))
+      setText("")
+    } else {
+      setAddText(`error: pathspec '${text.substring(8)}' did not match any file(s) known to git`)
+      setText("")
+    }
+  }
 
   const gitCommitM = (text :string) => {
     if (indexFiles.some(indexFile => indexFile.fileName !== "" && /[\S+]/.test(text.substring(13)))){
@@ -110,12 +114,14 @@ const InputCommand: React.FC = () => {
   }
 
   const touch = (text :string) => {
-    setWorktreeFiles(worktreeFile => [...worktreeFile,{
-      fileName: text.substring(6),
-      parentBranch: currentBranch,
-      textStatus: "おはようございます",
-      worktreeFileId: ""
-    }])
+    afterCommandFileNames(text, 6)?.map((afterCommandFileName) => (
+      setWorktreeFiles(worktreeFile => [...worktreeFile,{
+        fileName: afterCommandFileName,
+        parentBranch: currentBranch,
+        textStatus: "おはようございます",
+        worktreeFileId: ""
+      }])
+    ))
   setText("")
   }
 
@@ -134,17 +140,17 @@ const InputCommand: React.FC = () => {
                 text,
                 addText
               }])
-              if (text.startsWith("git add ") && afterCommandStr.test(text.substring(8))){
+              if (text.startsWith("git add ")){
                 gitAdd(text)
               } else if (text.startsWith("git commit -m")){
                 gitCommitM(text)
               } else if (text === `git push origin ${currentBranch}`) {
                 gitPush()
-              } else if (text.startsWith("git branch ") && afterCommandStr.test(text.substring(11))){
+              } else if (text.startsWith("git branch ") && afterCommandBranchName.test(text.substring(11))){
                 gitBranch(text)
               } else if (text.startsWith("git checkout ")) {
                 gitCheckout(text)
-              } else if (text.startsWith("touch ") && afterCommandStr.test(text.substring(6))) {
+              } else if (text.startsWith("touch ")) {
                 touch(text)
               } else {
                 setAddText(`zsh: command not found: ${text}`)
