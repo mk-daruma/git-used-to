@@ -113,6 +113,33 @@ const InputCommand: React.FC = () => {
     }
   }
 
+  const gitRm = (text :string) => {
+    if (worktreeFiles.some(worktreeFile => worktreeFile.fileName === text.substring(7)) && indexFiles.some(indexFile => indexFile.fileName === text.substring(7))) {
+      setWorktreeFiles(
+        worktreeFiles.filter((worktreeFile) => worktreeFile.fileName !== text.substring(7))
+      )
+      setIndexFiles(
+        indexFiles.filter((indexFile) => indexFile.fileName !== text.substring(7))
+      )
+      setText("")
+    } else {
+      setAddText(`error: pathspec '${text.substring(7)}' did not match any file(s) known to git`)
+      setText("")
+    }
+  }
+
+  const gitRmCashed = (text :string) => {
+    if (indexFiles.some(indexFile => indexFile.fileName !== text.substring(16))) {
+      setIndexFiles(
+        indexFiles.filter((indexFile) => indexFile.fileName !== text.substring(16))
+      )
+      setText("")
+    } else {
+      setAddText(`error: pathspec '${text.substring(16)}' did not match any file(s) known to git`)
+      setText("")
+    }
+  }
+
   const touch = (text :string) => {
     afterCommandFileNames(text, 6)?.map((afterCommandFileName) => (
       setWorktreeFiles(worktreeFile => [...worktreeFile,{
@@ -152,6 +179,10 @@ const InputCommand: React.FC = () => {
                 gitCheckout(text)
               } else if (text.startsWith("touch ")) {
                 touch(text)
+              } else if (text.startsWith("git rm --cashed")) {
+                gitRmCashed(text)
+              } else if (text.startsWith("git rm")) {
+                gitRm(text)
               } else {
                 setAddText(`zsh: command not found: ${text}`)
                 setText("")
