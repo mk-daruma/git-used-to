@@ -140,6 +140,19 @@ const InputCommand: React.FC = () => {
     }
   }
 
+  const Rm = (text :string) => {
+    if (worktreeFiles.some(worktreeFile => worktreeFile.fileName !== text.substring(3))) {
+      setWorktreeFiles(
+        worktreeFiles
+        .filter((worktreeFile) => (worktreeFile.fileName !== text.substring(3) && worktreeFile.parentBranch === currentBranch))
+      )
+      setText("")
+    } else {
+      setAddText(`error: pathspec '${text.substring(3)}' did not match any file(s) known to git`)
+      setText("")
+    }
+  }
+
   const touch = (text :string) => {
     afterCommandFileNames(text, 6)?.map((afterCommandFileName) => (
       setWorktreeFiles(worktreeFile => [...worktreeFile,{
@@ -183,6 +196,8 @@ const InputCommand: React.FC = () => {
                 gitRmCashed(text)
               } else if (text.startsWith("git rm")) {
                 gitRm(text)
+              } else if (text.startsWith("rm")) {
+                Rm(text)
               } else {
                 setAddText(`zsh: command not found: ${text}`)
                 setText("")
