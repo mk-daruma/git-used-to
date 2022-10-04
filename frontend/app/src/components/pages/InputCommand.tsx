@@ -103,6 +103,63 @@ const InputCommand: React.FC = () => {
     }
   }
 
+  const gitBranchD = (text :string) => {
+    const deleteBranchParentWorktreeFiles = worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch === text.substring(14))
+    const deleteBranchParentIndexFiles = indexFiles.filter((indexFile) => indexFile.parentBranch === text.substring(14))
+    const currentBranchParentWorktreeFiles = worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch === currentBranch)
+    const currentBranchParentIndexFiles = indexFiles.filter((indexFile) => indexFile.parentBranch === currentBranch)
+
+    if (branches.some(branch => branch.branchName === text.substring(14)) && currentBranch === text.substring(14)) {
+      setAddText(`error: Cannot delete the branch '${text.substring(14)}' which you are currently on.`)
+      setText("")
+    } else if (branches.some(branch => branch.branchName === text.substring(14))
+      && currentBranch !== text.substring(14)
+      && deleteBranchParentWorktreeFiles.every(deleteBranchParentWorktreeFiles => currentBranchParentWorktreeFiles.some(worktreeFile => worktreeFile.fileName === deleteBranchParentWorktreeFiles.fileName))
+      && deleteBranchParentIndexFiles.every(deleteBranchParentIndexFile => currentBranchParentIndexFiles.some(worktreeFile => worktreeFile.fileName === deleteBranchParentIndexFile.fileName))
+      ) {
+      setBranches(
+        branches.filter((branch) => branch.branchName !== text.substring(14))
+      )
+      setWorktreeFiles(
+        worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch !== text.substring(14))
+      )
+      setIndexFiles(
+        indexFiles.filter((indexFile) => indexFile.parentBranch !== text.substring(14))
+      )
+      setText("")
+    } else if (branches.some(branch => branch.branchName === text.substring(14))
+      && currentBranch !== text.substring(14)
+      && (!deleteBranchParentWorktreeFiles.every(deleteBranchParentWorktreeFiles => currentBranchParentWorktreeFiles.some(worktreeFile => worktreeFile.fileName === deleteBranchParentWorktreeFiles.fileName)) || !deleteBranchParentIndexFiles.every(deleteBranchParentIndexFile => currentBranchParentIndexFiles.some(worktreeFile => worktreeFile.fileName === deleteBranchParentIndexFile.fileName)))
+    ) {
+      setAddText(`error: The branch '${text.substring(14)}' is not fully merged. If you are sure you want to delete it, run 'git branch -D ${text.substring(14)}'.`)
+      setText("")
+    } else {
+      setAddText(`error: branch '${text.substring(14)}' not found.`)
+      setText("")
+    }
+  }
+
+  const gitBranchForceD = (text :string) => {
+    if (branches.some(branch => branch.branchName === text.substring(14)) && currentBranch === text.substring(14)) {
+      setAddText(`error: Cannot delete the branch '${text.substring(14)}' which you are currently on.`)
+      setText("")
+    } else if (branches.some(branch => branch.branchName === text.substring(14)) && currentBranch !== text.substring(14)) {
+      setBranches(
+        branches.filter((branch) => branch.branchName !== text.substring(14))
+      )
+      setWorktreeFiles(
+        worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch !== text.substring(14))
+      )
+      setIndexFiles(
+        indexFiles.filter((indexFile) => indexFile.parentBranch !== text.substring(14))
+      )
+      setText("")
+    } else {
+      setAddText(`error: branch '${text.substring(14)}' not found.`)
+      setText("")
+    }
+  }
+
   const gitCheckout = (text :string) => {
     if (branches.some(branch => branch.branchName === text.substring(13))) {
       setCurrentBranch(text.substring(13))
@@ -186,6 +243,10 @@ const InputCommand: React.FC = () => {
                 gitCommitM(text)
               } else if (text === `git push origin ${currentBranch}`) {
                 gitPush()
+              } else if (text.startsWith("git branch -D")) {
+                gitBranchForceD(text)
+              } else if (text.startsWith("git branch -d")) {
+                gitBranchD(text)
               } else if (text.startsWith("git branch ") && afterCommandBranchName.test(text.substring(11))){
                 gitBranch(text)
               } else if (text.startsWith("git checkout ")) {
