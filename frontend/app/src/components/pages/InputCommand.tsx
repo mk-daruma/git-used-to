@@ -34,7 +34,7 @@ const InputCommand: React.FC = () => {
     if (afterCommandFileNames(text, 8)?.every(afterCommandFileName => worktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandFileName))) {
       afterCommandFileNames(text, 8)?.map((afterCommandFileName) => (
         worktreeFiles
-        .filter((worktreeFile) => worktreeFile.fileName === afterCommandFileName )
+        .filter((worktreeFile) => worktreeFile.fileName === afterCommandFileName && worktreeFile.parentBranch === currentBranch)
         .map((worktreeFile) => (
           (setIndexFiles (indexFile => [...indexFile,{
             fileName :worktreeFile.fileName,
@@ -116,10 +116,10 @@ const InputCommand: React.FC = () => {
   const gitRm = (text :string) => {
     if (worktreeFiles.some(worktreeFile => worktreeFile.fileName === text.substring(7)) && indexFiles.some(indexFile => indexFile.fileName === text.substring(7))) {
       setWorktreeFiles(
-        worktreeFiles.filter((worktreeFile) => worktreeFile.fileName !== text.substring(7))
+        worktreeFiles.filter((worktreeFile) => (worktreeFile.fileName !== text.substring(7) && worktreeFile.parentBranch === currentBranch))
       )
       setIndexFiles(
-        indexFiles.filter((indexFile) => indexFile.fileName !== text.substring(7))
+        indexFiles.filter((indexFile) => (indexFile.fileName !== text.substring(7) && indexFile.parentBranch === currentBranch))
       )
       setText("")
     } else {
@@ -131,7 +131,7 @@ const InputCommand: React.FC = () => {
   const gitRmCashed = (text :string) => {
     if (indexFiles.some(indexFile => indexFile.fileName !== text.substring(16))) {
       setIndexFiles(
-        indexFiles.filter((indexFile) => indexFile.fileName !== text.substring(16))
+        indexFiles.filter((indexFile) => (indexFile.fileName !== text.substring(16) && indexFile.parentBranch === currentBranch))
       )
       setText("")
     } else {
