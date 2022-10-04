@@ -30,6 +30,11 @@ const InputCommand: React.FC = () => {
     commands, setCommands
   } = useContext(QuizContext)
 
+  const currentBranchParentWorktreeFiles = worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch === currentBranch)
+  const currentBranchParentIndexFiles = indexFiles.filter((indexFile) => indexFile.parentBranch === currentBranch)
+  const exceptCurrentBranchParentWorktreeFiles = worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch !== currentBranch)
+  const exceptCurrentBranchParentIndexFiles = indexFiles.filter((indexFile) => indexFile.parentBranch !== currentBranch)
+
   const gitAdd = (text :string) => {
     if (afterCommandFileNames(text, 8)?.every(afterCommandFileName => worktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandFileName))) {
       afterCommandFileNames(text, 8)?.map((afterCommandFileName) => (
@@ -106,8 +111,6 @@ const InputCommand: React.FC = () => {
   const gitBranchD = (text :string) => {
     const deleteBranchParentWorktreeFiles = worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch === text.substring(14))
     const deleteBranchParentIndexFiles = indexFiles.filter((indexFile) => indexFile.parentBranch === text.substring(14))
-    const currentBranchParentWorktreeFiles = worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch === currentBranch)
-    const currentBranchParentIndexFiles = indexFiles.filter((indexFile) => indexFile.parentBranch === currentBranch)
 
     if (branches.some(branch => branch.branchName === text.substring(14)) && currentBranch === text.substring(14)) {
       setAddText(`error: Cannot delete the branch '${text.substring(14)}' which you are currently on.`)
@@ -173,11 +176,27 @@ const InputCommand: React.FC = () => {
   const gitRm = (text :string) => {
     if (worktreeFiles.some(worktreeFile => worktreeFile.fileName === text.substring(7)) && indexFiles.some(indexFile => indexFile.fileName === text.substring(7))) {
       setWorktreeFiles(
-        worktreeFiles.filter((worktreeFile) => (worktreeFile.fileName !== text.substring(7) && worktreeFile.parentBranch === currentBranch))
+        currentBranchParentWorktreeFiles.filter((worktreeFile) => worktreeFile.fileName !== text.substring(7))
       )
+      exceptCurrentBranchParentWorktreeFiles.map(exceptCurrentBranchParentWorktreeFile => (
+        setWorktreeFiles(worktreeFile => [...worktreeFile,{
+          fileName: exceptCurrentBranchParentWorktreeFile.fileName,
+          parentBranch: exceptCurrentBranchParentWorktreeFile.parentBranch,
+          textStatus: exceptCurrentBranchParentWorktreeFile.textStatus,
+          worktreeFileId: exceptCurrentBranchParentWorktreeFile.worktreeFileId
+        }])
+      ))
       setIndexFiles(
-        indexFiles.filter((indexFile) => (indexFile.fileName !== text.substring(7) && indexFile.parentBranch === currentBranch))
+        currentBranchParentIndexFiles.filter((indexFile) => indexFile.fileName !== text.substring(7))
       )
+      exceptCurrentBranchParentIndexFiles.map(exceptCurrentBranchParentIndexFile => (
+        setIndexFiles(indexFile => [...indexFile,{
+          fileName: exceptCurrentBranchParentIndexFile.fileName,
+          parentBranch: exceptCurrentBranchParentIndexFile.parentBranch,
+          textStatus: exceptCurrentBranchParentIndexFile.textStatus,
+          indexFileId: exceptCurrentBranchParentIndexFile.indexFileId
+        }])
+      ))
       setText("")
     } else {
       setAddText(`error: pathspec '${text.substring(7)}' did not match any file(s) known to git`)
@@ -186,10 +205,18 @@ const InputCommand: React.FC = () => {
   }
 
   const gitRmCashed = (text :string) => {
-    if (indexFiles.some(indexFile => indexFile.fileName !== text.substring(16))) {
+    if (indexFiles.some(indexFile => indexFile.fileName === text.substring(16))) {
       setIndexFiles(
-        indexFiles.filter((indexFile) => (indexFile.fileName !== text.substring(16) && indexFile.parentBranch === currentBranch))
+        currentBranchParentIndexFiles.filter((indexFile) => indexFile.fileName !== text.substring(16))
       )
+      exceptCurrentBranchParentIndexFiles.map(exceptCurrentBranchParentIndexFile => (
+        setIndexFiles(indexFile => [...indexFile,{
+          fileName: exceptCurrentBranchParentIndexFile.fileName,
+          parentBranch: exceptCurrentBranchParentIndexFile.parentBranch,
+          textStatus: exceptCurrentBranchParentIndexFile.textStatus,
+          indexFileId: exceptCurrentBranchParentIndexFile.indexFileId
+        }])
+      ))
       setText("")
     } else {
       setAddText(`error: pathspec '${text.substring(16)}' did not match any file(s) known to git`)
@@ -198,11 +225,18 @@ const InputCommand: React.FC = () => {
   }
 
   const Rm = (text :string) => {
-    if (worktreeFiles.some(worktreeFile => worktreeFile.fileName !== text.substring(3))) {
+    if (worktreeFiles.some(worktreeFile => worktreeFile.fileName === text.substring(3))) {
       setWorktreeFiles(
-        worktreeFiles
-        .filter((worktreeFile) => (worktreeFile.fileName !== text.substring(3) && worktreeFile.parentBranch === currentBranch))
+        currentBranchParentWorktreeFiles.filter((worktreeFile) => worktreeFile.fileName !== text.substring(3))
       )
+      exceptCurrentBranchParentWorktreeFiles.map(exceptCurrentBranchParentWorktreeFile => (
+        setWorktreeFiles(worktreeFile => [...worktreeFile,{
+          fileName: exceptCurrentBranchParentWorktreeFile.fileName,
+          parentBranch: exceptCurrentBranchParentWorktreeFile.parentBranch,
+          textStatus: exceptCurrentBranchParentWorktreeFile.textStatus,
+          worktreeFileId: exceptCurrentBranchParentWorktreeFile.worktreeFileId
+        }])
+      ))
       setText("")
     } else {
       setAddText(`error: pathspec '${text.substring(3)}' did not match any file(s) known to git`)
@@ -219,7 +253,7 @@ const InputCommand: React.FC = () => {
         worktreeFileId: ""
       }])
     ))
-  setText("")
+    setText("")
   }
 
   return(
@@ -264,7 +298,6 @@ const InputCommand: React.FC = () => {
                 setText("")
             }}}}
         />
-
   )
 }
 
