@@ -35,9 +35,9 @@ const InputCommand: React.FC = () => {
   const exceptCurrentBranchParentWorktreeFiles = worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch !== currentBranch)
   const exceptCurrentBranchParentIndexFiles = indexFiles.filter((indexFile) => indexFile.parentBranch !== currentBranch)
 
-  const gitAdd = (text :string) => {
-    if (afterCommandFileNames(text, 8)?.every(afterCommandFileName => worktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandFileName))) {
-      afterCommandFileNames(text, 8)?.map((afterCommandFileName) => (
+  const gitAdd = (text :string, str :number) => {
+    if (afterCommandFileNames(text, str)?.every(afterCommandFileName => worktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandFileName))) {
+      afterCommandFileNames(text, str)?.map((afterCommandFileName) => (
         worktreeFiles
         .filter((worktreeFile) => worktreeFile.fileName === afterCommandFileName && worktreeFile.parentBranch === currentBranch)
         .map((worktreeFile) => (
@@ -51,15 +51,15 @@ const InputCommand: React.FC = () => {
       ))
       setText("")
     } else {
-      setAddText(`error: pathspec '${text.substring(8)}' did not match any file(s) known to git`)
+      setAddText(`error: pathspec '${text.substring(str)}' did not match any file(s) known to git`)
       setText("")
     }
   }
 
-  const gitCommitM = (text :string) => {
-    if (indexFiles.some(indexFile => indexFile.fileName !== "" && /[\S+]/.test(text.substring(13)))){
+  const gitCommitM = (text :string, str :number) => {
+    if (indexFiles.some(indexFile => indexFile.fileName !== "" && /[\S+]/.test(text.substring(str-1)))){
       setCommitMessages(commitMessage => [...commitMessage,{
-        message: text.substring(14),
+        message: text.substring(str),
         parentBranch: currentBranch,
         commitMessageId: ""
       }])
@@ -70,7 +70,7 @@ const InputCommand: React.FC = () => {
           fileName :indexFile.fileName,
           repositoryStatus: "local",
           textStatus: indexFile.textStatus,
-          parentCommitMessage: text.substring(14),
+          parentCommitMessage: text.substring(str),
           repositoryFileId: ""
         }]))
       ))
@@ -95,88 +95,88 @@ const InputCommand: React.FC = () => {
       })))
   }
 
-  const gitBranch = (text :string) => {
-    if (text.substring(11) === "") {
+  const gitBranch = (text :string, str :number) => {
+    if (text.substring(str) === "") {
       setAddText('Enter a name after "git branch"')
       setText("")
     } else {
       setBranches(branches => [...branches,{
-        branchName: text.substring(11),
+        branchName: text.substring(str),
         branchId: ""
       }])
       setText("")
     }
   }
 
-  const gitBranchD = (text :string) => {
-    const deleteBranchParentWorktreeFiles = worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch === text.substring(14))
-    const deleteBranchParentIndexFiles = indexFiles.filter((indexFile) => indexFile.parentBranch === text.substring(14))
+  const gitBranchD = (text :string, str :number) => {
+    const deleteBranchParentWorktreeFiles = worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch === text.substring(str))
+    const deleteBranchParentIndexFiles = indexFiles.filter((indexFile) => indexFile.parentBranch === text.substring(str))
 
-    if (branches.some(branch => branch.branchName === text.substring(14)) && currentBranch === text.substring(14)) {
-      setAddText(`error: Cannot delete the branch '${text.substring(14)}' which you are currently on.`)
+    if (branches.some(branch => branch.branchName === text.substring(str)) && currentBranch === text.substring(str)) {
+      setAddText(`error: Cannot delete the branch '${text.substring(str)}' which you are currently on.`)
       setText("")
-    } else if (branches.some(branch => branch.branchName === text.substring(14))
-      && currentBranch !== text.substring(14)
+    } else if (branches.some(branch => branch.branchName === text.substring(str))
+      && currentBranch !== text.substring(str)
       && deleteBranchParentWorktreeFiles.every(deleteBranchParentWorktreeFiles => currentBranchParentWorktreeFiles.some(worktreeFile => worktreeFile.fileName === deleteBranchParentWorktreeFiles.fileName))
       && deleteBranchParentIndexFiles.every(deleteBranchParentIndexFile => currentBranchParentIndexFiles.some(worktreeFile => worktreeFile.fileName === deleteBranchParentIndexFile.fileName))
       ) {
       setBranches(
-        branches.filter((branch) => branch.branchName !== text.substring(14))
+        branches.filter((branch) => branch.branchName !== text.substring(str))
       )
       setWorktreeFiles(
-        worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch !== text.substring(14))
+        worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch !== text.substring(str))
       )
       setIndexFiles(
-        indexFiles.filter((indexFile) => indexFile.parentBranch !== text.substring(14))
+        indexFiles.filter((indexFile) => indexFile.parentBranch !== text.substring(str))
       )
       setText("")
-    } else if (branches.some(branch => branch.branchName === text.substring(14))
-      && currentBranch !== text.substring(14)
+    } else if (branches.some(branch => branch.branchName === text.substring(str))
+      && currentBranch !== text.substring(str)
       && (!deleteBranchParentWorktreeFiles.every(deleteBranchParentWorktreeFiles => currentBranchParentWorktreeFiles.some(worktreeFile => worktreeFile.fileName === deleteBranchParentWorktreeFiles.fileName)) || !deleteBranchParentIndexFiles.every(deleteBranchParentIndexFile => currentBranchParentIndexFiles.some(worktreeFile => worktreeFile.fileName === deleteBranchParentIndexFile.fileName)))
     ) {
-      setAddText(`error: The branch '${text.substring(14)}' is not fully merged. If you are sure you want to delete it, run 'git branch -D ${text.substring(14)}'.`)
+      setAddText(`error: The branch '${text.substring(str)}' is not fully merged. If you are sure you want to delete it, run 'git branch -D ${text.substring(str)}'.`)
       setText("")
     } else {
-      setAddText(`error: branch '${text.substring(14)}' not found.`)
+      setAddText(`error: branch '${text.substring(str)}' not found.`)
       setText("")
     }
   }
 
-  const gitBranchForceD = (text :string) => {
-    if (branches.some(branch => branch.branchName === text.substring(14)) && currentBranch === text.substring(14)) {
-      setAddText(`error: Cannot delete the branch '${text.substring(14)}' which you are currently on.`)
+  const gitBranchForceD = (text :string, str :number) => {
+    if (branches.some(branch => branch.branchName === text.substring(str)) && currentBranch === text.substring(str)) {
+      setAddText(`error: Cannot delete the branch '${text.substring(str)}' which you are currently on.`)
       setText("")
-    } else if (branches.some(branch => branch.branchName === text.substring(14)) && currentBranch !== text.substring(14)) {
+    } else if (branches.some(branch => branch.branchName === text.substring(str)) && currentBranch !== text.substring(str)) {
       setBranches(
-        branches.filter((branch) => branch.branchName !== text.substring(14))
+        branches.filter((branch) => branch.branchName !== text.substring(str))
       )
       setWorktreeFiles(
-        worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch !== text.substring(14))
+        worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch !== text.substring(str))
       )
       setIndexFiles(
-        indexFiles.filter((indexFile) => indexFile.parentBranch !== text.substring(14))
+        indexFiles.filter((indexFile) => indexFile.parentBranch !== text.substring(str))
       )
       setText("")
     } else {
-      setAddText(`error: branch '${text.substring(14)}' not found.`)
+      setAddText(`error: branch '${text.substring(str)}' not found.`)
       setText("")
     }
   }
 
-  const gitCheckout = (text :string) => {
-    if (branches.some(branch => branch.branchName === text.substring(13))) {
-      setCurrentBranch(text.substring(13))
+  const gitCheckout = (text :string, str :number) => {
+    if (branches.some(branch => branch.branchName === text.substring(str))) {
+      setCurrentBranch(text.substring(str))
       setText("")
     } else {
-      setAddText(`error: pathspec '${text.substring(13)}' did not match any file(s) known to git`)
+      setAddText(`error: pathspec '${text.substring(str)}' did not match any file(s) known to git`)
       setText("")
     }
   }
 
-  const gitRm = (text :string) => {
-    if (worktreeFiles.some(worktreeFile => worktreeFile.fileName === text.substring(7)) && indexFiles.some(indexFile => indexFile.fileName === text.substring(7))) {
+  const gitRm = (text :string, str :number) => {
+    if (worktreeFiles.some(worktreeFile => worktreeFile.fileName === text.substring(str)) && indexFiles.some(indexFile => indexFile.fileName === text.substring(str))) {
       setWorktreeFiles(
-        currentBranchParentWorktreeFiles.filter((worktreeFile) => worktreeFile.fileName !== text.substring(7))
+        currentBranchParentWorktreeFiles.filter((worktreeFile) => worktreeFile.fileName !== text.substring(str))
       )
       exceptCurrentBranchParentWorktreeFiles.map(exceptCurrentBranchParentWorktreeFile => (
         setWorktreeFiles(worktreeFile => [...worktreeFile,{
@@ -187,7 +187,7 @@ const InputCommand: React.FC = () => {
         }])
       ))
       setIndexFiles(
-        currentBranchParentIndexFiles.filter((indexFile) => indexFile.fileName !== text.substring(7))
+        currentBranchParentIndexFiles.filter((indexFile) => indexFile.fileName !== text.substring(str))
       )
       exceptCurrentBranchParentIndexFiles.map(exceptCurrentBranchParentIndexFile => (
         setIndexFiles(indexFile => [...indexFile,{
@@ -199,15 +199,15 @@ const InputCommand: React.FC = () => {
       ))
       setText("")
     } else {
-      setAddText(`error: pathspec '${text.substring(7)}' did not match any file(s) known to git`)
+      setAddText(`error: pathspec '${text.substring(str)}' did not match any file(s) known to git`)
       setText("")
     }
   }
 
-  const gitRmCashed = (text :string) => {
-    if (indexFiles.some(indexFile => indexFile.fileName === text.substring(16))) {
+  const gitRmCashed = (text :string, str :number) => {
+    if (indexFiles.some(indexFile => indexFile.fileName === text.substring(str))) {
       setIndexFiles(
-        currentBranchParentIndexFiles.filter((indexFile) => indexFile.fileName !== text.substring(16))
+        currentBranchParentIndexFiles.filter((indexFile) => indexFile.fileName !== text.substring(str))
       )
       exceptCurrentBranchParentIndexFiles.map(exceptCurrentBranchParentIndexFile => (
         setIndexFiles(indexFile => [...indexFile,{
@@ -219,15 +219,15 @@ const InputCommand: React.FC = () => {
       ))
       setText("")
     } else {
-      setAddText(`error: pathspec '${text.substring(16)}' did not match any file(s) known to git`)
+      setAddText(`error: pathspec '${text.substring(str)}' did not match any file(s) known to git`)
       setText("")
     }
   }
 
-  const Rm = (text :string) => {
-    if (worktreeFiles.some(worktreeFile => worktreeFile.fileName === text.substring(3))) {
+  const Rm = (text :string, str :number) => {
+    if (worktreeFiles.some(worktreeFile => worktreeFile.fileName === text.substring(str))) {
       setWorktreeFiles(
-        currentBranchParentWorktreeFiles.filter((worktreeFile) => worktreeFile.fileName !== text.substring(3))
+        currentBranchParentWorktreeFiles.filter((worktreeFile) => worktreeFile.fileName !== text.substring(str))
       )
       exceptCurrentBranchParentWorktreeFiles.map(exceptCurrentBranchParentWorktreeFile => (
         setWorktreeFiles(worktreeFile => [...worktreeFile,{
@@ -239,14 +239,14 @@ const InputCommand: React.FC = () => {
       ))
       setText("")
     } else {
-      setAddText(`error: pathspec '${text.substring(3)}' did not match any file(s) known to git`)
+      setAddText(`error: pathspec '${text.substring(str)}' did not match any file(s) known to git`)
       setText("")
     }
   }
 
-  const touch = (text :string) => {
-    if (afterCommandFileNames(text, 6)?.every(afterCommandFileName => !currentBranchParentWorktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandFileName))) {
-      afterCommandFileNames(text, 6)?.map((afterCommandFileName) => (
+  const touch = (text :string, str :number) => {
+    if (afterCommandFileNames(text, str)?.every(afterCommandFileName => !currentBranchParentWorktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandFileName))) {
+      afterCommandFileNames(text, str)?.map((afterCommandFileName) => (
         setWorktreeFiles(worktreeFile => [...worktreeFile,{
           fileName: afterCommandFileName,
           parentBranch: currentBranch,
@@ -256,7 +256,7 @@ const InputCommand: React.FC = () => {
       ))
       setText("")
     } else {
-      setAddText(`error: pathspec '${text.substring(6)}' did not match any file(s) known to git`)
+      setAddText(`error: pathspec '${text.substring(str)}' did not match any file(s) known to git`)
       setText("")
     }
   }
@@ -277,27 +277,27 @@ const InputCommand: React.FC = () => {
                 addText
               }])
               if (text.startsWith("git add ")){
-                gitAdd(text)
+                gitAdd(text, 8)
               } else if (text.startsWith("git commit -m")){
-                gitCommitM(text)
+                gitCommitM(text, 14)
               } else if (text === `git push origin ${currentBranch}`) {
                 gitPush()
               } else if (text.startsWith("git branch -D")) {
-                gitBranchForceD(text)
+                gitBranchForceD(text, 14)
               } else if (text.startsWith("git branch -d")) {
-                gitBranchD(text)
+                gitBranchD(text, 14)
               } else if (text.startsWith("git branch ") && afterCommandBranchName.test(text.substring(11))){
-                gitBranch(text)
+                gitBranch(text, 11)
               } else if (text.startsWith("git checkout ")) {
-                gitCheckout(text)
+                gitCheckout(text, 13)
               } else if (text.startsWith("touch ")) {
-                touch(text)
+                touch(text, 6)
               } else if (text.startsWith("git rm --cashed")) {
-                gitRmCashed(text)
+                gitRmCashed(text, 16)
               } else if (text.startsWith("git rm")) {
-                gitRm(text)
+                gitRm(text, 7)
               } else if (text.startsWith("rm")) {
-                Rm(text)
+                Rm(text, 3)
               } else {
                 setAddText(`zsh: command not found: ${text}`)
                 setText("")
