@@ -114,3 +114,15 @@ export interface CreateQuizRepositoryFileData {
   quizRepositoryFileTextStatus: string
   quizCommitMessageId: number
 }
+
+export interface CreateQuizRemoteCommitMessage {
+  quizRemoteCommitMessage: string
+  quizRemoteBranchId: number
+}
+
+export interface CreateQuizRemoteRepositoryFileData {
+  quizRemoteRepositoryFileName: string
+  quizRemoteRepositoryFileStatus: string
+  quizRemoteRepositoryFileTextStatus: string
+  quizRemoteCommitMessageId: number
+}
