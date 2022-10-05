@@ -245,15 +245,20 @@ const InputCommand: React.FC = () => {
   }
 
   const touch = (text :string) => {
-    afterCommandFileNames(text, 6)?.map((afterCommandFileName) => (
-      setWorktreeFiles(worktreeFile => [...worktreeFile,{
-        fileName: afterCommandFileName,
-        parentBranch: currentBranch,
-        textStatus: "おはようございます",
-        worktreeFileId: ""
-      }])
-    ))
-    setText("")
+    if (afterCommandFileNames(text, 6)?.every(afterCommandFileName => !currentBranchParentWorktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandFileName))) {
+      afterCommandFileNames(text, 6)?.map((afterCommandFileName) => (
+        setWorktreeFiles(worktreeFile => [...worktreeFile,{
+          fileName: afterCommandFileName,
+          parentBranch: currentBranch,
+          textStatus: "おはようございます",
+          worktreeFileId: ""
+        }])
+      ))
+      setText("")
+    } else {
+      setAddText(`error: pathspec '${text.substring(6)}' did not match any file(s) known to git`)
+      setText("")
+    }
   }
 
   return(
