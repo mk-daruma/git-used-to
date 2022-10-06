@@ -71,7 +71,6 @@ const InputCommand: React.FC = () => {
       .map((indexFile) => (
         (setRepositoryFiles (repositoryFile => [...repositoryFile,{
           fileName :indexFile.fileName,
-          repositoryStatus: "local",
           textStatus: indexFile.textStatus,
           parentCommitMessage: text.substring(str),
           repositoryFileId: ""
@@ -91,7 +90,6 @@ const InputCommand: React.FC = () => {
     setRepositoryFiles((repositoryFile) => repositoryFile.map(
       (repositoryFile) =>({
         fileName: repositoryFile.fileName,
-        repositoryStatus: "remote",
         textStatus: repositoryFile.textStatus,
         parentCommitMessage: repositoryFile.parentCommitMessage,
         repositoryFileId: repositoryFile.repositoryFileId
