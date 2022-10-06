@@ -41,16 +41,28 @@ const InputCommand: React.FC = () => {
   const gitAdd = (text :string, str :number) => {
     if (afterCommandFileNames(text, str)?.every(afterCommandFileName => worktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandFileName))) {
       afterCommandFileNames(text, str)?.map((afterCommandFileName) => (
-        worktreeFiles
-        .filter((worktreeFile) => worktreeFile.fileName === afterCommandFileName && worktreeFile.parentBranch === currentBranch)
-        .map((worktreeFile) => (
-          (setIndexFiles (indexFile => [...indexFile,{
-            fileName :worktreeFile.fileName,
-            textStatus: worktreeFile.textStatus,
-            parentBranch: currentBranch,
-            indexFileId: ""
-          }]))
-        ))
+        currentBranchParentWorktreeFiles
+        .filter((worktreeFile) =>worktreeFile.fileName === afterCommandFileName)
+        .map((worktreeFile) =>
+          {if (!currentBranchParentIndexFiles.some(IndexFile => IndexFile.fileName === worktreeFile.fileName)){
+            setIndexFiles (indexFile => [...indexFile,{
+              fileName :worktreeFile.fileName,
+              textStatus: worktreeFile.textStatus,
+              parentBranch: currentBranch,
+              indexFileId: ""
+            }])
+          } else if (currentBranchParentIndexFiles.some(IndexFile => IndexFile.fileName === worktreeFile.fileName && IndexFile.textStatus !== worktreeFile.textStatus)) {
+            setIndexFiles (indexFile => indexFile.map((indexFile) =>
+              indexFile.textStatus !== worktreeFile.textStatus && indexFile.fileName === worktreeFile.fileName
+              ? {
+              fileName :worktreeFile.fileName,
+              textStatus: worktreeFile.textStatus,
+              parentBranch: currentBranch,
+              indexFileId: indexFile.indexFileId
+              }
+              : indexFile))
+          }}
+        )
       ))
       setText("")
     } else {
