@@ -38,6 +38,30 @@ const InputCommand: React.FC = () => {
   const exceptCurrentBranchParentWorktreeFiles = worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch !== currentBranch)
   const exceptCurrentBranchParentIndexFiles = indexFiles.filter((indexFile) => indexFile.parentBranch !== currentBranch)
 
+  const gitAddA = () => {
+    currentBranchParentWorktreeFiles.map((worktreeFile) =>
+    {if (!currentBranchParentIndexFiles.some(IndexFile => IndexFile.fileName === worktreeFile.fileName)){
+      setIndexFiles (indexFile => [...indexFile,{
+        fileName :worktreeFile.fileName,
+        textStatus: worktreeFile.textStatus,
+        parentBranch: currentBranch,
+        indexFileId: ""
+      }])
+    } else if (currentBranchParentIndexFiles.some(IndexFile => IndexFile.fileName === worktreeFile.fileName && IndexFile.textStatus !== worktreeFile.textStatus)) {
+      setIndexFiles (indexFile => indexFile.map((indexFile) =>
+        indexFile.textStatus !== worktreeFile.textStatus && indexFile.fileName === worktreeFile.fileName
+        ? {
+        fileName :worktreeFile.fileName,
+        textStatus: worktreeFile.textStatus,
+        parentBranch: currentBranch,
+        indexFileId: indexFile.indexFileId
+        }
+        : indexFile))
+    }}
+    )
+    setText("")
+  }
+
   const gitAdd = (text :string, str :number) => {
     if (afterCommandFileNames(text, str)?.every(afterCommandFileName => worktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandFileName))) {
       afterCommandFileNames(text, str)?.map((afterCommandFileName) => (
@@ -289,7 +313,9 @@ const InputCommand: React.FC = () => {
                 text,
                 addText
               }])
-              if (text.startsWith("git add ")){
+              if (text.startsWith("git add .") || text.startsWith("git add -A")){
+                gitAddA()
+              } else if (text.startsWith("git add ")){
                 gitAdd(text, 8)
               } else if (text.startsWith("git commit -m")){
                 gitCommitM(text, 14)
