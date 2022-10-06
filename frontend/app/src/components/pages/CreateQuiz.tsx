@@ -322,19 +322,18 @@ const CreateQuiz: React.FC = () => {
         commitMessages, setCommitMessages,
         commands, setCommands
         }}>
-      {location.pathname === "/quiz" &&
-      <>
-        <QuizBranchArea />
-        {/* <layout 5つのコンポーネントを横並びにする> */}
-          {/* <QuizWorktreeIndexArea />
-          <QuizCommitMessageArea />
-          <QuizRepositoryArea /> */}
-        {/* </layout> */}
+      <QuizBranchArea />
+    {/* <layout 5つのコンポーネントを横並びにする> */}
+      {/* <QuizWorktreeIndexArea />
+      <QuizCommitMessageArea />
+      <QuizRepositoryArea /> */}
+    {/* </layout> */}
 
-        {/* <layout 2つのコンポーネントを横並びにする> */}
-          <AboutQuiz />
-          <Terminal />
-        {/* </layout> */}
+    {/* <layout 2つのコンポーネントを横並びにする> */}
+      <AboutQuiz />
+      <Terminal />
+    {/* </layout> */}
+      {location.pathname === "/quiz" &&
         <Button
           type="submit"
           variant="contained"
@@ -347,13 +346,8 @@ const CreateQuiz: React.FC = () => {
         >
           Submit
         </Button>
-      </>
       }
       {location.pathname === (`/quiz/edit/${id}`) &&
-      <>
-      <QuizBranchArea />
-      <AboutQuiz />
-      <Terminal />
       <Button
           type="submit"
           variant="contained"
@@ -366,7 +360,8 @@ const CreateQuiz: React.FC = () => {
         >
           Submit
         </Button>
-
+        }
+        <>
         {/* ↓配列の中身確認用 */}
         <p>[branch]</p>
         { branches.map((branch) => (
@@ -393,7 +388,6 @@ const CreateQuiz: React.FC = () => {
           </p>
           ))}
       </>
-      }
     </QuizContext.Provider>
   )
 }
