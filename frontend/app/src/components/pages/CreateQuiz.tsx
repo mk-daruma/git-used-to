@@ -72,6 +72,20 @@ export const QuizContext = createContext({} as {
     repositoryFileId: string
   }[]>>
 
+  remoteRepositoryFiles: {
+    fileName: string
+    textStatus: string
+    parentRemoteCommitMessage: string
+    remoteRepositoryFileId: string
+  }[]
+
+  setRemoteRepositoryFiles:React.Dispatch<React.SetStateAction<{
+    fileName: string
+    textStatus: string
+    parentRemoteCommitMessage: string
+    remoteRepositoryFileId: string
+  }[]>>
+
   commitMessages: {
     message: string
     parentBranch: string
@@ -84,6 +98,18 @@ export const QuizContext = createContext({} as {
     commitMessageId: string
   }[]>>
 
+  remoteCommitMessages: {
+    remoteMessage: string
+    parentRemoteBranch: string
+    remotecommitMessageId: string
+  }[]
+
+  setRemoteCommitMessages: React.Dispatch<React.SetStateAction<{
+    remoteMessage: string
+    parentRemoteBranch: string
+    remotecommitMessageId: string
+  }[]>>
+
   branches: {
     branchName: string
     branchId: string
@@ -92,6 +118,16 @@ export const QuizContext = createContext({} as {
   setBranches: React.Dispatch<React.SetStateAction<{
     branchName: string
     branchId: string
+  }[]>>
+
+  remoteBranches: {
+    remoteBranchName: string
+    remoteBranchId: string
+  }[]
+
+  setRemoteBranches: React.Dispatch<React.SetStateAction<{
+    remoteBranchName: string
+    remoteBranchId: string
   }[]>>
 
   commands: {
@@ -145,14 +181,29 @@ const CreateQuiz: React.FC = () => {
     parentCommitMessage: "",
     repositoryFileId: ""
   }])
+  const [remoteRepositoryFiles, setRemoteRepositoryFiles] = useState([{
+    fileName: "",
+    textStatus: "",
+    parentRemoteCommitMessage: "",
+    remoteRepositoryFileId: ""
+  }])
   const [commitMessages, setCommitMessages] = useState([{
     message: "",
     parentBranch: "",
     commitMessageId: ""
   }])
+  const [remoteCommitMessages, setRemoteCommitMessages] = useState([{
+    remoteMessage: "",
+    parentRemoteBranch: "",
+    remotecommitMessageId: ""
+  }])
   const [branches, setBranches] = useState([{
     branchName: "master",
     branchId: ""
+    }])
+  const [remoteBranches, setRemoteBranches] = useState([{
+    remoteBranchName: "",
+    remoteBranchId: ""
     }])
   const [commands, setCommands] = useState([{
     text:"play with git-used-to!!",
@@ -320,10 +371,13 @@ const CreateQuiz: React.FC = () => {
         addText, setAddText,
         currentBranch, setCurrentBranch,
         branches, setBranches,
+        remoteBranches, setRemoteBranches,
         worktreeFiles, setWorktreeFiles,
         indexFiles, setIndexFiles,
         repositoryFiles, setRepositoryFiles,
+        remoteRepositoryFiles, setRemoteRepositoryFiles,
         commitMessages, setCommitMessages,
+        remoteCommitMessages, setRemoteCommitMessages,
         commands, setCommands
         }}>
       <QuizBranchArea />
