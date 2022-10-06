@@ -189,26 +189,30 @@ const CreateQuiz: React.FC = () => {
 
       const quizBranchRes = await createQuizBranch(quizBranchData)
 
-      const quizWorktreeFileData = quizBranchRes.data.data.map((branch :any) =>(
-        worktreeFiles
-        .filter(worktreeFile => worktreeFile.parentBranch === branch.quizBranchName)
-        .map((filteredWorktreeFile :any) =>({
-          quizWorktreeFileName: filteredWorktreeFile.fileName,
-          quizWorktreeFileTextStatus: filteredWorktreeFile.textStatus,
-          quizBranchId: branch.id
-        }))
-      ))
+      const quizWorktreeFileData = quizBranchRes !== undefined
+      ? quizBranchRes.data.data.map((branch :any) =>(
+          worktreeFiles
+          .filter(worktreeFile => worktreeFile.parentBranch === branch.quizBranchName)
+          .map((filteredWorktreeFile :any) =>({
+            quizWorktreeFileName: filteredWorktreeFile.fileName,
+            quizWorktreeFileTextStatus: filteredWorktreeFile.textStatus,
+            quizBranchId: branch.id
+          }))
+        ))
+      : []
 
       const quizWorktreeFileRes = await createQuizWorktreeFile(quizWorktreeFileData.flat())
 
-      const QuizCommitMessageData = quizBranchRes.data.data.map((branch :any) =>(
-        commitMessages
-        .filter(commitMessage => commitMessage.parentBranch === branch.quizBranchName)
-        .map((commitMessage :any) =>({
-          quizCommitMessage: commitMessage.message,
-          quizBranchId: branch.id
-        }))
-      ))
+      const QuizCommitMessageData = quizBranchRes !== undefined
+      ? quizBranchRes.data.data.map((branch :any) =>(
+          commitMessages
+          .filter(commitMessage => commitMessage.parentBranch === branch.quizBranchName)
+          .map((commitMessage :any) =>({
+            quizCommitMessage: commitMessage.message,
+            quizBranchId: branch.id
+          }))
+        ))
+      : []
 
       const QuizCommitMessageRes = await createQuizCommitMessage(QuizCommitMessageData.flat())
 

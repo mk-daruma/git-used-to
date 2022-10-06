@@ -1,7 +1,10 @@
+// import { CreateQuizBranch } from "interfaces"
 import client from "lib/api/client"
 
 export const createQuizBranch = (data :any) => {
-  return client.post("quiz_branches", data)
+  if (Object.keys(data).length > 0) {
+    return client.post("quiz_branches", data)
+  }
 }
 
 // export const updateQuizBranch = (id: number | undefined | null, data: これから作成) => {
