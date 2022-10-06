@@ -22,10 +22,13 @@ const InputCommand: React.FC = () => {
     text, setText,
     currentBranch, setCurrentBranch,
     branches, setBranches,
+    remoteBranches, setRemoteBranches,
     worktreeFiles, setWorktreeFiles,
     indexFiles, setIndexFiles,
     repositoryFiles, setRepositoryFiles,
+    remoteRepositoryFiles, setRemoteRepositoryFiles,
     commitMessages, setCommitMessages,
+    remoteCommitMessages, setRemoteCommitMessages,
     addText, setAddText,
     commands, setCommands
   } = useContext(QuizContext)
