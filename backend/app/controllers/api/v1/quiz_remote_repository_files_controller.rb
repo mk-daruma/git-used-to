@@ -5,7 +5,7 @@ class Api::V1::QuizRemoteRepositoryFilesController < ApplicationController
   def create
     quiz_remote_repository_file_hash = []
     params.require(:_json).map do |param|
-      quiz_remote_repository_file = QuizRemoteRepositoryFile.new(param.permit(:quiz_remote_repository_file_name, :quiz_remote_repository_file_status, :quiz_remote_repository_file_text_status ,:quiz_remote_commit_message_id).to_h)
+      quiz_remote_repository_file = QuizRemoteRepositoryFile.new(param.permit(:quiz_remote_repository_file_name, :quiz_remote_repository_file_text_status ,:quiz_remote_commit_message_id).to_h)
       if quiz_remote_repository_file.save
         quiz_remote_repository_file_hash.push(quiz_remote_repository_file)
       else
