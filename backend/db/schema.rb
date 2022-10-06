@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_05_062652) do
+ActiveRecord::Schema.define(version: 2022_10_06_035441) do
 
   create_table "quiz_branches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "quiz_branch_name"
@@ -63,7 +63,7 @@ ActiveRecord::Schema.define(version: 2022_10_05_062652) do
 
   create_table "quiz_remote_repository_files", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "quiz_remote_repository_file_name"
-    t.string "quiz_repository_file_text_status"
+    t.string "quiz_remote_repository_file_text_status"
     t.bigint "quiz_remote_commit_message_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
