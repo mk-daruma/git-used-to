@@ -59,6 +59,7 @@ export const QuizContext = createContext({} as {
   repositoryFiles: {
     fileName: string
     textStatus: string
+    parentBranch: string
     parentCommitMessage: string
     repositoryFileId: string
   }[]
@@ -66,6 +67,7 @@ export const QuizContext = createContext({} as {
   setRepositoryFiles:React.Dispatch<React.SetStateAction<{
     fileName: string
     textStatus: string
+    parentBranch: string
     parentCommitMessage: string
     repositoryFileId: string
   }[]>>
@@ -73,6 +75,7 @@ export const QuizContext = createContext({} as {
   remoteRepositoryFiles: {
     fileName: string
     textStatus: string
+    parentRemoteBranch: string
     parentRemoteCommitMessage: string
     remoteRepositoryFileId: string
   }[]
@@ -80,6 +83,7 @@ export const QuizContext = createContext({} as {
   setRemoteRepositoryFiles:React.Dispatch<React.SetStateAction<{
     fileName: string
     textStatus: string
+    parentRemoteBranch: string
     parentRemoteCommitMessage: string
     remoteRepositoryFileId: string
   }[]>>
@@ -175,12 +179,14 @@ const CreateQuiz: React.FC = () => {
   const [repositoryFiles, setRepositoryFiles] = useState([{
     fileName: "",
     textStatus: "",
+    parentBranch: "",
     parentCommitMessage: "",
     repositoryFileId: ""
   }])
   const [remoteRepositoryFiles, setRemoteRepositoryFiles] = useState([{
     fileName: "",
     textStatus: "",
+    parentRemoteBranch: "",
     parentRemoteCommitMessage: "",
     remoteRepositoryFileId: ""
   }])
@@ -267,11 +273,14 @@ const CreateQuiz: React.FC = () => {
       const quizRepositoryFileData = QuizCommitMessageRes !== undefined
       ? QuizCommitMessageRes.data.data.map((commitMessage :any) =>(
         repositoryFiles
-        .filter(repositoryFile => repositoryFile.parentCommitMessage === commitMessage.quizCommitMessage)
+        .filter(repositoryFile =>
+          repositoryFile.parentCommitMessage === commitMessage.quizCommitMessage
+          && repositoryFile.fileName !== "")
         .map((filteredRepositoryFile :any) =>({
           quizRepositoryFileName: filteredRepositoryFile.fileName,
           quizRepositoryFileTextStatus: filteredRepositoryFile.textStatus,
-          quizCommitMessageId: commitMessage.id
+          quizCommitMessageId: commitMessage.id,
+          quizBranchId: commitMessage.quizBranchId
         }))
       ))
       : []
@@ -330,6 +339,7 @@ const CreateQuiz: React.FC = () => {
             setRepositoryFiles(repositoryFile => [...repositoryFile,{
               fileName: data.quizRepositoryFileName,
               textStatus: data.quizRepositoryFileTextStatus,
+              parentBranch: message.quizBranchId,
               parentCommitMessage: message.quizCommitMessage,
               repositoryFileId: data.id
             }])
