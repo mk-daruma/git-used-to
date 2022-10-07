@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_06_035441) do
+ActiveRecord::Schema.define(version: 2022_10_07_045043) do
 
   create_table "quiz_branches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "quiz_branch_name"
@@ -67,6 +67,8 @@ ActiveRecord::Schema.define(version: 2022_10_06_035441) do
     t.bigint "quiz_remote_commit_message_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "quiz_remote_branch_id", null: false
+    t.index ["quiz_remote_branch_id"], name: "index_quiz_remote_repository_files_on_quiz_remote_branch_id"
     t.index ["quiz_remote_commit_message_id"], name: "index_quiz_remote_repository_files_on_remote_commit_message_id"
   end
 
@@ -77,6 +79,8 @@ ActiveRecord::Schema.define(version: 2022_10_06_035441) do
     t.string "quiz_repository_file_text_status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "quiz_branch_id", null: false
+    t.index ["quiz_branch_id"], name: "index_quiz_repository_files_on_quiz_branch_id"
     t.index ["quiz_commit_message_id"], name: "index_quiz_repository_files_on_quiz_commit_message_id"
   end
 
