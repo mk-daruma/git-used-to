@@ -247,6 +247,17 @@ const InputCommand: React.FC = () => {
     }
   }
 
+  const gitCheckoutB = (text :string, str :number) => {
+    if (afterCommandBranchName.test(text.substring(str))) {
+      gitBranch(text, str)
+      setCurrentBranch(text.substring(str))
+      setText("")
+    } else {
+      setAddText(`error: pathspec '${text.substring(str)}' did not match any file(s) known to git`)
+      setText("")
+    }
+  }
+
   const gitRm = (text :string, str :number) => {
     if (worktreeFiles.some(worktreeFile => worktreeFile.fileName === text.substring(str)) && indexFiles.some(indexFile => indexFile.fileName === text.substring(str))) {
       setWorktreeFiles(
@@ -364,6 +375,8 @@ const InputCommand: React.FC = () => {
                 gitBranchD(text, 14)
               } else if (text.startsWith("git branch ") && afterCommandBranchName.test(text.substring(11))){
                 gitBranch(text, 11)
+              } else if (text.startsWith("git checkout -b ")) {
+                gitCheckoutB(text, 16)
               } else if (text.startsWith("git checkout ")) {
                 gitCheckout(text, 13)
               } else if (text.startsWith("touch ")) {
