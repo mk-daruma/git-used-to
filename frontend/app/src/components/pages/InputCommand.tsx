@@ -103,11 +103,14 @@ const InputCommand: React.FC = () => {
         commitMessageId: ""
       }])
       indexFiles
-      .filter((indexFile) => indexFile.fileName !== "")
+      .filter((indexFile) =>
+        indexFile.fileName !== ""
+        && indexFile.parentBranch === currentBranch )
       .map((indexFile) => (
         (setRepositoryFiles (repositoryFile => [...repositoryFile,{
           fileName :indexFile.fileName,
           textStatus: indexFile.textStatus,
+          parentBranch: currentBranch,
           parentCommitMessage: text.substring(str),
           repositoryFileId: ""
         }]))
@@ -127,6 +130,7 @@ const InputCommand: React.FC = () => {
       (repositoryFile) =>({
         fileName: repositoryFile.fileName,
         textStatus: repositoryFile.textStatus,
+        parentBranch: currentBranch,
         parentCommitMessage: repositoryFile.parentCommitMessage,
         repositoryFileId: repositoryFile.repositoryFileId
       })))
