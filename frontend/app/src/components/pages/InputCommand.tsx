@@ -35,6 +35,7 @@ const InputCommand: React.FC = () => {
 
   const currentBranchParentWorktreeFiles = worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch === currentBranch)
   const currentBranchParentIndexFiles = indexFiles.filter((indexFile) => indexFile.parentBranch === currentBranch)
+  const currentBranchParentCommitMessages = commitMessages.filter((commitMessage) => commitMessage.parentBranch === currentBranch)
   const exceptCurrentBranchParentWorktreeFiles = worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch !== currentBranch)
   const exceptCurrentBranchParentIndexFiles = indexFiles.filter((indexFile) => indexFile.parentBranch !== currentBranch)
 
@@ -145,6 +146,38 @@ const InputCommand: React.FC = () => {
         branchName: text.substring(str),
         branchId: ""
       }])
+      currentBranchParentWorktreeFiles.map((worktreeFile) => {
+        setWorktreeFiles(worktreeFiles => [...worktreeFiles,{
+          fileName: worktreeFile.fileName,
+          parentBranch: text.substring(str),
+          textStatus: worktreeFile.textStatus,
+          worktreeFileId: ""
+        }])
+      })
+      currentBranchParentIndexFiles.map((indexFile) => {
+        setIndexFiles(indexFiles => [...indexFiles,{
+          fileName: indexFile.fileName,
+          parentBranch: text.substring(str),
+          textStatus: indexFile.textStatus,
+          indexFileId: ""
+        }])
+      })
+      currentBranchParentCommitMessages.map((commitMessage) => {
+        setCommitMessages(commitMessages => [...commitMessages,{
+          message: commitMessage.message,
+          parentBranch: text.substring(str),
+          commitMessageId: ""
+        }])
+        repositoryFiles.map((repositoryFile) => {
+          setRepositoryFiles(repositoryFiles => [...repositoryFiles,{
+            fileName: repositoryFile.fileName,
+            textStatus: repositoryFile.textStatus,
+            parentBranch: text.substring(str),
+            parentCommitMessage: commitMessage.message,
+            repositoryFileId: ""
+          }])
+        })
+      })
       setText("")
     }
   }
