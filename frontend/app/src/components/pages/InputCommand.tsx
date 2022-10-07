@@ -182,6 +182,64 @@ const InputCommand: React.FC = () => {
     }
   }
 
+  const gitBranchM = (text :string, str :number) => {
+    if (afterCommandFileNames(text, str)?.length === 2
+        && branches.some(branch => branch.branchName === afterCommandFileNames(text, str)![0])) {
+      setBranches(branches.map((branch) =>
+        branch.branchName === afterCommandFileNames(text, str)![0]
+        ? {
+          branchName: afterCommandFileNames(text, str)![1],
+          branchId: branch.branchId
+        }
+        : branch
+        ))
+      setWorktreeFiles(worktreeFiles.map((worktreeFile) =>
+        worktreeFile.parentBranch === afterCommandFileNames(text, str)![0]
+        ? {
+          fileName: worktreeFile.fileName,
+          parentBranch: afterCommandFileNames(text, str)![1],
+          textStatus: worktreeFile.textStatus,
+          worktreeFileId: worktreeFile.worktreeFileId
+        }
+        : worktreeFile
+        ))
+      setIndexFiles(indexFiles.map((indexFile) =>
+        indexFile.parentBranch === afterCommandFileNames(text, str)![0]
+        ? {
+          fileName: indexFile.fileName,
+          parentBranch: afterCommandFileNames(text, str)![1],
+          textStatus: indexFile.textStatus,
+          indexFileId: indexFile.indexFileId
+        }
+        : indexFile
+        ))
+      setCommitMessages(commitMessages.map((commitMessage) =>
+        commitMessage.parentBranch === afterCommandFileNames(text, str)![0]
+        ? {
+          message: commitMessage.message,
+          parentBranch: afterCommandFileNames(text, str)![1],
+          commitMessageId: commitMessage.commitMessageId
+        }
+        : commitMessage
+      ))
+      setRepositoryFiles(repositoryFiles.map((repositoryFile) =>
+        repositoryFile.parentBranch === afterCommandFileNames(text, str)![0]
+        ? {
+          fileName: repositoryFile.fileName,
+          parentBranch: afterCommandFileNames(text, str)![1],
+          parentCommitMessage: repositoryFile.parentCommitMessage,
+          textStatus: repositoryFile.textStatus,
+          repositoryFileId: repositoryFile.repositoryFileId
+        }
+        : repositoryFile
+        ))
+      setText("")
+    } else {
+      setAddText(`error: branch '${text.substring(str)}' not found.`)
+      setText("")
+    }
+  }
+
   const gitBranchD = (text :string, str :number) => {
     const deleteBranchParentWorktreeFiles = worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch === text.substring(str))
     const deleteBranchParentIndexFiles = indexFiles.filter((indexFile) => indexFile.parentBranch === text.substring(str))
@@ -369,6 +427,8 @@ const InputCommand: React.FC = () => {
                 gitCommitM(text, 14)
               } else if (text === `git push origin ${currentBranch}`) {
                 gitPush()
+              } else if (text.startsWith("git branch -m")) {
+                gitBranchM(text, 14)
               } else if (text.startsWith("git branch -D")) {
                 gitBranchForceD(text, 14)
               } else if (text.startsWith("git branch -d")) {
