@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
 const InputCommand: React.FC = () => {
   const classes = useStyles()
   const afterCommandBranchName = /^[a-zA-Z]+$/
-  const afterCommandFileNames = (text :string, str :number) => text.substring(str).match(/[^\s]+/g)
+  const afterCommandMultipleStrings = (text :string, str :number) => text.substring(str).match(/[^\s]+/g)
 
   const {
     text, setText,
@@ -64,10 +64,10 @@ const InputCommand: React.FC = () => {
   }
 
   const gitAdd = (text :string, str :number) => {
-    if (afterCommandFileNames(text, str)?.every(afterCommandFileName => worktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandFileName))) {
-      afterCommandFileNames(text, str)?.map((afterCommandFileName) => (
+    if (afterCommandMultipleStrings(text, str)?.every(afterCommandMultipleString => worktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandMultipleString))) {
+      afterCommandMultipleStrings(text, str)?.map((afterCommandMultipleString) => (
         currentBranchParentWorktreeFiles
-        .filter((worktreeFile) =>worktreeFile.fileName === afterCommandFileName)
+        .filter((worktreeFile) =>worktreeFile.fileName === afterCommandMultipleString)
         .map((worktreeFile) =>
           {if (!currentBranchParentIndexFiles.some(IndexFile => IndexFile.fileName === worktreeFile.fileName)){
             setIndexFiles (indexFile => [...indexFile,{
@@ -183,50 +183,50 @@ const InputCommand: React.FC = () => {
   }
 
   const gitBranchM = (text :string, str :number) => {
-    if (afterCommandFileNames(text, str)?.length === 2
-        && branches.some(branch => branch.branchName === afterCommandFileNames(text, str)![0])) {
+    if (afterCommandMultipleStrings(text, str)?.length === 2
+        && branches.some(branch => branch.branchName === afterCommandMultipleStrings(text, str)![0])) {
       setBranches(branches.map((branch) =>
-        branch.branchName === afterCommandFileNames(text, str)![0]
+        branch.branchName === afterCommandMultipleStrings(text, str)![0]
         ? {
-          branchName: afterCommandFileNames(text, str)![1],
+          branchName: afterCommandMultipleStrings(text, str)![1],
           branchId: branch.branchId
         }
         : branch
         ))
       setWorktreeFiles(worktreeFiles.map((worktreeFile) =>
-        worktreeFile.parentBranch === afterCommandFileNames(text, str)![0]
+        worktreeFile.parentBranch === afterCommandMultipleStrings(text, str)![0]
         ? {
           fileName: worktreeFile.fileName,
-          parentBranch: afterCommandFileNames(text, str)![1],
+          parentBranch: afterCommandMultipleStrings(text, str)![1],
           textStatus: worktreeFile.textStatus,
           worktreeFileId: worktreeFile.worktreeFileId
         }
         : worktreeFile
         ))
       setIndexFiles(indexFiles.map((indexFile) =>
-        indexFile.parentBranch === afterCommandFileNames(text, str)![0]
+        indexFile.parentBranch === afterCommandMultipleStrings(text, str)![0]
         ? {
           fileName: indexFile.fileName,
-          parentBranch: afterCommandFileNames(text, str)![1],
+          parentBranch: afterCommandMultipleStrings(text, str)![1],
           textStatus: indexFile.textStatus,
           indexFileId: indexFile.indexFileId
         }
         : indexFile
         ))
       setCommitMessages(commitMessages.map((commitMessage) =>
-        commitMessage.parentBranch === afterCommandFileNames(text, str)![0]
+        commitMessage.parentBranch === afterCommandMultipleStrings(text, str)![0]
         ? {
           message: commitMessage.message,
-          parentBranch: afterCommandFileNames(text, str)![1],
+          parentBranch: afterCommandMultipleStrings(text, str)![1],
           commitMessageId: commitMessage.commitMessageId
         }
         : commitMessage
       ))
       setRepositoryFiles(repositoryFiles.map((repositoryFile) =>
-        repositoryFile.parentBranch === afterCommandFileNames(text, str)![0]
+        repositoryFile.parentBranch === afterCommandMultipleStrings(text, str)![0]
         ? {
           fileName: repositoryFile.fileName,
-          parentBranch: afterCommandFileNames(text, str)![1],
+          parentBranch: afterCommandMultipleStrings(text, str)![1],
           parentCommitMessage: repositoryFile.parentCommitMessage,
           textStatus: repositoryFile.textStatus,
           repositoryFileId: repositoryFile.repositoryFileId
@@ -388,10 +388,10 @@ const InputCommand: React.FC = () => {
   }
 
   const touch = (text :string, str :number) => {
-    if (afterCommandFileNames(text, str)?.every(afterCommandFileName => !currentBranchParentWorktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandFileName))) {
-      afterCommandFileNames(text, str)?.map((afterCommandFileName) => (
+    if (afterCommandMultipleStrings(text, str)?.every(afterCommandMultipleString => !currentBranchParentWorktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandMultipleString))) {
+      afterCommandMultipleStrings(text, str)?.map((afterCommandMultipleString) => (
         setWorktreeFiles(worktreeFile => [...worktreeFile,{
-          fileName: afterCommandFileName,
+          fileName: afterCommandMultipleString,
           parentBranch: currentBranch,
           textStatus: "おはようございます",
           worktreeFileId: ""
