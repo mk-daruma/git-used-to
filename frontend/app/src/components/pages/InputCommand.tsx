@@ -37,6 +37,7 @@ const InputCommand: React.FC = () => {
   const currentBranchParentWorktreeFiles = worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch === currentBranch)
   const currentBranchParentIndexFiles = indexFiles.filter((indexFile) => indexFile.parentBranch === currentBranch)
   const currentBranchParentCommitMessages = commitMessages.filter((commitMessage) => commitMessage.parentBranch === currentBranch)
+  const currentBranchParentRepositoryFiles = repositoryFiles.filter((repositoryFile) => repositoryFile.parentBranch === currentBranch)
   const exceptCurrentBranchParentWorktreeFiles = worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch !== currentBranch)
   const exceptCurrentBranchParentIndexFiles = indexFiles.filter((indexFile) => indexFile.parentBranch !== currentBranch)
   const currentBranchLastestThreeCommits = commitMessages.filter((commitMessage) => commitMessage.parentBranch === currentBranch).slice(-3)
@@ -100,33 +101,52 @@ const InputCommand: React.FC = () => {
 
   const gitCommitM = (text :string, str :number) => {
     if (indexFiles.some(indexFile => indexFile.fileName !== "" && /[\S+]/.test(text.substring(str-1)))){
-      setCommitMessages(commitMessage => [...commitMessage,{
-        message: text.substring(str),
-        parentBranch: currentBranch,
-        commitMessageId: ""
-      }])
-      indexFiles
-      .filter((indexFile) =>
-        indexFile.fileName !== ""
-        && indexFile.parentBranch === currentBranch )
-      .map((indexFile) => (
-        (setRepositoryFiles (repositoryFile => [...repositoryFile,{
-          fileName :indexFile.fileName,
-          textStatus: indexFile.textStatus,
-          parentBranch: currentBranch,
-          parentCommitMessage: text.substring(str),
-          repositoryFileId: ""
-        }])),
-        (setFileHistoryForCansellCommit (historyFile => [...historyFile,{
-          fileName :indexFile.fileName,
-          textStatus: indexFile.textStatus,
-          parentBranch: currentBranch,
-          parentCommitMessage: text.substring(str),
-          historyFileId: ""
-        }]))
-      ))
-      setIndexFiles(
-        indexFiles.filter((indexFile) => indexFile.fileName === "" )
+      currentBranchParentIndexFiles
+      .filter((indexFile) => indexFile.fileName !== "")
+      .map((indexFile) =>
+        {if (currentBranchParentIndexFiles.every(currentBranchParentIndexFiles =>
+              currentBranchParentRepositoryFiles.some(currentBranchParentRepositoryFile =>
+                currentBranchParentIndexFiles.fileName === currentBranchParentRepositoryFile.fileName
+                && currentBranchParentIndexFiles.textStatus === currentBranchParentRepositoryFile.textStatus)))
+        {
+          setAddText(`On branch '${currentBranch}' nothing to commit, working tree clean`)
+        } else if (!currentBranchParentRepositoryFiles.some((repositoryFile) => indexFile.fileName === repositoryFile.fileName)){
+          setCommitMessages(commitMessage => [...commitMessage,{
+            message: text.substring(str),
+            parentBranch: currentBranch,
+            commitMessageId: ""
+          }])
+          setRepositoryFiles (repositoryFile => [...repositoryFile,{
+            fileName :indexFile.fileName,
+            textStatus: indexFile.textStatus,
+            parentBranch: currentBranch,
+            parentCommitMessage: text.substring(str),
+            repositoryFileId: ""
+          }])
+          setFileHistoryForCansellCommit (historyFile => [...historyFile,{
+            fileName :indexFile.fileName,
+            textStatus: indexFile.textStatus,
+            parentBranch: currentBranch,
+            parentCommitMessage: text.substring(str),
+            historyFileId: ""
+          }])
+        } else if (currentBranchParentRepositoryFiles.some(repositoryFile => repositoryFile.fileName === indexFile.fileName && repositoryFile.textStatus !== indexFile.textStatus)) {
+          setCommitMessages(commitMessage => [...commitMessage,{
+            message: text.substring(str),
+            parentBranch: currentBranch,
+            commitMessageId: ""
+          }])
+          setRepositoryFiles (repositoryFile => repositoryFile.map((repositoryFile) =>
+            indexFile.textStatus !== repositoryFile.textStatus && indexFile.fileName === repositoryFile.fileName
+            ? {
+              fileName: indexFile.fileName,
+              textStatus: indexFile.textStatus,
+              parentBranch: currentBranch,
+              parentCommitMessage: text.substring(str),
+              repositoryFileId: ""
+              }
+            : repositoryFile))
+        }}
       )
       setText("")
     } else {
