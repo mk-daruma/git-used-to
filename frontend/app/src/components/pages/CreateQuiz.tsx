@@ -72,6 +72,22 @@ export const QuizContext = createContext({} as {
     repositoryFileId: string
   }[]>>
 
+  fileHistoryForCansellCommit: {
+    fileName: string
+    textStatus: string
+    parentBranch: string
+    parentCommitMessage: string
+    historyFileId: string
+  }[]
+
+  setFileHistoryForCansellCommit:React.Dispatch<React.SetStateAction<{
+    fileName: string
+    textStatus: string
+    parentBranch: string
+    parentCommitMessage: string
+    historyFileId: string
+  }[]>>
+
   remoteRepositoryFiles: {
     fileName: string
     textStatus: string
@@ -182,6 +198,13 @@ const CreateQuiz: React.FC = () => {
     parentBranch: "",
     parentCommitMessage: "",
     repositoryFileId: ""
+  }])
+  const [fileHistoryForCansellCommit, setFileHistoryForCansellCommit] = useState([{
+    fileName: "",
+    textStatus: "",
+    parentBranch: "",
+    parentCommitMessage: "",
+    historyFileId: ""
   }])
   const [remoteRepositoryFiles, setRemoteRepositoryFiles] = useState([{
     fileName: "",
@@ -365,7 +388,8 @@ const CreateQuiz: React.FC = () => {
     console.log("indexFiles", indexFiles)
     console.log("branches", branches)
     console.log("currentBranch", currentBranch)
-  },[commitMessages, indexFiles, repositoryFiles, worktreeFiles, branches, currentBranch])
+    console.log("fileHistoryForCansellCommit", fileHistoryForCansellCommit)
+  },[commitMessages, indexFiles, repositoryFiles, worktreeFiles, branches, currentBranch, fileHistoryForCansellCommit])
 
   return(
     <QuizContext.Provider
@@ -381,6 +405,7 @@ const CreateQuiz: React.FC = () => {
         indexFiles, setIndexFiles,
         repositoryFiles, setRepositoryFiles,
         remoteRepositoryFiles, setRemoteRepositoryFiles,
+        fileHistoryForCansellCommit, setFileHistoryForCansellCommit,
         commitMessages, setCommitMessages,
         remoteCommitMessages, setRemoteCommitMessages,
         commands, setCommands

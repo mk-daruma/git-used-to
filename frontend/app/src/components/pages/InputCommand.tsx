@@ -26,6 +26,7 @@ const InputCommand: React.FC = () => {
     worktreeFiles, setWorktreeFiles,
     indexFiles, setIndexFiles,
     repositoryFiles, setRepositoryFiles,
+    fileHistoryForCansellCommit, setFileHistoryForCansellCommit,
     remoteRepositoryFiles, setRemoteRepositoryFiles,
     commitMessages, setCommitMessages,
     remoteCommitMessages, setRemoteCommitMessages,
@@ -38,6 +39,7 @@ const InputCommand: React.FC = () => {
   const currentBranchParentCommitMessages = commitMessages.filter((commitMessage) => commitMessage.parentBranch === currentBranch)
   const exceptCurrentBranchParentWorktreeFiles = worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch !== currentBranch)
   const exceptCurrentBranchParentIndexFiles = indexFiles.filter((indexFile) => indexFile.parentBranch !== currentBranch)
+  const currentBranchLastestThreeCommits = commitMessages.filter((commitMessage) => commitMessage.parentBranch === currentBranch).slice(-3)
 
   const gitAddA = () => {
     currentBranchParentWorktreeFiles.map((worktreeFile) =>
@@ -114,6 +116,13 @@ const InputCommand: React.FC = () => {
           parentBranch: currentBranch,
           parentCommitMessage: text.substring(str),
           repositoryFileId: ""
+        }])),
+        (setFileHistoryForCansellCommit (historyFile => [...historyFile,{
+          fileName :indexFile.fileName,
+          textStatus: indexFile.textStatus,
+          parentBranch: currentBranch,
+          parentCommitMessage: text.substring(str),
+          historyFileId: ""
         }]))
       ))
       setIndexFiles(
