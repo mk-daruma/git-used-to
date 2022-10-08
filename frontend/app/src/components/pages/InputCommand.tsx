@@ -126,6 +126,21 @@ const InputCommand: React.FC = () => {
     }
   }
 
+  const gitCommitAmend = (text :string, str :number) => {
+    if (commitMessages[commitMessages.length -1].message !== "") {
+      commitMessages[commitMessages.length -1] =
+      {
+        message: text.substring(str),
+        parentBranch: currentBranch,
+        commitMessageId: ""
+      }
+    setText("")
+    } else {
+      setAddText('error: commit message not found.')
+      setText("")
+    }
+  }
+
   const gitPush = () => {
     setRepositoryFiles((repositoryFile) => repositoryFile.map(
       (repositoryFile) =>({
@@ -423,6 +438,8 @@ const InputCommand: React.FC = () => {
                 gitAddA()
               } else if (text.startsWith("git add ")){
                 gitAdd(text, 8)
+              } else if (text.startsWith("git commit --amend")){
+                gitCommitAmend(text, 19)
               } else if (text.startsWith("git commit -m")){
                 gitCommitM(text, 14)
               } else if (text === `git push origin ${currentBranch}`) {
