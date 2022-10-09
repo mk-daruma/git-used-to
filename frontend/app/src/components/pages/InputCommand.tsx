@@ -63,7 +63,6 @@ const InputCommand: React.FC = () => {
         : indexFile))
     }}
     )
-    setText("")
   }
 
   const gitAdd = (text :string, str :number) => {
@@ -92,10 +91,8 @@ const InputCommand: React.FC = () => {
           }}
         )
       ))
-      setText("")
     } else {
       setAddText(`error: pathspec '${text.substring(str)}' did not match any file(s) known to git`)
-      setText("")
     }
   }
 
@@ -148,10 +145,8 @@ const InputCommand: React.FC = () => {
             : repositoryFile))
         }}
       )
-      setText("")
     } else {
       setAddText(`On branch '${currentBranch}' nothing to commit, working tree clean`)
-      setText("")
     }
   }
 
@@ -163,10 +158,8 @@ const InputCommand: React.FC = () => {
         parentBranch: currentBranch,
         commitMessageId: ""
       }
-    setText("")
     } else {
       setAddText('error: commit message not found.')
-      setText("")
     }
   }
 
@@ -184,7 +177,6 @@ const InputCommand: React.FC = () => {
   const gitBranch = (text :string, str :number) => {
     if (text.substring(str) === "") {
       setAddText('Enter a name after "git branch"')
-      setText("")
     } else {
       setBranches(branches => [...branches,{
         branchName: text.substring(str),
@@ -212,17 +204,16 @@ const InputCommand: React.FC = () => {
           parentBranch: text.substring(str),
           commitMessageId: ""
         }])
-        repositoryFiles.map((repositoryFile) => {
-          setRepositoryFiles(repositoryFiles => [...repositoryFiles,{
-            fileName: repositoryFile.fileName,
-            textStatus: repositoryFile.textStatus,
-            parentBranch: text.substring(str),
-            parentCommitMessage: commitMessage.message,
-            repositoryFileId: ""
-          }])
-        })
       })
-      setText("")
+      currentBranchParentRepositoryFiles.map((repositoryFile) => {
+        setRepositoryFiles(repositoryFiles => [...repositoryFiles,{
+          fileName: repositoryFile.fileName,
+          textStatus: repositoryFile.textStatus,
+          parentBranch: text.substring(str),
+          parentCommitMessage: repositoryFile.parentCommitMessage,
+          repositoryFileId: ""
+        }])
+      })
     }
   }
 
@@ -277,10 +268,8 @@ const InputCommand: React.FC = () => {
         }
         : repositoryFile
         ))
-      setText("")
     } else {
       setAddText(`error: branch '${text.substring(str)}' not found.`)
-      setText("")
     }
   }
 
@@ -290,7 +279,6 @@ const InputCommand: React.FC = () => {
 
     if (branches.some(branch => branch.branchName === text.substring(str)) && currentBranch === text.substring(str)) {
       setAddText(`error: Cannot delete the branch '${text.substring(str)}' which you are currently on.`)
-      setText("")
     } else if (branches.some(branch => branch.branchName === text.substring(str))
       && currentBranch !== text.substring(str)
       && deleteBranchParentWorktreeFiles.every(deleteBranchParentWorktreeFiles => currentBranchParentWorktreeFiles.some(worktreeFile => worktreeFile.fileName === deleteBranchParentWorktreeFiles.fileName))
@@ -305,23 +293,19 @@ const InputCommand: React.FC = () => {
       setIndexFiles(
         indexFiles.filter((indexFile) => indexFile.parentBranch !== text.substring(str))
       )
-      setText("")
     } else if (branches.some(branch => branch.branchName === text.substring(str))
       && currentBranch !== text.substring(str)
       && (!deleteBranchParentWorktreeFiles.every(deleteBranchParentWorktreeFiles => currentBranchParentWorktreeFiles.some(worktreeFile => worktreeFile.fileName === deleteBranchParentWorktreeFiles.fileName)) || !deleteBranchParentIndexFiles.every(deleteBranchParentIndexFile => currentBranchParentIndexFiles.some(worktreeFile => worktreeFile.fileName === deleteBranchParentIndexFile.fileName)))
     ) {
       setAddText(`error: The branch '${text.substring(str)}' is not fully merged. If you are sure you want to delete it, run 'git branch -D ${text.substring(str)}'.`)
-      setText("")
     } else {
       setAddText(`error: branch '${text.substring(str)}' not found.`)
-      setText("")
     }
   }
 
   const gitBranchForceD = (text :string, str :number) => {
     if (branches.some(branch => branch.branchName === text.substring(str)) && currentBranch === text.substring(str)) {
       setAddText(`error: Cannot delete the branch '${text.substring(str)}' which you are currently on.`)
-      setText("")
     } else if (branches.some(branch => branch.branchName === text.substring(str)) && currentBranch !== text.substring(str)) {
       setBranches(
         branches.filter((branch) => branch.branchName !== text.substring(str))
@@ -332,20 +316,16 @@ const InputCommand: React.FC = () => {
       setIndexFiles(
         indexFiles.filter((indexFile) => indexFile.parentBranch !== text.substring(str))
       )
-      setText("")
     } else {
       setAddText(`error: branch '${text.substring(str)}' not found.`)
-      setText("")
     }
   }
 
   const gitCheckout = (text :string, str :number) => {
     if (branches.some(branch => branch.branchName === text.substring(str))) {
       setCurrentBranch(text.substring(str))
-      setText("")
     } else {
       setAddText(`error: pathspec '${text.substring(str)}' did not match any file(s) known to git`)
-      setText("")
     }
   }
 
@@ -353,10 +333,8 @@ const InputCommand: React.FC = () => {
     if (afterCommandBranchName.test(text.substring(str))) {
       gitBranch(text, str)
       setCurrentBranch(text.substring(str))
-      setText("")
     } else {
       setAddText(`error: pathspec '${text.substring(str)}' did not match any file(s) known to git`)
-      setText("")
     }
   }
 
@@ -380,7 +358,6 @@ const InputCommand: React.FC = () => {
           : indexFile
           )))
     console.log("git reset")
-    setText("")
   }
 
   const gitRm = (text :string, str :number) => {
@@ -407,10 +384,8 @@ const InputCommand: React.FC = () => {
           indexFileId: exceptCurrentBranchParentIndexFile.indexFileId
         }])
       ))
-      setText("")
     } else {
       setAddText(`error: pathspec '${text.substring(str)}' did not match any file(s) known to git`)
-      setText("")
     }
   }
 
@@ -427,10 +402,8 @@ const InputCommand: React.FC = () => {
           indexFileId: exceptCurrentBranchParentIndexFile.indexFileId
         }])
       ))
-      setText("")
     } else {
       setAddText(`error: pathspec '${text.substring(str)}' did not match any file(s) known to git`)
-      setText("")
     }
   }
 
@@ -447,10 +420,8 @@ const InputCommand: React.FC = () => {
           worktreeFileId: exceptCurrentBranchParentWorktreeFile.worktreeFileId
         }])
       ))
-      setText("")
     } else {
       setAddText(`error: pathspec '${text.substring(str)}' did not match any file(s) known to git`)
-      setText("")
     }
   }
 
@@ -464,10 +435,8 @@ const InputCommand: React.FC = () => {
           worktreeFileId: ""
         }])
       ))
-      setText("")
     } else {
       setAddText(`error: pathspec '${text.substring(str)}' did not match any file(s) known to git`)
-      setText("")
     }
   }
 
@@ -520,8 +489,9 @@ const InputCommand: React.FC = () => {
                 Rm(text, 3)
               } else {
                 setAddText(`zsh: command not found: ${text}`)
-                setText("")
-            }}}}
+            }
+            setText("")
+          }}}
         />
   )
 }
