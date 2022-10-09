@@ -360,6 +360,29 @@ const InputCommand: React.FC = () => {
     }
   }
 
+  const gitReset = () => {
+    setIndexFiles(
+      indexFiles.filter(indexFile => currentBranchParentRepositoryFiles.some(repositoryFile => repositoryFile.fileName === indexFile.fileName))
+    )
+    currentBranchParentRepositoryFiles.map(repositoryFile =>
+      setIndexFiles(
+        indexFiles
+        .map((indexFile) =>
+          indexFile.parentBranch === currentBranch
+          && repositoryFile.fileName === indexFile.fileName
+          && repositoryFile.textStatus !== indexFile.textStatus
+          ?{
+            fileName: indexFile.fileName,
+            parentBranch: indexFile.parentBranch,
+            textStatus: repositoryFile.textStatus,
+            indexFileId: indexFile.indexFileId
+          }
+          : indexFile
+          )))
+    console.log("git reset")
+    setText("")
+  }
+
   const gitRm = (text :string, str :number) => {
     if (worktreeFiles.some(worktreeFile => worktreeFile.fileName === text.substring(str)) && indexFiles.some(indexFile => indexFile.fileName === text.substring(str))) {
       setWorktreeFiles(
@@ -489,6 +512,8 @@ const InputCommand: React.FC = () => {
                 touch(text, 6)
               } else if (text.startsWith("git rm --cashed")) {
                 gitRmCashed(text, 16)
+              } else if (text.startsWith("git reset")) {
+                gitReset()
               } else if (text.startsWith("git rm")) {
                 gitRm(text, 7)
               } else if (text.startsWith("rm")) {
