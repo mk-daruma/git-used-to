@@ -72,19 +72,23 @@ export const QuizContext = createContext({} as {
     repositoryFileId: string
   }[]>>
 
-  fileHistoryForCansellCommit: {
+  fileHistoryForCansellCommits: {
     fileName: string
     textStatus: string
+    pastTextStatus: string
     parentBranch: string
     parentCommitMessage: string
+    parentPastCommitMessage: string
     historyFileId: string
   }[]
 
-  setFileHistoryForCansellCommit:React.Dispatch<React.SetStateAction<{
+  setFileHistoryForCansellCommits:React.Dispatch<React.SetStateAction<{
     fileName: string
     textStatus: string
+    pastTextStatus: string
     parentBranch: string
     parentCommitMessage: string
+    parentPastCommitMessage: string
     historyFileId: string
   }[]>>
 
@@ -199,11 +203,13 @@ const CreateQuiz: React.FC = () => {
     parentCommitMessage: "",
     repositoryFileId: ""
   }])
-  const [fileHistoryForCansellCommit, setFileHistoryForCansellCommit] = useState([{
+  const [fileHistoryForCansellCommits, setFileHistoryForCansellCommits] = useState([{
     fileName: "",
     textStatus: "",
+    pastTextStatus: "",
     parentBranch: "",
     parentCommitMessage: "",
+    parentPastCommitMessage: "",
     historyFileId: ""
   }])
   const [remoteRepositoryFiles, setRemoteRepositoryFiles] = useState([{
@@ -388,8 +394,8 @@ const CreateQuiz: React.FC = () => {
     console.log("indexFiles", indexFiles)
     console.log("branches", branches)
     console.log("currentBranch", currentBranch)
-    console.log("fileHistoryForCansellCommit", fileHistoryForCansellCommit)
-  },[commitMessages, indexFiles, repositoryFiles, worktreeFiles, branches, currentBranch, fileHistoryForCansellCommit])
+    console.log("fileHistoryForCansellCommit", fileHistoryForCansellCommits)
+  },[commitMessages, indexFiles, repositoryFiles, worktreeFiles, branches, currentBranch, fileHistoryForCansellCommits])
 
   return(
     <QuizContext.Provider
@@ -405,7 +411,7 @@ const CreateQuiz: React.FC = () => {
         indexFiles, setIndexFiles,
         repositoryFiles, setRepositoryFiles,
         remoteRepositoryFiles, setRemoteRepositoryFiles,
-        fileHistoryForCansellCommit, setFileHistoryForCansellCommit,
+        fileHistoryForCansellCommits, setFileHistoryForCansellCommits,
         commitMessages, setCommitMessages,
         remoteCommitMessages, setRemoteCommitMessages,
         commands, setCommands
