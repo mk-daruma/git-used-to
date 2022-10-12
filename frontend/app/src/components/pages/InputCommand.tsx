@@ -361,13 +361,12 @@ const InputCommand: React.FC = () => {
     }
   }
 
-  //何かがおかしい。⇨修正点：setIndexFiles(をsetIndexFiles(indexFile =>にした。後で順番を合わせてcommitする
   const gitReset = () => {
     setIndexFiles(
       indexFiles.filter(indexFile => repositoryFiles.some(repositoryFile =>
         repositoryFile.fileName === indexFile.fileName
         && repositoryFile.parentBranch === indexFile.parentBranch)
-))
+        ))
     currentBranchParentRepositoryFiles.map(repositoryFile =>
       setIndexFiles(indexFile =>
         indexFile
@@ -516,7 +515,9 @@ const InputCommand: React.FC = () => {
 
   const touch = (text :string, str :number) => {
     if (afterCommandMultipleStrings(text, str)?.every(afterCommandMultipleString => !currentBranchParentWorktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandMultipleString))) {
-      afterCommandMultipleStrings(text, str)?.map((afterCommandMultipleString) => (
+      const RemoveDuplicatesAfterCommandMultipleStrings = Array.from(new Set(afterCommandMultipleStrings(text, str)))
+
+      RemoveDuplicatesAfterCommandMultipleStrings.map((afterCommandMultipleString) => (
         setWorktreeFiles(worktreeFile => [...worktreeFile,{
           fileName: afterCommandMultipleString,
           parentBranch: currentBranch,
