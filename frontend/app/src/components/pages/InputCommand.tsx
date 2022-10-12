@@ -168,8 +168,7 @@ const InputCommand: React.FC = () => {
       setCommitMessages(commitMessages.filter((commitMessage) =>commitMessage.parentBranch !== currentBranch))
       currentBranchParentCommitMessages[currentBranchParentCommitMessages.length -1] = {
         message: text.substring(str),
-        parentBranch: currentBranch,
-        commitMessageId: ""
+        parentBranch: currentBranch,commitMessageId: ""
       }
       currentBranchParentCommitMessages.map((commitMessage) => {
         setCommitMessages(commitMessages => [...commitMessages,{
@@ -423,19 +422,20 @@ const InputCommand: React.FC = () => {
           }
           : indexFile
           )))
-    console.log("git reset")
   }
 
-  const gitResetSoft = (text :string, str :number) => {
+  const gitResetOption = (text :string, str :number, option:string) => {
     const resetNunber = Number(text.substring(str))
     const resetedCommitMessages :any = []
     const resetedHistoryFiles :any = []
     const forResetCurrentBranchCommitMessages = commitMessages.filter((commitMessage) => commitMessage.parentBranch === currentBranch)
     if (forResetCurrentBranchCommitMessages[forResetCurrentBranchCommitMessages.length -1].message) {
       for (let i = 0; i < resetNunber; i++){
-        fileHistoryForCansellCommits
-        .filter(fileHistoryForCansellCommit => fileHistoryForCansellCommit.parentCommitMessage === forResetCurrentBranchCommitMessages[forResetCurrentBranchCommitMessages.length -1].message)
-        .map(fileHistoryForCansellCommit =>
+        const lastestFileHistoryForCansellCommits = fileHistoryForCansellCommits.filter(fileHistory =>
+          fileHistory.parentCommitMessage === forResetCurrentBranchCommitMessages[forResetCurrentBranchCommitMessages.length -1].message
+        )
+
+        lastestFileHistoryForCansellCommits.map(fileHistoryForCansellCommit =>
           repositoryFiles.map((repositoryFile) =>
           {if (fileHistoryForCansellCommit.parentCommitMessage === repositoryFile.parentCommitMessage
               && repositoryFile.parentBranch === currentBranch
@@ -444,9 +444,7 @@ const InputCommand: React.FC = () => {
             }}
           )
         )
-        fileHistoryForCansellCommits
-        .filter(fileHistoryForCansellCommit => fileHistoryForCansellCommit.parentCommitMessage === forResetCurrentBranchCommitMessages[forResetCurrentBranchCommitMessages.length -1].message)
-        .map(fileHistoryForCansellCommit =>
+        lastestFileHistoryForCansellCommits.map(fileHistoryForCansellCommit =>
           setRepositoryFiles(repositoryFile =>
             repositoryFile.map((repositoryFile) =>
             fileHistoryForCansellCommit.pastTextStatus
@@ -474,10 +472,66 @@ const InputCommand: React.FC = () => {
                 }
               : repositoryFile
           )))
+          if (option === "mixed" || option === "hard") {
+            console.log("mixedかhard")
+            lastestFileHistoryForCansellCommits.map(fileHistoryForCansellCommit =>
+              setIndexFiles((indexFile) =>
+                indexFile.map((indexFile) =>
+                fileHistoryForCansellCommit.pastTextStatus
+                && fileHistoryForCansellCommit.fileName === indexFile.fileName
+                && indexFile.parentBranch === currentBranch
+                && fileHistoryForCansellCommit.parentBranch === currentBranch
+                ? {
+                  fileName: indexFile.fileName,
+                  textStatus: fileHistoryForCansellCommit.pastTextStatus,
+                  parentBranch: fileHistoryForCansellCommit.parentBranch,
+                  indexFileId: indexFile.indexFileId
+                  }
+                : !fileHistoryForCansellCommit.pastTextStatus
+                  && fileHistoryForCansellCommit.fileName === indexFile.fileName
+                  && indexFile.parentBranch === currentBranch
+                ? {
+                  fileName: "",
+                  textStatus: "",
+                  parentBranch: "",
+                  indexFileId: ""
+                  }
+                : indexFile
+                )
+              )
+            )
+          }
+          if (option === "hard") {
+            console.log("hardだけ")
+            lastestFileHistoryForCansellCommits.map(fileHistoryForCansellCommit =>
+              setWorktreeFiles((worktreeFile) =>
+              worktreeFile.map((worktreeFile) =>
+                fileHistoryForCansellCommit.pastTextStatus
+                && fileHistoryForCansellCommit.fileName === worktreeFile.fileName
+                && worktreeFile.parentBranch === currentBranch
+                && fileHistoryForCansellCommit.parentBranch === currentBranch
+                ? {
+                  fileName: worktreeFile.fileName,
+                  textStatus: fileHistoryForCansellCommit.pastTextStatus,
+                  parentBranch: fileHistoryForCansellCommit.parentBranch,
+                  worktreeFileId: worktreeFile.worktreeFileId
+                  }
+                : !fileHistoryForCansellCommit.pastTextStatus
+                  && fileHistoryForCansellCommit.fileName === worktreeFile.fileName
+                  && worktreeFile.parentBranch === currentBranch
+                ? {
+                  fileName: "",
+                  textStatus: "",
+                  parentBranch: "",
+                  worktreeFileId: ""
+                  }
+                : worktreeFile
+                )
+              )
+            )
+          }
         resetedCommitMessages.push(forResetCurrentBranchCommitMessages.pop())
       }
-      console.log(resetedCommitMessages)
-      console.log(resetedHistoryFiles)
       setCommitMessages(commitMessage =>
         commitMessage.filter(commitMessage =>
           !resetedCommitMessages.some((resetedCommitMessage :any) => resetedCommitMessage === commitMessage)))
@@ -612,8 +666,15 @@ const InputCommand: React.FC = () => {
                 touch(text, 6)
               } else if (text.startsWith("git rm --cashed")) {
                 gitRmCashed(text, 16)
+              } else if (text.startsWith("git reset --mixed HEAD~")) {
+                gitResetOption(text, 23, "mixed")
+                console.log("mixedです")
+              } else if (text.startsWith("git reset --hard HEAD~")) {
+                gitResetOption(text, 22, "hard")
+                console.log("hardです")
               } else if (text.startsWith("git reset --soft HEAD~")) {
-                gitResetSoft(text, 22)
+                gitResetOption(text, 22, "soft")
+                console.log("softです")
               } else if (text.startsWith("git reset")) {
                 gitReset()
               } else if (text.startsWith("git rm")) {
