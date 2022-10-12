@@ -161,15 +161,56 @@ const InputCommand: React.FC = () => {
     }
   }
 
-  //要修正他のコミットメッセージも修正
   const gitCommitAmend = (text :string, str :number) => {
     if (commitMessages[commitMessages.length -1].message !== "") {
-      commitMessages[commitMessages.length -1] =
-      {
+      const changeCommitMessage = currentBranchParentCommitMessages[currentBranchParentCommitMessages.length -1].message
+
+      setCommitMessages(commitMessages.filter((commitMessage) =>commitMessage.parentBranch !== currentBranch))
+      currentBranchParentCommitMessages[currentBranchParentCommitMessages.length -1] = {
         message: text.substring(str),
         parentBranch: currentBranch,
         commitMessageId: ""
       }
+      currentBranchParentCommitMessages.map((commitMessage) => {
+        setCommitMessages(commitMessages => [...commitMessages,{
+          message: commitMessage.message,
+          parentBranch: commitMessage.parentBranch,
+          commitMessageId: ""
+        }])
+      })
+      setRepositoryFiles(
+        repositoryFiles.map((repositoryFile) =>
+          repositoryFile.parentCommitMessage === changeCommitMessage
+          && repositoryFile.parentBranch === currentBranch
+          ? {
+            fileName: repositoryFile.fileName,
+            textStatus: repositoryFile.textStatus,
+            parentBranch: repositoryFile.parentBranch,
+            parentCommitMessage: text.substring(str),
+            repositoryFileId: ""
+            }
+          : repositoryFile
+        )
+      )
+      setFileHistoryForCansellCommits(
+        fileHistoryForCansellCommits.map((historyFile) =>
+        historyFile.parentCommitMessage === changeCommitMessage
+          && historyFile.parentBranch === currentBranch
+          ? {
+            fileName :historyFile.fileName,
+            textStatus: historyFile.textStatus,
+            pastTextStatus: historyFile.pastTextStatus,
+            parentBranch: historyFile.parentBranch,
+            parentCommitMessage: text.substring(str),
+            parentPastCommitMessage: historyFile.parentPastCommitMessage,
+            historyFileId: ""
+            }
+          : historyFile
+        )
+      )
+
+
+
     } else {
       setAddText('error: commit message not found.')
     }
