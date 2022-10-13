@@ -356,6 +356,15 @@ const InputCommand: React.FC = () => {
       setIndexFiles(
         indexFiles.filter((indexFile) => indexFile.parentBranch !== text.substring(str))
       )
+      setCommitMessages(
+        commitMessages.filter((commitMessage) => commitMessage.parentBranch !== text.substring(str))
+      )
+      setRepositoryFiles(
+        repositoryFiles.filter((repositoryFile) => repositoryFile.parentBranch !== text.substring(str))
+      )
+      setFileHistoryForCansellCommits(
+        fileHistoryForCansellCommits.filter((historyFile) => historyFile.parentBranch !== text.substring(str))
+      )
     } else if (branches.some(branch => branch.branchName === text.substring(str))
       && currentBranch !== text.substring(str)
       && (!deleteBranchParentWorktreeFiles.every(deleteBranchParentWorktreeFiles => currentBranchParentWorktreeFiles.some(worktreeFile => worktreeFile.fileName === deleteBranchParentWorktreeFiles.fileName)) || !deleteBranchParentIndexFiles.every(deleteBranchParentIndexFile => currentBranchParentIndexFiles.some(worktreeFile => worktreeFile.fileName === deleteBranchParentIndexFile.fileName)))
@@ -378,6 +387,15 @@ const InputCommand: React.FC = () => {
       )
       setIndexFiles(
         indexFiles.filter((indexFile) => indexFile.parentBranch !== text.substring(str))
+      )
+      setCommitMessages(
+        commitMessages.filter((commitMessage) => commitMessage.parentBranch !== text.substring(str))
+      )
+      setRepositoryFiles(
+        repositoryFiles.filter((repositoryFile) => repositoryFile.parentBranch !== text.substring(str))
+      )
+      setFileHistoryForCansellCommits(
+        fileHistoryForCansellCommits.filter((historyFile) => historyFile.parentBranch !== text.substring(str))
       )
     } else {
       setAddText(`error: branch '${text.substring(str)}' not found.`)
@@ -624,7 +642,6 @@ const InputCommand: React.FC = () => {
       setAddText(`error: pathspec '${text.substring(str)}' did not match any file(s) known to git`)
     }
   }
-
 
   return(
     <Input
