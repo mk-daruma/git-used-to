@@ -37,10 +37,10 @@ ActiveRecord::Schema.define(version: 2022_10_14_112445) do
   end
 
   create_table "quiz_history_of_committed_files", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "quiz_history_of_committed_files_name"
-    t.string "quiz_history_of_committed_files_text_status"
-    t.string "quiz_history_of_committed_files_past_text_status"
-    t.text "quiz_history_of_committed_files_parent_past_commit_message"
+    t.string "quiz_history_of_committed_file_name"
+    t.string "quiz_history_of_committed_file_text_status"
+    t.string "quiz_history_of_committed_file_past_text_status"
+    t.text "quiz_history_of_committed_file_parent_past_commit_message"
     t.bigint "quiz_branch_id", null: false
     t.bigint "quiz_commit_message_id", null: false
     t.datetime "created_at", precision: 6, null: false
