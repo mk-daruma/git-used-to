@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_07_045043) do
+ActiveRecord::Schema.define(version: 2022_10_14_112445) do
 
   create_table "quiz_branches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "quiz_branch_name"
@@ -34,6 +34,19 @@ ActiveRecord::Schema.define(version: 2022_10_07_045043) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["quiz_id"], name: "index_quiz_first_or_lasts_on_quiz_id"
+  end
+
+  create_table "quiz_history_of_committed_files", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "quiz_history_of_committed_files_name"
+    t.string "quiz_history_of_committed_files_text_status"
+    t.string "quiz_history_of_committed_files_past_text_status"
+    t.text "quiz_history_of_committed_files_parent_past_commit_message"
+    t.bigint "quiz_branch_id", null: false
+    t.bigint "quiz_commit_message_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["quiz_branch_id"], name: "index_quiz_history_of_committed_files_on_quiz_branch_id"
+    t.index ["quiz_commit_message_id"], name: "index_quiz_history_of_committed_files_on_quiz_commit_message_id"
   end
 
   create_table "quiz_index_files", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -138,6 +151,8 @@ ActiveRecord::Schema.define(version: 2022_10_07_045043) do
   add_foreign_key "quiz_branches", "quiz_first_or_lasts"
   add_foreign_key "quiz_commit_messages", "quiz_branches"
   add_foreign_key "quiz_first_or_lasts", "quizzes"
+  add_foreign_key "quiz_history_of_committed_files", "quiz_branches"
+  add_foreign_key "quiz_history_of_committed_files", "quiz_commit_messages"
   add_foreign_key "quiz_index_files", "quiz_branches"
   add_foreign_key "quiz_remote_branches", "quiz_first_or_lasts"
   add_foreign_key "quiz_remote_commit_messages", "quiz_remote_branches"
