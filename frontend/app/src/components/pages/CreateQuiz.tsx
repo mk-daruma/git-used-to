@@ -123,13 +123,13 @@ export const QuizContext = createContext({} as {
   remoteCommitMessages: {
     remoteMessage: string
     parentRemoteBranch: string
-    remotecommitMessageId: string
+    remoteCommitMessageId: string
   }[]
 
   setRemoteCommitMessages: React.Dispatch<React.SetStateAction<{
     remoteMessage: string
     parentRemoteBranch: string
-    remotecommitMessageId: string
+    remoteCommitMessageId: string
   }[]>>
 
   branches: {
@@ -227,7 +227,7 @@ const CreateQuiz: React.FC = () => {
   const [remoteCommitMessages, setRemoteCommitMessages] = useState([{
     remoteMessage: "",
     parentRemoteBranch: "",
-    remotecommitMessageId: ""
+    remoteCommitMessageId: ""
   }])
   const [branches, setBranches] = useState([{
     branchName: "master",
@@ -395,7 +395,10 @@ const CreateQuiz: React.FC = () => {
     console.log("branches", branches)
     console.log("currentBranch", currentBranch)
     console.log("fileHistoryForCansellCommit", fileHistoryForCansellCommits)
-  },[commitMessages, indexFiles, repositoryFiles, worktreeFiles, branches, currentBranch, fileHistoryForCansellCommits])
+    console.log("remoteBranches", remoteBranches)
+    console.log("remoteCommitMessages", remoteCommitMessages)
+    console.log("remoteRepositoryFiles", remoteRepositoryFiles)
+  },[commitMessages, indexFiles, repositoryFiles, worktreeFiles, branches, currentBranch, fileHistoryForCansellCommits, remoteBranches, remoteCommitMessages, remoteRepositoryFiles])
 
   return(
     <QuizContext.Provider
@@ -458,27 +461,45 @@ const CreateQuiz: React.FC = () => {
         <>
         {/* ↓配列の中身確認用 */}
         <p>[branch]</p>
-        { branches.map((branch) => (
+        { branches.filter((branch) => currentBranch === branch.branchName)
+          .map((branch) => (
           <p>
             { branch.branchName }
           </p>
           ))}
           <p>[work]</p>
-        { worktreeFiles.map((worktreeFile) => (
+        { worktreeFiles.filter((worktreeFile) => currentBranch === worktreeFile.parentBranch)
+        .map((worktreeFile) => (
           <p>
-            { worktreeFile.fileName }
+            { worktreeFile.fileName } text: { worktreeFile.textStatus }
+          </p>
+          ))}
+          <p>[index]</p>
+        { indexFiles.filter((indexFile) => currentBranch === indexFile.parentBranch)
+        .map((indexFile) => (
+          <p>
+            { indexFile.fileName } text: { indexFile.textStatus }
           </p>
           ))}
           <p>[repo]</p>
-        { repositoryFiles.map((repositoryFile) => (
+        { repositoryFiles.filter((repositoryFile) => currentBranch === repositoryFile.parentBranch)
+        .map((repositoryFile) => (
           <p>
-            { repositoryFile.fileName }
+            { repositoryFile.fileName } text: { repositoryFile.textStatus }
           </p>
           ))}
           <p>[commit]</p>
-        { commitMessages.map((commitMessage) => (
+        { commitMessages.filter((commitMessage) => currentBranch === commitMessage.parentBranch)
+        .map((commitMessage) => (
           <p>
             { commitMessage.message }
+          </p>
+          ))}
+          <p>[remoteRepo]</p>
+        { remoteRepositoryFiles.filter((repositoryFile) => currentBranch === repositoryFile.parentRemoteBranch)
+        .map((repositoryFile) => (
+          <p>
+            { repositoryFile.fileName } text: { repositoryFile.textStatus }
           </p>
           ))}
       </>
