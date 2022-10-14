@@ -3,5 +3,6 @@ class QuizBranch < ApplicationRecord
   has_many :quiz_commit_messages
   has_many :quiz_worktree_files
   has_many :quiz_index_files
+  has_many :quiz_remote_repository_files
   has_many :quiz_repository_files
 end
