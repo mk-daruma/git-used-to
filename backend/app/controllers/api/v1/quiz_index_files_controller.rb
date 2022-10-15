@@ -1,4 +1,4 @@
-class QuizIndexFilesController < ApplicationController
+class Api::V1::QuizIndexFilesController < ApplicationController
   before_action :set_quiz_index_file, only: [:update, :destroy]
   before_action :quiz_index_file_params, only: [:update]
 
