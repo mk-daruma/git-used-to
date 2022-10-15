@@ -16,6 +16,7 @@ import { createQuizWorktreeFile } from "lib/api/quiz_worktree_files";
 import { createQuizCommitMessage, getQuizCommitMessage } from "lib/api/quiz_commit_messages";
 import { createQuizRepositoryFile } from "lib/api/quiz_repository_files";
 import { createQuizIndexFile } from "lib/api/quiz_index_files";
+import { CreateQuizHistoryOfCommittedFile } from "lib/api/quiz_history_of_committed_files";
 
 export const QuizContext = createContext({} as {
   quizTitle: string
@@ -314,6 +315,25 @@ const CreateQuiz: React.FC = () => {
 
       const QuizCommitMessageRes = await createQuizCommitMessage(QuizCommitMessageData.flat())
 
+      const quizHistoryOfCommittedFileData = QuizCommitMessageRes !== undefined
+      ? QuizCommitMessageRes.data.data.map((commitMessage :any) =>(
+        fileHistoryForCansellCommits
+        .filter(historyFile =>
+          historyFile.parentCommitMessage === commitMessage.quizCommitMessage
+          && historyFile.fileName !== "")
+        .map((filteredHistoryFile :any) =>({
+          quizHistoryOfCommittedFileName: filteredHistoryFile.fileName,
+          quizHistoryOfCommittedFileTextStatus: filteredHistoryFile.textStatus,
+          quizHistoryOfCommittedFilePastTextStatus: filteredHistoryFile.pastTextStatus,
+          quizHistoryOfCommittedFileParentPastCommitMessage: filteredHistoryFile.parentPastCommitMessage,
+          quizCommitMessageId: commitMessage.id,
+          quizBranchId: commitMessage.quizBranchId,
+        }))
+      ))
+      : []
+
+      const quizHistoryOfCommittedFileRes = await CreateQuizHistoryOfCommittedFile(quizHistoryOfCommittedFileData.flat())
+
       const quizRepositoryFileData = QuizCommitMessageRes !== undefined
       ? QuizCommitMessageRes.data.data.map((commitMessage :any) =>(
         repositoryFiles
@@ -337,6 +357,7 @@ const CreateQuiz: React.FC = () => {
       console.log(quizWorktreeFileRes)
       console.log(quizIndexFileRes)
       console.log(QuizCommitMessageRes)
+      console.log(quizHistoryOfCommittedFileRes)
       console.log(quizRepositoryFileRes)
 
       console.log("create quiz success!!")
