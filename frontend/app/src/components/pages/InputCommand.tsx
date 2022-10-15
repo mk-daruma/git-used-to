@@ -101,6 +101,7 @@ const InputCommand: React.FC = () => {
     //地獄的にみづらい。リファクタリング必要。
     if (indexFiles.some(indexFile =>
       indexFile.fileName !== ""&& /[\S+]/.test(text.substring(str-1)))
+        && commitMessages.every(commitMessages => commitMessages.message !== text.substring(str))
         && !currentBranchParentIndexFiles.every(currentBranchParentIndexFiles =>
           currentBranchParentRepositoryFiles.some(currentBranchParentRepositoryFile =>
             currentBranchParentIndexFiles.fileName === currentBranchParentRepositoryFile.fileName
