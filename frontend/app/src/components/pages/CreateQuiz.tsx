@@ -332,7 +332,20 @@ const CreateQuiz: React.FC = () => {
       ))
       : []
 
-      const quizHistoryOfCommittedFileRes = await CreateQuizHistoryOfCommittedFile(quizHistoryOfCommittedFileData.flat())
+      const flatedQuizHistoryOfCommittedFileData = quizHistoryOfCommittedFileData.flat()
+
+      const removeDuplicateQuizHistoryOfCommittedFileData = flatedQuizHistoryOfCommittedFileData.filter((e :any, index :any, self :any) => {
+        return self.findIndex((el :any) =>
+          el.quizHistoryOfCommittedFileName === e.quizHistoryOfCommittedFileName
+          && el.quizHistoryOfCommittedFileTextStatus === e.quizHistoryOfCommittedFileTextStatus
+          && el.quizHistoryOfCommittedFilePastTextStatus === e.quizHistoryOfCommittedFilePastTextStatus
+          && el.quizHistoryOfCommittedFileParentPastCommitMessage === e.quizHistoryOfCommittedFileParentPastCommitMessage
+          && el.quizCommitMessageId === e.quizCommitMessageId
+          && el.quizBranchId === e.quizBranchId
+        ) === index;
+      });
+
+      const quizHistoryOfCommittedFileRes = await CreateQuizHistoryOfCommittedFile(removeDuplicateQuizHistoryOfCommittedFileData)
 
       const quizRepositoryFileData = QuizCommitMessageRes !== undefined
       ? QuizCommitMessageRes.data.data.map((commitMessage :any) =>(
@@ -349,7 +362,18 @@ const CreateQuiz: React.FC = () => {
       ))
       : []
 
-      const quizRepositoryFileRes = await createQuizRepositoryFile(quizRepositoryFileData.flat())
+      const flatedQuizRepositoryFileData = quizRepositoryFileData.flat()
+
+      const removeDuplicateQuizRepositoryFileData = flatedQuizRepositoryFileData.filter((e :any, index :any, self :any) => {
+        return self.findIndex((el :any) =>
+          el.quizRepositoryFileName === e.quizRepositoryFileName
+          && el.quizRepositoryFileTextStatus === e.quizRepositoryFileTextStatus
+          && el.quizCommitMessageId === e.quizCommitMessageId
+          && el.quizBranchId === e.quizBranchId
+        ) === index;
+      });
+
+      const quizRepositoryFileRes = await createQuizRepositoryFile(removeDuplicateQuizRepositoryFileData)
 
       console.log(aboutQuizRes)
       console.log(quizFirtsOrLastRes)
