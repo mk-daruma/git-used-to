@@ -216,14 +216,26 @@ const InputCommand: React.FC = () => {
   }
 
   const gitPush = () => {
-    setRepositoryFiles((repositoryFile) => repositoryFile.map(
-      (repositoryFile) =>({
-        fileName: repositoryFile.fileName,
-        textStatus: repositoryFile.textStatus,
-        parentBranch: currentBranch,
-        parentCommitMessage: repositoryFile.parentCommitMessage,
-        repositoryFileId: repositoryFile.repositoryFileId
-      })))
+    setRemoteBranches((remoteBranch) => [...remoteBranch,{
+      remoteBranchName: currentBranch,
+      remoteBranchId: ""
+    }])
+    currentBranchParentCommitMessages.forEach(currentBranchParentCommitMessages => {
+      setRemoteCommitMessages((commitMessage) => [...commitMessage,{
+        remoteMessage: currentBranchParentCommitMessages.message,
+        parentRemoteBranch: currentBranchParentCommitMessages.parentBranch,
+        remoteCommitMessageId: ""
+      }])
+    })
+    currentBranchParentRepositoryFiles.forEach(currentBranchParentCommitMessages => {
+      setRemoteRepositoryFiles((repositoryFile) => [...repositoryFile,{
+        fileName: currentBranchParentCommitMessages.fileName,
+        textStatus: currentBranchParentCommitMessages.textStatus,
+        parentRemoteBranch: currentBranchParentCommitMessages.parentBranch,
+        parentRemoteCommitMessage: currentBranchParentCommitMessages.parentCommitMessage,
+        remoteRepositoryFileId: ""
+      }])
+    })
   }
 
   const gitBranch = (text :string, str :number) => {
