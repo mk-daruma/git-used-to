@@ -103,6 +103,15 @@ export interface CreateQuizIndexFileData {
   quizBranchId: number
 }
 
+export interface CreateQuizHistoryOfCommittedFileData {
+  quizHistoryOfCommittedFileName: string
+  quizHistoryOfCommittedFileTextStatus: string
+  quizHistoryOfCommittedFilePastTextStatus: string
+  quizHistoryOfCommittedFileParentPastCommitMessage: string
+  quizBranchId: number
+  quizCommitMessageId: number
+}
+
 export interface CreateQuizCommitMessage {
   quizCommitMessage: string
   quizBranchId: number
