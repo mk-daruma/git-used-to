@@ -15,6 +15,7 @@ import { createQuizBranch, getQuizBranch } from "lib/api/quiz_branches";
 import { createQuizWorktreeFile } from "lib/api/quiz_worktree_files";
 import { createQuizCommitMessage, getQuizCommitMessage } from "lib/api/quiz_commit_messages";
 import { createQuizRepositoryFile } from "lib/api/quiz_repository_files";
+import { createQuizIndexFile } from "lib/api/quiz_index_files";
 
 export const QuizContext = createContext({} as {
   quizTitle: string
@@ -286,6 +287,20 @@ const CreateQuiz: React.FC = () => {
 
       const quizWorktreeFileRes = await createQuizWorktreeFile(quizWorktreeFileData.flat())
 
+      const quizIndexFileData = quizBranchRes !== undefined
+      ? quizBranchRes.data.data.map((branch :any) =>(
+          indexFiles
+          .filter(indexFile => indexFile.parentBranch === branch.quizBranchName)
+          .map((filteredIndexFile :any) =>({
+            quizIndexFileName: filteredIndexFile.fileName,
+            quizIndexFileTextStatus: filteredIndexFile.textStatus,
+            quizBranchId: branch.id
+          }))
+        ))
+      : []
+
+      const quizIndexFileRes = await createQuizIndexFile(quizIndexFileData.flat())
+
       const QuizCommitMessageData = quizBranchRes !== undefined
       ? quizBranchRes.data.data.map((branch :any) =>(
           commitMessages
@@ -320,6 +335,7 @@ const CreateQuiz: React.FC = () => {
       console.log(quizFirtsOrLastRes)
       console.log(quizBranchRes)
       console.log(quizWorktreeFileRes)
+      console.log(quizIndexFileRes)
       console.log(QuizCommitMessageRes)
       console.log(quizRepositoryFileRes)
 
