@@ -17,6 +17,9 @@ import { createQuizCommitMessage, getQuizCommitMessage } from "lib/api/quiz_comm
 import { createQuizRepositoryFile } from "lib/api/quiz_repository_files";
 import { createQuizIndexFile } from "lib/api/quiz_index_files";
 import { CreateQuizHistoryOfCommittedFile } from "lib/api/quiz_history_of_committed_files";
+import { createQuizRemoteBranch } from "lib/api/quiz_remote_branches";
+import { createQuizRemoteCommitMessage } from "lib/api/quiz_remote_commit_messages";
+import { createQuizRemoteRepositoryFile } from "lib/api/quiz_remote_repository_file";
 
 export const QuizContext = createContext({} as {
   quizTitle: string
@@ -375,6 +378,58 @@ const CreateQuiz: React.FC = () => {
 
       const quizRepositoryFileRes = await createQuizRepositoryFile(removeDuplicateQuizRepositoryFileData)
 
+      const quizRemoteBranchData =
+        remoteBranches
+        .filter((branch) => branch.remoteBranchName)
+        .map((branch) => ({
+          quizRemoteBranchName: branch.remoteBranchName,
+          quizFirstOrLastId: quizFirtsOrLastRes.data.data.id
+        }
+      ))
+
+      const quizRemoteBranchRes = await createQuizRemoteBranch(quizRemoteBranchData)
+
+      const QuizRemoteCommitMessageData = quizRemoteBranchRes !== undefined
+      ? quizRemoteBranchRes.data.data.map((branch :any) =>(
+          remoteCommitMessages
+          .filter(commitMessage => commitMessage.parentRemoteBranch === branch.quizRemoteBranchName)
+          .map((commitMessage :any) =>({
+            quizRemoteCommitMessage: commitMessage.remoteMessage,
+            quizRemoteBranchId: branch.id
+          }))
+        ))
+      : []
+
+      const QuizRemoteCommitMessageRes = await createQuizRemoteCommitMessage(QuizRemoteCommitMessageData.flat())
+
+      const quizRemoteRepositoryFileData = QuizRemoteCommitMessageRes !== undefined
+      ? QuizRemoteCommitMessageRes.data.data.map((commitMessage :any) =>(
+        remoteRepositoryFiles
+        .filter(repositoryFile =>
+          repositoryFile.parentRemoteCommitMessage === commitMessage.quizRemoteCommitMessage
+          && repositoryFile.fileName !== "")
+        .map((filteredRepositoryFile :any) =>({
+          quizRemoteRepositoryFileName: filteredRepositoryFile.fileName,
+          quizRemoteRepositoryFileTextStatus: filteredRepositoryFile.textStatus,
+          quizRemoteCommitMessageId: commitMessage.id,
+          quizRemoteBranchId: commitMessage.quizRemoteBranchId
+        }))
+      ))
+      : []
+
+      const flatedQuizRemoteRepositoryFileData = quizRemoteRepositoryFileData.flat()
+
+      const removeDuplicateQuizRemoteRepositoryFileData = flatedQuizRemoteRepositoryFileData.filter((e :any, index :any, self :any) => {
+        return self.findIndex((el :any) =>
+          el.quizRemoteRepositoryFileName === e.quizRemoteRepositoryFileName
+          && el.quizRemoteRepositoryFileTextStatus === e.quizRemoteRepositoryFileTextStatus
+          && el.quizRemoteCommitMessageId === e.quizRemoteCommitMessageId
+          && el.quizRemoteBranchId === e.quizRemoteBranchId
+        ) === index;
+      });
+
+      const quizRemoteRepositoryFileRes = await createQuizRemoteRepositoryFile(removeDuplicateQuizRemoteRepositoryFileData)
+
       console.log(aboutQuizRes)
       console.log(quizFirtsOrLastRes)
       console.log(quizBranchRes)
@@ -383,7 +438,9 @@ const CreateQuiz: React.FC = () => {
       console.log(QuizCommitMessageRes)
       console.log(quizHistoryOfCommittedFileRes)
       console.log(quizRepositoryFileRes)
-
+      console.log(quizRemoteBranchRes)
+      console.log(QuizRemoteCommitMessageRes)
+      console.log(quizRemoteRepositoryFileRes)
       console.log("create quiz success!!")
 
       history.push("/")
