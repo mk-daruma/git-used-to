@@ -17,8 +17,8 @@ import { createQuizCommitMessage, getQuizCommitMessage } from "lib/api/quiz_comm
 import { createQuizRepositoryFile } from "lib/api/quiz_repository_files";
 import { createQuizIndexFile } from "lib/api/quiz_index_files";
 import { CreateQuizHistoryOfCommittedFile } from "lib/api/quiz_history_of_committed_files";
-import { createQuizRemoteBranch } from "lib/api/quiz_remote_branches";
-import { createQuizRemoteCommitMessage } from "lib/api/quiz_remote_commit_messages";
+import { createQuizRemoteBranch, getQuizRemoteBranch } from "lib/api/quiz_remote_branches";
+import { createQuizRemoteCommitMessage, getQuizRemoteCommitMessage } from "lib/api/quiz_remote_commit_messages";
 import { createQuizRemoteRepositoryFile } from "lib/api/quiz_remote_repository_file";
 
 export const QuizContext = createContext({} as {
@@ -460,7 +460,7 @@ const CreateQuiz: React.FC = () => {
       const ResQuizOfLast = await getQuizFirstOrLast(ResQuiz.data.quizFirstOrLastsData[0].id)
 
       await Promise.all(
-        await ResQuizOfLast.data.data.map(async (branch :any) => {
+        await ResQuizOfLast.data.dataBranches.map(async (branch :any) => {
         setBranches(branches => [...branches,{
           branchName: branch.quizBranchName,
           branchId: branch.id
@@ -513,6 +513,31 @@ const CreateQuiz: React.FC = () => {
               }])
             })
           )
+          await ResQuizOfLast.data.dataRemoteBranches.map(async (remoteBranch :any) => {
+            setRemoteBranches(branches => [...branches,{
+              remoteBranchName: remoteBranch.quizRemoteBranchName,
+              remoteBranchId: remoteBranch.id
+            }])
+            const ResQuizRemoteBranches = await getQuizRemoteBranch(remoteBranch.id)
+            ResQuizRemoteBranches.data.dataRemoteMessages.map(async (message :any) => {
+              setRemoteCommitMessages(commitMessage => [...commitMessage,{
+                remoteMessage: message.quizRemoteCommitMessage,
+                parentRemoteBranch: remoteBranch.quizRemoteBranchName,
+                remoteCommitMessageId: message.id
+            }])
+            const ResQuizRemoteCommitMessages = await getQuizRemoteCommitMessage(message.id)
+            await Promise.all(
+              ResQuizRemoteCommitMessages.data.dataRemoteRepositoryFiles.map((data :any) => {
+                setRemoteRepositoryFiles(repositoryFile => [...repositoryFile,{
+                  fileName: data.quizRemoteRepositoryFileName,
+                  textStatus: data.quizRemoteRepositoryFileTextStatus,
+                  parentRemoteBranch: message.quizRemoteBranchId,
+                  parentRemoteCommitMessage: message.quizRemoteCommitMessage,
+                  remoteRepositoryFileId: data.id
+                }])
+              })
+            )})
+          })
         }
       )}))
       console.log(ResQuiz)
