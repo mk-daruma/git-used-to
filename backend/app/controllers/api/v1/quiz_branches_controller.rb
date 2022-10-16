@@ -18,8 +18,9 @@ class Api::V1::QuizBranchesController < ApplicationController
 
   def show
     quiz_worktree_files = @quiz_branch.quiz_worktree_files
+    quiz_index_files = @quiz_branch.quiz_index_files
     quiz_commit_messages = @quiz_branch.quiz_commit_messages
-    render json: { status: 'SUCCESS', message: 'Loaded quizzes', data_worktrees: quiz_worktree_files, data_messages: quiz_commit_messages }
+    render json: { status: 'SUCCESS', message: 'Loaded quizzes', data_worktree_Files: quiz_worktree_files, data_index_files: quiz_index_files, data_messages: quiz_commit_messages }
   end
 
   def update

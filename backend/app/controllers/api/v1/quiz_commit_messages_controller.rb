@@ -18,7 +18,8 @@ class Api::V1::QuizCommitMessagesController < ApplicationController
 
   def show
     quiz_repository_files = @quiz_commit_message.quiz_repository_files
-    render json: { status: 'SUCCESS', message: 'Loaded quizzes', data: quiz_repository_files }
+    quiz_history_of_committed_files = @quiz_commit_message.quiz_history_of_committed_files
+    render json: { status: 'SUCCESS', message: 'Loaded quizzes', data_repository_files: quiz_repository_files, data_history_of_committed_files: quiz_history_of_committed_files }
   end
 
   def update
