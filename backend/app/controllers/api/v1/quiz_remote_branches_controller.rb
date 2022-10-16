@@ -18,7 +18,7 @@ class Api::V1::QuizRemoteBranchesController < ApplicationController
 
   def show
     quiz_remote_commit_messages = @quiz_remote_branch.quiz_remote_commit_messages
-    render json: { status: 'SUCCESS', message: 'Loaded quizzes', data_messages: quiz_remote_commit_messages }
+    render json: { status: 'SUCCESS', message: 'Loaded quizzes', data_remote_messages: quiz_remote_commit_messages }
   end
 
   def update

@@ -18,7 +18,7 @@ class Api::V1::QuizRemoteCommitMessagesController < ApplicationController
 
   def show
     quiz_remote_repository_files = @quiz_remote_commit_message.quiz_remote_repository_files
-    render json: { status: 'SUCCESS', message: 'Loaded quizzes', data: quiz_remote_repository_files }
+    render json: { status: 'SUCCESS', message: 'Loaded quizzes', data_remote_repository_files: quiz_remote_repository_files }
   end
 
   def update
