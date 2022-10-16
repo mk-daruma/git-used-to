@@ -417,15 +417,23 @@ const CreateQuiz: React.FC = () => {
             worktreeFileId: wortktree.id
           }])
         })
+        ResQuizBranches.data.dataIndexFiles.map((indexFile :any) => {
+          setIndexFiles(indexFiles => [...indexFiles,{
+            fileName: indexFile.quizIndexFileName,
+            parentBranch: branch.quizBranchName,
+            textStatus: indexFile.quizIndexFileTextStatus,
+            indexFileId: indexFile.id
+          }])
+        })
         ResQuizBranches.data.dataMessages.map(async (message :any) => {
           setCommitMessages(commitMessage => [...commitMessage,{
             message: message.quizCommitMessage,
             parentBranch: branch.quizBranchName,
             commitMessageId: message.id
           }])
-          const ResQuizRepositoryFiles = await getQuizCommitMessage(message.id)
+          const ResQuizCommitMessages = await getQuizCommitMessage(message.id)
           await Promise.all(
-            ResQuizRepositoryFiles.data.data.map((data :any) => {
+            ResQuizCommitMessages.data.dataRepositoryFiles.map((data :any) => {
             setRepositoryFiles(repositoryFile => [...repositoryFile,{
               fileName: data.quizRepositoryFileName,
               textStatus: data.quizRepositoryFileTextStatus,
@@ -433,7 +441,21 @@ const CreateQuiz: React.FC = () => {
               parentCommitMessage: message.quizCommitMessage,
               repositoryFileId: data.id
             }])
-          }))
+          })
+          )
+          await Promise.all(
+            ResQuizCommitMessages.data.dataHistoryOfCommittedFiles.map((historyFile :any) => {
+              setFileHistoryForCansellCommits(historyFiles => [...historyFiles,{
+                fileName: historyFile.quizHistoryOfCommittedFileName,
+                textStatus: historyFile.quizHistoryOfCommittedFileTextStatus,
+                pastTextStatus: historyFile.quizHistoryOfCommittedFilePastTextStatus,
+                parentBranch: branch.quizBranchName,
+                parentCommitMessage: message.quizCommitMessage,
+                parentPastCommitMessage: historyFile.quizHistoryOfCommittedFileParentPastCommitMessage,
+                historyFileId: historyFile.id
+              }])
+            })
+          )
         }
       )}))
       console.log(ResQuiz)
