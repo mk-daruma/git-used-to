@@ -1,8 +1,10 @@
 import { QuizFirtsOrLastData } from "interfaces"
 import client from "lib/api/client"
 
-export const createQuizFirstOrLast = (data: QuizFirtsOrLastData) => {
-  return client.post("quiz_first_or_lasts", data)
+export const createQuizFirstOrLast = (data: QuizFirtsOrLastData | undefined) => {
+  if (data !== undefined) {
+    return client.post("quiz_first_or_lasts", data)
+  }
 }
 
 // export const updateQuizFirstOrLast = (id: number | undefined | null, data: これから作成) => {

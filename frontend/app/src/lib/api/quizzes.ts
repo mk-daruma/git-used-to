@@ -1,8 +1,10 @@
 import { AboutQuizData } from "interfaces"
 import client from "lib/api/client"
 
-export const createQuiz = (data: AboutQuizData) => {
-  return client.post("quizzes", data)
+export const createQuiz = (data: AboutQuizData | undefined) => {
+  if (data !== undefined) {
+    return client.post("quizzes", data)
+  }
 }
 
 // export const updateQuiz = (id: number | undefined | null, data: これから作成) => {
