@@ -358,10 +358,11 @@ const CreateQuiz: React.FC = () => {
 
   const [quizTitle, setQuizTitle] = useState<string>("")
   const [quizIntroduction, setQuizIntroduction] = useState<string>("")
+  const [quizFirstOrLastId, setQuizFirstOrLastId] = useState<string>("")
   const [text, setText] = useState("");
   const [addText, setAddText] = useState("");
   const [currentBranch, setCurrentBranch] = useState({
-    currentBranchName: "master",
+    currentBranchName: "",
     currentBranchId : ""
   })
   const [worktreeFiles, setWorktreeFiles] = useState([{
@@ -420,7 +421,7 @@ const CreateQuiz: React.FC = () => {
     remoteCommitMessageId: ""
   }])
   const [branches, setBranches] = useState([{
-    branchName: "master",
+    branchName: "",
     branchId: ""
     }])
   const [remoteBranches, setRemoteBranches] = useState([{
@@ -497,12 +498,15 @@ const CreateQuiz: React.FC = () => {
 
   const quizType = "user"
 
-  const aboutQuizData: AboutQuizData = {
-    quizTitle: quizTitle,
-    quizIntroduction: quizIntroduction,
-    quizType: quizType,
-    userId: currentUser?.id
-  }
+  const aboutQuizData: AboutQuizData | undefined  =
+  location.pathname === "/quiz"
+  ? {
+      quizTitle: quizTitle,
+      quizIntroduction: quizIntroduction,
+      quizType: quizType,
+      userId: currentUser?.id
+    }
+  : undefined
 
   const handleCreateQuizSubmit = (argBranches :any, argsWorktreeFiles :any, argIndexFiles :any, argCommitMessages :any, argFileHistoryForCansellCommits :any, argRepositoryFiles :any, argRemoteBranches :any, argRemoteCommitMessages :any, argRemoteRepositoryFiles :any) => async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
@@ -511,17 +515,20 @@ const CreateQuiz: React.FC = () => {
     try {
       const aboutQuizRes = await createQuiz(aboutQuizData)
 
-      const quizFirtsOrLastData: QuizFirtsOrLastData = {
-        quizFirstOrLastStatus: quizFirtsOrLastStatus,
-        quizId: aboutQuizRes.data.data.id
-      }
+      const quizFirtsOrLastData: QuizFirtsOrLastData | undefined =
+      location.pathname === "/quiz"
+      ? {
+          quizFirstOrLastStatus: quizFirtsOrLastStatus,
+          quizId: aboutQuizRes?.data.data.id
+        }
+      : undefined
+
       const quizFirtsOrLastRes = await createQuizFirstOrLast(quizFirtsOrLastData)
 
       const quizBranchData = argBranches.map((branch :any) => ({
         quizBranchName: branch.branchName,
-        quizFirstOrLastId: quizFirtsOrLastRes.data.data.id
-      }
-      ))
+        quizFirstOrLastId: location.pathname === "/quiz" ? quizFirtsOrLastRes?.data.data.id : quizFirstOrLastId
+      }))
 
       const quizBranchRes = await createQuizBranch(quizBranchData)
 
@@ -631,7 +638,7 @@ const CreateQuiz: React.FC = () => {
         .filter((branch :any) => branch.remoteBranchName)
         .map((branch :any) => ({
           quizRemoteBranchName: branch.remoteBranchName,
-          quizFirstOrLastId: quizFirtsOrLastRes.data.data.id
+          quizFirstOrLastId: quizFirtsOrLastRes === undefined ? quizFirstOrLastId : quizFirtsOrLastRes.data.data.id
         }
       ))
 
@@ -806,6 +813,12 @@ const CreateQuiz: React.FC = () => {
       setQuizIntroduction(ResQuiz.data.quizData.quizIntroduction)
 
       const ResQuizOfLast = await getQuizFirstOrLast(ResQuiz.data.quizFirstOrLastsData[0].id)
+      setQuizFirstOrLastId(ResQuiz.data.quizFirstOrLastsData[0].id)
+
+      setCurrentBranch({
+        currentBranchName: ResQuizOfLast.data.dataBranches[0].quizBranchName,
+        currentBranchId: ResQuizOfLast.data.dataBranches[0].id
+      })
 
       await Promise.all(
         await ResQuizOfLast.data.dataBranches.map(async (branch :any) => {
@@ -932,7 +945,7 @@ const CreateQuiz: React.FC = () => {
   }
 
   //ブランチidと自身のidを持っていない配列
-  const createBranches = branches.filter(branch => !branch.branchId)
+  const createBranches = branches.filter(branch => branch.branchName && !branch.branchId)
   const createWorktreeFiles = worktreeFiles.filter(worktreeFile => worktreeFile.fileName && !worktreeFile.worktreeFileId && !worktreeFile.parentBranchId)
   const createIndexFiles = indexFiles.filter(indexFile => indexFile.fileName && !indexFile.indexFileId && !indexFile.parentBranchId)
   const createRepositoryFiles = repositoryFiles.filter(repositoryFile => repositoryFile.fileName && !repositoryFile.repositoryFileId && !repositoryFile.parentBranchId && !repositoryFile.parentCommitMessageId)
@@ -1000,7 +1013,9 @@ const CreateQuiz: React.FC = () => {
       initialRemoteBranch.remoteBranchId === remoteBranch.remoteBranchId
     ))
 
-  const handleUpdateQuizData = async () => {
+  const handleUpdateQuizData = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault
+
     try {
 
       //新規作成
@@ -1040,7 +1055,23 @@ const CreateQuiz: React.FC = () => {
 
       console.log("終わり")
       //新規作成用の関数(branchも新規作成の場合)
-      //更新用の関数
+      await handleCreateQuizSubmit(
+        createBranches,
+        createWorktreeFiles,
+        createIndexFiles,
+        createCommitMessages,
+        createFileHistoryForCansellCommits,
+        createRepositoryFiles,
+        createRemoteBranches,
+        createRemoteCommitMessages,
+        createRemoteRepositoryFiles
+      )(e)
+      // 既存ブランチ内の新規作成
+
+      // 更新用の関数
+
+      // 削除用の関数
+
     } catch (err) {
       console.log(err)
     }
@@ -1138,19 +1169,7 @@ const CreateQuiz: React.FC = () => {
           color="default"
           disabled={!quizTitle || !quizIntroduction || !quizType ? true : false}
           className={classes.submitBtn}
-          onClick={
-            handleCreateQuizSubmit(
-              createBranches,
-              createWorktreeFiles,
-              createIndexFiles,
-              createCommitMessages,
-              createFileHistoryForCansellCommits,
-              createRepositoryFiles,
-              createRemoteBranches,
-              createRemoteCommitMessages,
-              createRemoteRepositoryFiles
-            )
-          }
+          onClick={handleUpdateQuizData}
         >
           Submit
         </Button>
