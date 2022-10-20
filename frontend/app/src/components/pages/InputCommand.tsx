@@ -55,7 +55,9 @@ const InputCommand: React.FC = () => {
       }])
     } else if (currentBranchParentIndexFiles.some(IndexFile => IndexFile.fileName === worktreeFile.fileName && IndexFile.textStatus !== worktreeFile.textStatus)) {
       setIndexFiles (indexFile => indexFile.map((indexFile) =>
-        indexFile.textStatus !== worktreeFile.textStatus && indexFile.fileName === worktreeFile.fileName
+        indexFile.textStatus !== worktreeFile.textStatus
+        && indexFile.fileName === worktreeFile.fileName
+        && indexFile.parentBranch === currentBranch.currentBranchName
         ? {
         fileName :worktreeFile.fileName,
         textStatus: worktreeFile.textStatus,
@@ -84,7 +86,9 @@ const InputCommand: React.FC = () => {
             }])
           } else if (currentBranchParentIndexFiles.some(IndexFile => IndexFile.fileName === worktreeFile.fileName && IndexFile.textStatus !== worktreeFile.textStatus)) {
             setIndexFiles (indexFile => indexFile.map((indexFile) =>
-              indexFile.textStatus !== worktreeFile.textStatus && indexFile.fileName === worktreeFile.fileName
+              indexFile.textStatus !== worktreeFile.textStatus
+              && indexFile.fileName === worktreeFile.fileName
+              && indexFile.parentBranch === currentBranch.currentBranchName
               ? {
               fileName :worktreeFile.fileName,
               textStatus: worktreeFile.textStatus,
@@ -228,9 +232,6 @@ const InputCommand: React.FC = () => {
           : historyFile
         )
       )
-
-
-
     } else {
       setAddText('error: commit message not found.')
     }
@@ -713,6 +714,23 @@ const InputCommand: React.FC = () => {
     }
   }
 
+  const forCheck = (text :string, str :number) => {
+    setWorktreeFiles(
+      worktreeFiles.map(worktreeFile =>
+        worktreeFile.fileName === text.substring(str)
+        && worktreeFile.parentBranch === currentBranch.currentBranchName
+        ? {
+          fileName: worktreeFile.fileName,
+          parentBranch: worktreeFile.parentBranch,
+          textStatus: text.substring(str),
+          parentBranchId: worktreeFile.parentBranchId,
+          worktreeFileId: worktreeFile.worktreeFileId
+          }
+        : worktreeFile
+      )
+    )
+  }
+
   return(
     <Input
           className={classes.input}
@@ -732,6 +750,8 @@ const InputCommand: React.FC = () => {
                 gitAddA()
               } else if (text.startsWith("git add ")){
                 gitAdd(text, 8)
+              } else if (text.startsWith("kakunin")){
+                forCheck(text, 8)
               } else if (text.startsWith("git commit --amend")){
                 gitCommitAmend(text, 19)
               } else if (text.startsWith("git commit -m")){
