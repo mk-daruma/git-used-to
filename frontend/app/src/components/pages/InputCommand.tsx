@@ -705,7 +705,7 @@ const InputCommand: React.FC = () => {
           fileName: afterCommandMultipleString,
           parentBranch: currentBranch.currentBranchName,
           textStatus: "おはようございます",
-          parentBranchId: "",
+          parentBranchId: currentBranch.currentBranchId,
           worktreeFileId: ""
         }])
       ))
