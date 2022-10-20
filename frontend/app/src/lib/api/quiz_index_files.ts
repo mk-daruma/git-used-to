@@ -1,7 +1,7 @@
 import { CreateQuizIndexFileData } from "interfaces"
 import client from "lib/api/client"
 
-export const createQuizIndexFile = (data: CreateQuizIndexFileData) => {
+export const createQuizIndexFile = (data: any) => {
   if (Object.keys(data).length > 0) {
     return client.post("quiz_index_files", data)
   }

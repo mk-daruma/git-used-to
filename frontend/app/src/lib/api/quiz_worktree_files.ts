@@ -1,7 +1,7 @@
 import { CreateQuizWortreeFileData } from "interfaces"
 import client from "lib/api/client"
 
-export const createQuizWorktreeFile = (data: CreateQuizWortreeFileData) => {
+export const createQuizWorktreeFile = (data: any) => {
   if (Object.keys(data).length > 0) {
     return client.post("quiz_worktree_files", data)
   }
