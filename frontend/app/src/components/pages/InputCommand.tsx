@@ -756,7 +756,7 @@ const InputCommand: React.FC = () => {
                 gitCommitAmend(text, 19)
               } else if (text.startsWith("git commit -m")){
                 gitCommitM(text, 14)
-              } else if (text === `git push origin ${currentBranch}`) {
+              } else if (text === `git push origin ${currentBranch.currentBranchName}`) {
                 gitPush()
               } else if (text.startsWith("git branch -m")) {
                 gitBranchM(text, 14)
