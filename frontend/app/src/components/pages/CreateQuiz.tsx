@@ -931,50 +931,115 @@ const CreateQuiz: React.FC = () => {
     }
   }
 
+  //ブランチidと自身のidを持っていない配列
+  const createBranches = branches.filter(branch => !branch.branchId)
+  const createWorktreeFiles = worktreeFiles.filter(worktreeFile => worktreeFile.fileName && !worktreeFile.worktreeFileId && !worktreeFile.parentBranchId)
+  const createIndexFiles = indexFiles.filter(indexFile => indexFile.fileName && !indexFile.indexFileId && !indexFile.parentBranchId)
+  const createRepositoryFiles = repositoryFiles.filter(repositoryFile => repositoryFile.fileName && !repositoryFile.repositoryFileId && !repositoryFile.parentBranchId && !repositoryFile.parentCommitMessageId)
+  const createCommitMessages = commitMessages.filter(commitMessage => commitMessage.message && !commitMessage.commitMessageId && !commitMessage.parentBranchId)
+  const createFileHistoryForCansellCommits = fileHistoryForCansellCommits.filter(historyFile => historyFile.fileName && !historyFile.historyFileId && !historyFile.parentBranchId && !historyFile.parentCommitMessageId)
+  const createRemoteBranches = remoteBranches.filter(remoteBranch => remoteBranch.remoteBranchName && !remoteBranch.remoteBranchId)
+  const createRemoteCommitMessages = remoteCommitMessages.filter(remoteCommitMessage => remoteCommitMessage.remoteMessage && !remoteCommitMessage.remoteCommitMessageId && !remoteCommitMessage.parentRemoteBranchId)
+  const createRemoteRepositoryFiles = remoteRepositoryFiles.filter(remoteRepositoryFile => remoteRepositoryFile.fileName && !remoteRepositoryFile.remoteRepositoryFileId && !remoteRepositoryFile.parentRemoteBranchId && !remoteRepositoryFile.parentRemoteCommitMessageId)
+
+  //ブランチidは持っていて自身のidを持っていない配列
+  const createNewBranchWorktreeFiles = worktreeFiles.filter(worktreeFile => !worktreeFile.worktreeFileId && worktreeFile.parentBranchId)
+  const createNewBranchIndexFiles = indexFiles.filter(indexFile => !indexFile.indexFileId && indexFile.parentBranchId)
+  const createNewBranchRepositoryFiles = repositoryFiles.filter(repositoryFile => !repositoryFile.repositoryFileId && repositoryFile.parentBranchId && !repositoryFile.parentCommitMessageId)
+  const createNewBranchCommitMessages = commitMessages.filter(commitMessage => !commitMessage.commitMessageId && commitMessage.parentBranchId)
+  const createNewBranchFileHistoryForCansellCommits = fileHistoryForCansellCommits.filter(historyFile => !historyFile.historyFileId && historyFile.parentBranchId && !historyFile.parentCommitMessageId)
+  const createNewBranchRemoteCommitMessages = remoteCommitMessages.filter(remoteCommitMessage => !remoteCommitMessage.remoteCommitMessageId && remoteCommitMessage.parentRemoteBranchId)
+  const createNewBranchRemoteRepositoryFiles = remoteRepositoryFiles.filter(remoteRepositoryFile => !remoteRepositoryFile.remoteRepositoryFileId && remoteRepositoryFile.parentRemoteBranchId && !remoteRepositoryFile.parentRemoteCommitMessageId)
+
+  const updateBranches =
+    branches.filter(branch => initialBranches.some(initBranch =>
+      branch.branchName !== initBranch.branchName
+      && branch.branchName === initBranch.branchName
+    ))
+  const updateWorktreeFiles =
+    worktreeFiles.filter(worktreeFile => initialWorktreeFiles.some(initWorkfile =>
+      initWorkfile.fileName === worktreeFile.fileName
+      && initWorkfile.parentBranch === worktreeFile.parentBranch
+      && initWorkfile.textStatus !== worktreeFile.textStatus
+      && initWorkfile.worktreeFileId === worktreeFile.worktreeFileId
+    ))
+  const updateIndexFiles =
+    indexFiles.filter(indexFile => initialIndexFiles.some(initialIndexFile =>
+      indexFile.fileName === initialIndexFile.fileName
+      && indexFile.parentBranch === initialIndexFile.parentBranch
+      && indexFile.textStatus !== initialIndexFile.textStatus
+      && indexFile.indexFileId === initialIndexFile.indexFileId
+    ))
+
+  const deleteBranches =
+    initialBranches.filter(initialBranch => !branches.some(branch =>
+      initialBranch.branchId === branch.branchId
+    ))
+  const deleteWorktreeFiles =
+    initialWorktreeFiles.filter(initWorkfile => !worktreeFiles.some(worktreeFile =>
+      initWorkfile.worktreeFileId === worktreeFile.worktreeFileId
+    ))
+  const deleteIndexFiles =
+    initialIndexFiles.filter(initIndexFile => !indexFiles.some(indexFile =>
+      initIndexFile.indexFileId === indexFile.indexFileId
+    ))
+  const deleteCommitMessages =
+    initialCommitMessages.filter(initCommit => !commitMessages.some(commitMessage =>
+      initCommit.commitMessageId === commitMessage.commitMessageId
+    ))
+  const deleteRepositoryFiles =
+    initialRepositoryFiles.filter(initialRepositoryFile => !repositoryFiles.some(repositoryFile =>
+      initialRepositoryFile.repositoryFileId === repositoryFile.repositoryFileId
+    ))
+  const deleteFileHistoryForCansellCommit =
+    initialFileHistoryForCansellCommits.filter(initialFileHistoryForCansellCommit => !fileHistoryForCansellCommits.some(fileHistoryForCansellCommit =>
+      initialFileHistoryForCansellCommit.historyFileId === fileHistoryForCansellCommit.historyFileId
+    ))
+  const deleteRemoteBranches =
+    initialRemoteBranches.filter(initialRemoteBranch => !remoteBranches.some(remoteBranch =>
+      initialRemoteBranch.remoteBranchId === remoteBranch.remoteBranchId
+    ))
+
   const handleUpdateQuizData = async () => {
     try {
-      //棲み分け用
-      const createWorktreeFiles = worktreeFiles.filter(worktreeFile => !worktreeFile.worktreeFileId)
-      const createIndexFiles = indexFiles.filter(indexFile => !indexFile.indexFileId)
-      const createRepositoryFile = repositoryFiles.filter(repositoryFile => !repositoryFile.repositoryFileId)
-      const createBranches = branches.filter(branch => !branch.branchId)
-      const createFileHistoryForCansellCommit = fileHistoryForCansellCommits.filter(historyFile => !historyFile.historyFileId)
-      const createRemoteBranches = remoteBranches.filter(remoteBranch => !remoteBranch.remoteBranchId)
-      const createRemoteCommitMessages = remoteCommitMessages.filter(remoteCommitMessage => !remoteCommitMessage.remoteCommitMessageId)
-      const createRemoteRepositoryFiles = remoteRepositoryFiles.filter(remoteRepositoryFile => !remoteRepositoryFile.remoteRepositoryFileId)
 
-      const updateWorktreeFiles =
-        worktreeFiles.filter(worktreeFile => initialWorktreeFiles.some(initWorkfile =>
-          initWorkfile.fileName === worktreeFile.fileName
-          && initWorkfile.parentBranch === worktreeFile.parentBranch
-          && initWorkfile.textStatus !== worktreeFile.textStatus
-          && initWorkfile.worktreeFileId === worktreeFile.worktreeFileId
-        ))
+      //新規作成
+      console.log("始まり")
+      console.log("createCommitMessages", createCommitMessages)
+      console.log("createrepositoryFiles", createRepositoryFiles)
+      console.log("createworktreeFiles", createWorktreeFiles)
+      console.log("createindexFiles", createIndexFiles)
+      console.log("createbranches", createBranches)
+      console.log("createfileHistoryForCansellCommit", createFileHistoryForCansellCommits)
+      console.log("createremoteBranches", createRemoteBranches)
+      console.log("createremoteCommitMessages", createRemoteCommitMessages)
+      console.log("createremoteRepositoryFiles", createRemoteRepositoryFiles)
 
-      const deleteWorktreeFiles =
-        initialWorktreeFiles.filter(initWorkfile => !worktreeFiles.some(worktreeFile =>
-          initWorkfile.worktreeFileId === worktreeFile.worktreeFileId
-        ))
+      //既存のブランチから新規
+      console.log("createNewBranchWorktreeFiles", createNewBranchWorktreeFiles)
+      console.log("createNewBranchCommitMessages", createNewBranchCommitMessages)
+      console.log("createNewBranchFileHistoryForCansellCommits", createNewBranchFileHistoryForCansellCommits)
+      console.log("createNewBranchIndexFiles", createNewBranchIndexFiles)
+      console.log("createNewBranchRepositoryFiles", createNewBranchRepositoryFiles)
+      console.log("createNewBranchRemoteCommitMessages", createNewBranchRemoteCommitMessages)
+      console.log("createNewBranchRemoteRepositoryFiles", createNewBranchRemoteRepositoryFiles)
 
-        const deleteCommitMessages =
-        initialCommitMessages.filter(initCommit => !commitMessages.some(commitMessage =>
-          initCommit.commitMessageId === commitMessage.commitMessageId
-        ))
+      //更新
+      console.log("updateWorktreeFiles", updateWorktreeFiles)
+      console.log("updateIndexFiles", updateIndexFiles)
+      console.log("updateBranches", updateBranches)
 
-      const updateIndexFiles =
-        indexFiles.filter(indexFile => initialIndexFiles.some(initialIndexFile =>
-          indexFile.fileName === initialIndexFile.fileName
-          && indexFile.parentBranch === initialIndexFile.parentBranch
-          && indexFile.textStatus !== initialIndexFile.textStatus
-          && indexFile.indexFileId === initialIndexFile.indexFileId
-        ))
+      //削除
+      console.log("deleteBranches", deleteBranches)
+      console.log("deleteCommitMessages", deleteCommitMessages)
+      console.log("deleteWorktreeFiles", deleteWorktreeFiles)
+      console.log("deleteIndexFiles", deleteIndexFiles)
+      console.log("deleteRepositoryFiles", deleteRepositoryFiles)
+      console.log("deleteFileHistoryForCansellCommit", deleteFileHistoryForCansellCommit)
+      console.log("deleteRemoteBranches", deleteRemoteBranches)
 
-      console.log("作成",createWorktreeFiles)
-      console.log("更新",updateWorktreeFiles)
-      console.log("削除",deleteWorktreeFiles)
-
-      //作成用の関数
-
+      console.log("終わり")
+      //新規作成用の関数(branchも新規作成の場合)
       //更新用の関数
     } catch (err) {
       console.log(err)
@@ -1073,7 +1138,19 @@ const CreateQuiz: React.FC = () => {
           color="default"
           disabled={!quizTitle || !quizIntroduction || !quizType ? true : false}
           className={classes.submitBtn}
-          onClick={handleUpdateQuizData}
+          onClick={
+            handleCreateQuizSubmit(
+              createBranches,
+              createWorktreeFiles,
+              createIndexFiles,
+              createCommitMessages,
+              createFileHistoryForCansellCommits,
+              createRepositoryFiles,
+              createRemoteBranches,
+              createRemoteCommitMessages,
+              createRemoteRepositoryFiles
+            )
+          }
         >
           Submit
         </Button>
