@@ -31,6 +31,7 @@ const InputCommand: React.FC = () => {
     commitMessages, setCommitMessages,
     remoteCommitMessages, setRemoteCommitMessages,
     addText, setAddText,
+    gitInit, setGitInit,
     commands, setCommands
   } = useContext(QuizContext)
 
@@ -160,7 +161,7 @@ const InputCommand: React.FC = () => {
                 parentCommitMessage: text.substring(str),
                 parentPastCommitMessage: repo.parentCommitMessage,
                 parentBranchId: currentBranch.currentBranchId,
-                parentCommitMessageId: repo.parentCommitMessageId,
+                parentCommitMessageId: "",
                 historyFileId: ""
               }])
             }}
@@ -180,7 +181,7 @@ const InputCommand: React.FC = () => {
         }}
       )
     } else {
-      setAddText(`On branch '${currentBranch}' nothing to commit, working tree clean`)
+      setAddText(`On branch '${currentBranch.currentBranchName}' nothing to commit, working tree clean`)
     }
   }
 
@@ -251,12 +252,14 @@ const InputCommand: React.FC = () => {
     }
     remoteBranches.forEach(remoteBranch => {
       hasNoRemoteCommitMessages.forEach(hasNoRemoteCommitMessage => {
-        setRemoteCommitMessages((commitMessage) => [...commitMessage,{
-          remoteMessage: hasNoRemoteCommitMessage.message,
-          parentRemoteBranch: hasNoRemoteCommitMessage.parentBranch,
-          parentRemoteBranchId: remoteBranch.remoteBranchName === hasNoRemoteCommitMessage.parentBranch ? remoteBranch.remoteBranchId : "",
-          remoteCommitMessageId: ""
-        }])
+        if (remoteBranch.remoteBranchName === hasNoRemoteCommitMessage.parentBranch){
+          setRemoteCommitMessages((commitMessage) => [...commitMessage,{
+            remoteMessage: hasNoRemoteCommitMessage.message,
+            parentRemoteBranch: hasNoRemoteCommitMessage.parentBranch,
+            parentRemoteBranchId: remoteBranch.remoteBranchId,
+            remoteCommitMessageId: ""
+          }])
+        }
       })
       differTextStatusRemoteRepositoryFiles.forEach(differTextStatusRemoteRepositoryFile => {
         setRemoteRepositoryFiles((repositoryFile) =>
@@ -277,15 +280,17 @@ const InputCommand: React.FC = () => {
         )
       })
       hasNoRemoteRepositoryFiles.forEach(hasNoRemoteRepositoryFile => {
-        setRemoteRepositoryFiles((repositoryFile) => [...repositoryFile,{
-          fileName: hasNoRemoteRepositoryFile.fileName,
-          textStatus: hasNoRemoteRepositoryFile.textStatus,
-          parentRemoteBranch: hasNoRemoteRepositoryFile.parentBranch,
-          parentRemoteCommitMessage: hasNoRemoteRepositoryFile.parentCommitMessage,
-          parentRemoteBranchId: remoteBranch.remoteBranchName === hasNoRemoteRepositoryFile.parentBranch ? remoteBranch.remoteBranchId : "",
-          parentRemoteCommitMessageId: "",
-          remoteRepositoryFileId: ""
-        }])
+        if (remoteBranch.remoteBranchName === hasNoRemoteRepositoryFile.parentBranch) {
+          setRemoteRepositoryFiles((repositoryFile) => [...repositoryFile,{
+            fileName: hasNoRemoteRepositoryFile.fileName,
+            textStatus: hasNoRemoteRepositoryFile.textStatus,
+            parentRemoteBranch: hasNoRemoteRepositoryFile.parentBranch,
+            parentRemoteCommitMessage: hasNoRemoteRepositoryFile.parentCommitMessage,
+            parentRemoteBranchId: remoteBranch.remoteBranchId,
+            parentRemoteCommitMessageId: "",
+            remoteRepositoryFileId: ""
+          }])
+        }
       })
     })
   }
