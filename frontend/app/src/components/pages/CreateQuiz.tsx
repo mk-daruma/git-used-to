@@ -30,6 +30,8 @@ export const QuizContext = createContext({} as {
   setText: React.Dispatch<React.SetStateAction<string>>
   addText: string
   setAddText :React.Dispatch<React.SetStateAction<string>>
+  gitInit: string
+  setGitInit :React.Dispatch<React.SetStateAction<string>>
 
   currentBranch: {
     currentBranchName: string
@@ -361,6 +363,7 @@ const CreateQuiz: React.FC = () => {
   const [quizFirstOrLastId, setQuizFirstOrLastId] = useState<string>("")
   const [text, setText] = useState("");
   const [addText, setAddText] = useState("");
+  const [gitInit, setGitInit] = useState<string>("not a git repository")
   const [currentBranch, setCurrentBranch] = useState({
     currentBranchName: "",
     currentBranchId : ""
@@ -807,6 +810,8 @@ const CreateQuiz: React.FC = () => {
 
   const handleGetQuizData = async () => {
     try {
+      setGitInit("Initialized empty Git repository")
+
       const ResQuiz = await getQuiz(Number(id))
 
       setQuizTitle(ResQuiz.data.quizData.quizTitle)
@@ -1179,6 +1184,7 @@ const CreateQuiz: React.FC = () => {
         quizIntroduction, setQuizIntroduction,
         text, setText,
         addText, setAddText,
+        gitInit,setGitInit,
         currentBranch, setCurrentBranch,
         branches, setBranches,
         initialBranches,setInitialBranches,
