@@ -249,42 +249,44 @@ const InputCommand: React.FC = () => {
         remoteBranchId: ""
       }])
     }
-    hasNoRemoteCommitMessages.forEach(hasNoRemoteCommitMessage => {
-      setRemoteCommitMessages((commitMessage) => [...commitMessage,{
-        remoteMessage: hasNoRemoteCommitMessage.message,
-        parentRemoteBranch: hasNoRemoteCommitMessage.parentBranch,
-        parentRemoteBranchId: "",
-        remoteCommitMessageId: ""
-      }])
-    })
-    differTextStatusRemoteRepositoryFiles.forEach(differTextStatusRemoteRepositoryFile => {
-      setRemoteRepositoryFiles((repositoryFile) =>
-        repositoryFile.map(repositoryFile =>
-          differTextStatusRemoteRepositoryFile.fileName === repositoryFile.fileName
-          && differTextStatusRemoteRepositoryFile.parentBranch === repositoryFile.parentRemoteBranch
-          ? {
-              fileName: differTextStatusRemoteRepositoryFile.fileName,
-              textStatus: differTextStatusRemoteRepositoryFile.textStatus,
-              parentRemoteBranch: differTextStatusRemoteRepositoryFile.parentBranch,
-              parentRemoteCommitMessage: differTextStatusRemoteRepositoryFile.parentCommitMessage,
-              parentRemoteBranchId: "",
-              parentRemoteCommitMessageId: "",
-              remoteRepositoryFileId: ""
-            }
-          : repositoryFile
+    remoteBranches.forEach(remoteBranch => {
+      hasNoRemoteCommitMessages.forEach(hasNoRemoteCommitMessage => {
+        setRemoteCommitMessages((commitMessage) => [...commitMessage,{
+          remoteMessage: hasNoRemoteCommitMessage.message,
+          parentRemoteBranch: hasNoRemoteCommitMessage.parentBranch,
+          parentRemoteBranchId: remoteBranch.remoteBranchName === hasNoRemoteCommitMessage.parentBranch ? remoteBranch.remoteBranchId : "",
+          remoteCommitMessageId: ""
+        }])
+      })
+      differTextStatusRemoteRepositoryFiles.forEach(differTextStatusRemoteRepositoryFile => {
+        setRemoteRepositoryFiles((repositoryFile) =>
+          repositoryFile.map(repositoryFile =>
+            differTextStatusRemoteRepositoryFile.fileName === repositoryFile.fileName
+            && differTextStatusRemoteRepositoryFile.parentBranch === repositoryFile.parentRemoteBranch
+            ? {
+                fileName: differTextStatusRemoteRepositoryFile.fileName,
+                textStatus: differTextStatusRemoteRepositoryFile.textStatus,
+                parentRemoteBranch: differTextStatusRemoteRepositoryFile.parentBranch,
+                parentRemoteCommitMessage: differTextStatusRemoteRepositoryFile.parentCommitMessage,
+                parentRemoteBranchId: remoteBranch.remoteBranchName === differTextStatusRemoteRepositoryFile.parentBranch ? remoteBranch.remoteBranchId : "",
+                parentRemoteCommitMessageId: "",
+                remoteRepositoryFileId: ""
+              }
+            : repositoryFile
+          )
         )
-      )
-    })
-    hasNoRemoteRepositoryFiles.forEach(hasNoRemoteRepositoryFile => {
-      setRemoteRepositoryFiles((repositoryFile) => [...repositoryFile,{
-        fileName: hasNoRemoteRepositoryFile.fileName,
-        textStatus: hasNoRemoteRepositoryFile.textStatus,
-        parentRemoteBranch: hasNoRemoteRepositoryFile.parentBranch,
-        parentRemoteCommitMessage: hasNoRemoteRepositoryFile.parentCommitMessage,
-        parentRemoteBranchId: "",
-        parentRemoteCommitMessageId: "",
-        remoteRepositoryFileId: ""
-      }])
+      })
+      hasNoRemoteRepositoryFiles.forEach(hasNoRemoteRepositoryFile => {
+        setRemoteRepositoryFiles((repositoryFile) => [...repositoryFile,{
+          fileName: hasNoRemoteRepositoryFile.fileName,
+          textStatus: hasNoRemoteRepositoryFile.textStatus,
+          parentRemoteBranch: hasNoRemoteRepositoryFile.parentBranch,
+          parentRemoteCommitMessage: hasNoRemoteRepositoryFile.parentCommitMessage,
+          parentRemoteBranchId: remoteBranch.remoteBranchName === hasNoRemoteRepositoryFile.parentBranch ? remoteBranch.remoteBranchId : "",
+          parentRemoteCommitMessageId: "",
+          remoteRepositoryFileId: ""
+        }])
+      })
     })
   }
 
