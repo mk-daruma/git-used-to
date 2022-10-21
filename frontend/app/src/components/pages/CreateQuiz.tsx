@@ -956,14 +956,38 @@ const CreateQuiz: React.FC = () => {
   const createRemoteRepositoryFiles = remoteRepositoryFiles.filter(remoteRepositoryFile => remoteRepositoryFile.fileName && !remoteRepositoryFile.remoteRepositoryFileId && !remoteRepositoryFile.parentRemoteBranchId && !remoteRepositoryFile.parentRemoteCommitMessageId)
 
   //ブランチidは持っていて自身のidを持っていない配列
-  const createNewBranchWorktreeFiles = worktreeFiles.filter(worktreeFile => !worktreeFile.worktreeFileId && worktreeFile.parentBranchId)
-  const createNewBranchIndexFiles = indexFiles.filter(indexFile => !indexFile.indexFileId && indexFile.parentBranchId)
-  const createNewBranchRepositoryFiles = repositoryFiles.filter(repositoryFile => !repositoryFile.repositoryFileId && repositoryFile.parentBranchId && !repositoryFile.parentCommitMessageId)
-  const createNewBranchCommitMessages = commitMessages.filter(commitMessage => !commitMessage.commitMessageId && commitMessage.parentBranchId)
-  const createNewBranchFileHistoryForCansellCommits = fileHistoryForCansellCommits.filter(historyFile => !historyFile.historyFileId && historyFile.parentBranchId && !historyFile.parentCommitMessageId)
-  const createNewBranchRemoteCommitMessages = remoteCommitMessages.filter(remoteCommitMessage => !remoteCommitMessage.remoteCommitMessageId && remoteCommitMessage.parentRemoteBranchId)
-  const createNewBranchRemoteRepositoryFiles = remoteRepositoryFiles.filter(remoteRepositoryFile => !remoteRepositoryFile.remoteRepositoryFileId && remoteRepositoryFile.parentRemoteBranchId && !remoteRepositoryFile.parentRemoteCommitMessageId)
+  const createNewBranchWorktreeFiles =
+    worktreeFiles
+    .filter(worktreeFile => !worktreeFile.worktreeFileId && worktreeFile.parentBranchId)
+    .map(filteredWorktreeFile =>({
+      quizWorktreeFileName: filteredWorktreeFile.fileName,
+      quizWorktreeFileTextStatus: filteredWorktreeFile.textStatus,
+      quizBranchId: filteredWorktreeFile.parentBranchId
+    }))
+  const createNewBranchIndexFiles =
+    indexFiles
+    .filter(indexFile => !indexFile.indexFileId && indexFile.parentBranchId)
+    .map(filteredIndexFile =>({
+      quizIndexFileName: filteredIndexFile.fileName,
+      quizIndexFileTextStatus: filteredIndexFile.textStatus,
+      quizBranchId: filteredIndexFile.parentBranchId
+    }))
+  const createNewBranchCommitMessages =
+    commitMessages
+    .filter(commitMessage => !commitMessage.commitMessageId && commitMessage.parentBranchId)
+    .map((filtedcommitMessage :any) =>({
+      quizCommitMessage: filtedcommitMessage.message,
+      quizBranchId: filtedcommitMessage.parentBranchId
+    }))
+  const createNewBranchRemoteCommitMessages =
+    remoteCommitMessages
+    .filter(remoteCommitMessage => !remoteCommitMessage.remoteCommitMessageId && remoteCommitMessage.parentRemoteBranchId)
+    .map((filtedcommitMessage :any) =>({
+      quizRemoteCommitMessage: filtedcommitMessage.remoteMessage,
+      quizRemoteBranchId: filtedcommitMessage.parentRemoteBranchId
+    }))
 
+  //更新用関数
   const updateBranches =
     branches.filter(branch => initialBranches.some(initBranch =>
       branch.branchName !== initBranch.branchName
@@ -1017,28 +1041,6 @@ const CreateQuiz: React.FC = () => {
     e.preventDefault
 
     try {
-
-      //新規作成
-      console.log("始まり")
-      console.log("createCommitMessages", createCommitMessages)
-      console.log("createrepositoryFiles", createRepositoryFiles)
-      console.log("createworktreeFiles", createWorktreeFiles)
-      console.log("createindexFiles", createIndexFiles)
-      console.log("createbranches", createBranches)
-      console.log("createfileHistoryForCansellCommit", createFileHistoryForCansellCommits)
-      console.log("createremoteBranches", createRemoteBranches)
-      console.log("createremoteCommitMessages", createRemoteCommitMessages)
-      console.log("createremoteRepositoryFiles", createRemoteRepositoryFiles)
-
-      //既存のブランチから新規
-      console.log("createNewBranchWorktreeFiles", createNewBranchWorktreeFiles)
-      console.log("createNewBranchCommitMessages", createNewBranchCommitMessages)
-      console.log("createNewBranchFileHistoryForCansellCommits", createNewBranchFileHistoryForCansellCommits)
-      console.log("createNewBranchIndexFiles", createNewBranchIndexFiles)
-      console.log("createNewBranchRepositoryFiles", createNewBranchRepositoryFiles)
-      console.log("createNewBranchRemoteCommitMessages", createNewBranchRemoteCommitMessages)
-      console.log("createNewBranchRemoteRepositoryFiles", createNewBranchRemoteRepositoryFiles)
-
       //更新
       console.log("updateWorktreeFiles", updateWorktreeFiles)
       console.log("updateIndexFiles", updateIndexFiles)
@@ -1053,7 +1055,6 @@ const CreateQuiz: React.FC = () => {
       console.log("deleteFileHistoryForCansellCommit", deleteFileHistoryForCansellCommit)
       console.log("deleteRemoteBranches", deleteRemoteBranches)
 
-      console.log("終わり")
       //新規作成用の関数(branchも新規作成の場合)
       await handleCreateQuizSubmit(
         createBranches,
@@ -1067,7 +1068,83 @@ const CreateQuiz: React.FC = () => {
         createRemoteRepositoryFiles
       )(e)
       // 既存ブランチ内の新規作成
+      const quizWorktreeFileRes = await createQuizWorktreeFile(createNewBranchWorktreeFiles)
+      const quizIndexFileRes = await createQuizIndexFile(createNewBranchIndexFiles)
+      const QuizCommitMessageRes = await createQuizCommitMessage(createNewBranchCommitMessages)
 
+      const createNewBranchFileHistoryForCansellCommits =
+        QuizCommitMessageRes !== undefined
+        ? QuizCommitMessageRes.data.data.map((commitMessage :any) =>(
+            fileHistoryForCansellCommits
+            .filter((historyFile :any) =>
+              historyFile.parentCommitMessage === commitMessage.quizCommitMessage
+              && historyFile.fileName !== ""
+              && historyFile.parentBranchId
+              && !historyFile.historyFileId
+              && !historyFile.parentCommitMessageId)
+            .map((filteredHistoryFile :any) =>({
+              quizHistoryOfCommittedFileName: filteredHistoryFile.fileName,
+              quizHistoryOfCommittedFileTextStatus: filteredHistoryFile.textStatus,
+              quizHistoryOfCommittedFilePastTextStatus: filteredHistoryFile.pastTextStatus,
+              quizHistoryOfCommittedFileParentPastCommitMessage: filteredHistoryFile.parentPastCommitMessage,
+              quizCommitMessageId: commitMessage.id,
+              quizBranchId: filteredHistoryFile.parentBranchId,
+            }))
+          ))
+        : []
+      const quizHistoryOfCommittedFileRes = await CreateQuizHistoryOfCommittedFile(createNewBranchFileHistoryForCansellCommits.flat())
+
+      const createNewBranchRepositoryFiles =
+        QuizCommitMessageRes !== undefined
+        ? QuizCommitMessageRes.data.data.map((commitMessage :any) =>(
+            repositoryFiles
+            .filter((repositoryFile :any) =>
+              repositoryFile.parentCommitMessage === commitMessage.quizCommitMessage
+              && repositoryFile.fileName !== ""
+              && repositoryFile.parentBranchId
+              && !repositoryFile.repositoryFileId
+              && !repositoryFile.parentCommitMessageId)
+            .map((filteredRepositoryFile :any) =>({
+              quizRepositoryFileName: filteredRepositoryFile.fileName,
+              quizRepositoryFileTextStatus: filteredRepositoryFile.textStatus,
+              quizCommitMessageId: commitMessage.id,
+              quizBranchId: filteredRepositoryFile.parentBranchId
+            }))
+          ))
+        : []
+      const quizRepositoryFileRes = await createQuizRepositoryFile(createNewBranchRepositoryFiles.flat())
+
+      const QuizRemoteCommitMessageRes = await createQuizRemoteCommitMessage(createNewBranchRemoteCommitMessages)
+
+      const createNewBranchRemoteRepositoryFiles =
+      QuizRemoteCommitMessageRes !== undefined
+      ? QuizRemoteCommitMessageRes.data.data.map((commitMessage :any) =>(
+          remoteRepositoryFiles
+          .filter((repositoryFile :any) =>
+            repositoryFile.parentRemoteCommitMessage === commitMessage.quizRemoteCommitMessage
+            && repositoryFile.fileName !== ""
+            && repositoryFile.parentRemoteBranchId
+            && !repositoryFile.remoteRepositoryFileId
+            && !repositoryFile.parentRemoteCommitMessageId)
+          .map((filteredRepositoryFile :any) =>({
+            quizRemoteRepositoryFileName: filteredRepositoryFile.fileName,
+            quizRemoteRepositoryFileTextStatus: filteredRepositoryFile.textStatus,
+            quizRemoteCommitMessageId: commitMessage.id,
+            quizRemoteBranchId: filteredRepositoryFile.parentRemoteBranchId
+          }))
+        ))
+      : []
+
+      const quizRemoteRepositoryFileRes = await createQuizRemoteRepositoryFile(createNewBranchRemoteRepositoryFiles.flat())
+
+      //確認
+      console.log("既存ブランチからworkFile新規作成",quizWorktreeFileRes)
+      console.log("既存ブランチからindexFile新規作成",quizIndexFileRes)
+      console.log("既存ブランチからCommitMessage新規作成",QuizCommitMessageRes)
+      console.log("既存ブランチからHistoryOfCommittedFile新規作成",quizHistoryOfCommittedFileRes)
+      console.log("既存ブランチからRepositoryFile新規作成",quizRepositoryFileRes)
+      console.log("既存ブランチからRemoteCommitMessage新規作成",QuizRemoteCommitMessageRes)
+      console.log("既存ブランチからRemoteRepositoryFile新規作成",quizRemoteRepositoryFileRes)
       // 更新用の関数
 
       // 削除用の関数
