@@ -705,15 +705,15 @@ const CreateQuiz: React.FC = () => {
     }
   }
 
-  const addBranches = (useState :any, branchName :any, branchId :any) => {
-    useState((branches :any) => [...branches,{
+  const addBranches = (array :any, branchName :any, branchId :any) => {
+    array((branches :any) => [...branches,{
       branchName: branchName,
       branchId: branchId
     }])
   }
 
-  const addWorktreeFiles = (useState :any, fileName :any, parentBranch :any, textStatus :any, parentBranchId :any,worktreeFileId :any) => {
-    useState((worktreeFile :any) => [...worktreeFile,{
+  const addWorktreeFiles = (array :any, fileName :any, parentBranch :any, textStatus :any, parentBranchId :any,worktreeFileId :any) => {
+    array((worktreeFile :any) => [...worktreeFile,{
       fileName: fileName,
       parentBranch: parentBranch,
       textStatus: textStatus,
@@ -722,8 +722,8 @@ const CreateQuiz: React.FC = () => {
     }])
   }
 
-  const addIndexFile = (useState :any, fileName :any, parentBranch :any, textStatus :any, parentBranchId :any, worktreeFileId :any) => {
-    useState((indexFile :any) => [...indexFile,{
+  const addIndexFile = (array :any, fileName :any, parentBranch :any, textStatus :any, parentBranchId :any, worktreeFileId :any) => {
+    array((indexFile :any) => [...indexFile,{
       fileName: fileName,
       parentBranch: parentBranch,
       textStatus: textStatus,
@@ -732,8 +732,8 @@ const CreateQuiz: React.FC = () => {
     }])
   }
 
-  const addCommitMessages = (useState :any, message :any, parentBranch :any, parentBranchId :any, commitMessageId :any) => {
-    useState((commitMessage :any) => [...commitMessage,{
+  const addCommitMessages = (array :any, message :any, parentBranch :any, parentBranchId :any, commitMessageId :any) => {
+    array((commitMessage :any) => [...commitMessage,{
       message: message,
       parentBranch: parentBranch,
       parentBranchId: parentBranchId,
@@ -741,8 +741,8 @@ const CreateQuiz: React.FC = () => {
     }])
   }
 
-  const addRepositoryFiles = (useState :any, fileName :any, textStatus :any, parentBranch :any, parentCommitMessage :any, parentBranchId :any, parentCommitMessageId :any, repositoryFileId: any) => {
-    useState((repositoryFile :any) => [...repositoryFile,{
+  const addRepositoryFiles = (array :any, fileName :any, textStatus :any, parentBranch :any, parentCommitMessage :any, parentBranchId :any, parentCommitMessageId :any, repositoryFileId: any) => {
+    array((repositoryFile :any) => [...repositoryFile,{
       fileName: fileName,
       textStatus: textStatus,
       parentBranch: parentBranch,
@@ -753,8 +753,8 @@ const CreateQuiz: React.FC = () => {
     }])
   }
 
-  const addFileHistoryForCansellCommits = (useState :any, fileName :any, textStatus :any, pastTextStatus :any, parentBranch :any, parentCommitMessage :any, parentPastCommitMessage :any, parentBranchId :any, parentCommitMessageId :any, historyFileId: any) => {
-    useState((historyFiles :any) => [...historyFiles,{
+  const addFileHistoryForCansellCommits = (array :any, fileName :any, textStatus :any, pastTextStatus :any, parentBranch :any, parentCommitMessage :any, parentPastCommitMessage :any, parentBranchId :any, parentCommitMessageId :any, historyFileId: any) => {
+    array((historyFiles :any) => [...historyFiles,{
       fileName: fileName,
       textStatus: textStatus,
       pastTextStatus: pastTextStatus,
@@ -767,15 +767,15 @@ const CreateQuiz: React.FC = () => {
     }])
   }
 
-  const addRemoteBranches = (useState :any, remoteBranchName :any, remoteBranchId :any) => {
-    useState((branches :any) => [...branches,{
+  const addRemoteBranches = (array :any, remoteBranchName :any, remoteBranchId :any) => {
+    array((branches :any) => [...branches,{
       remoteBranchName: remoteBranchName,
       remoteBranchId: remoteBranchId
     }])
   }
 
-  const addRemoteCommitMessages = (useState :any, remoteMessage :any, parentRemoteBranch :any, parentRemoteBranchId :any, remoteCommitMessageId :any) => {
-    useState((commitMessage :any) => [...commitMessage,{
+  const addRemoteCommitMessages = (array :any, remoteMessage :any, parentRemoteBranch :any, parentRemoteBranchId :any, remoteCommitMessageId :any) => {
+    array((commitMessage :any) => [...commitMessage,{
       remoteMessage: remoteMessage,
       parentRemoteBranch: parentRemoteBranch,
       parentRemoteBranchId: parentRemoteBranchId,
@@ -783,8 +783,8 @@ const CreateQuiz: React.FC = () => {
     }])
   }
 
-  const addRemoteRepositoryFiles = (useState :any, fileName :any, textStatus :any, parentRemoteBranch :any, parentRemoteCommitMessage :any, parentRemoteBranchId :any, parentRemoteCommitMessageId :any, remoteRepositoryFileId: any) => {
-    useState((repositoryFile :any) => [...repositoryFile,{
+  const addRemoteRepositoryFiles = (array :any, fileName :any, textStatus :any, parentRemoteBranch :any, parentRemoteCommitMessage :any, parentRemoteBranchId :any, parentRemoteCommitMessageId :any, remoteRepositoryFileId: any) => {
+    array((repositoryFile :any) => [...repositoryFile,{
       fileName: fileName,
       textStatus: textStatus,
       parentRemoteBranch: parentRemoteBranch,
