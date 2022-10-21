@@ -1,7 +1,7 @@
 import { CreateQuizRemoteCommitMessage } from "interfaces"
 import client from "lib/api/client"
 
-export const createQuizRemoteCommitMessage = (data: CreateQuizRemoteCommitMessage) => {
+export const createQuizRemoteCommitMessage = (data: any) => {
   if (Object.keys(data).length > 0) {
     return client.post("quiz_remote_commit_messages", data)
   }

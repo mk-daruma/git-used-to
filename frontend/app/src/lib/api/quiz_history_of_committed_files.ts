@@ -1,7 +1,7 @@
 import { CreateQuizHistoryOfCommittedFileData } from "interfaces"
 import client from "lib/api/client"
 
-export const CreateQuizHistoryOfCommittedFile = (data: CreateQuizHistoryOfCommittedFileData) => {
+export const CreateQuizHistoryOfCommittedFile = (data: any) => {
   if (Object.keys(data).length > 0) {
     return client.post("quiz_history_of_committed_files", data)
   }
