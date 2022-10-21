@@ -746,6 +746,18 @@ const InputCommand: React.FC = () => {
     }
   }
 
+  const gitSetUp = () => {
+    setGitInit("Initialized empty Git repository")
+    setCurrentBranch({
+      currentBranchName: "master",
+      currentBranchId: ""
+    })
+    setBranches([{
+      branchName: "master",
+      branchId: ""
+    }])
+  }
+
   const forCheck = (text :string, str :number) => {
     setWorktreeFiles(
       worktreeFiles.map(worktreeFile =>
@@ -778,52 +790,56 @@ const InputCommand: React.FC = () => {
                 text,
                 addText
               }])
-              if (text.startsWith("git add .") || text.startsWith("git add -A")){
-                gitAddA()
-              } else if (text.startsWith("git add ")){
-                gitAdd(text, 8)
-              } else if (text.startsWith("kakunin")){
-                forCheck(text, 8)
-              } else if (text.startsWith("git commit --amend")){
-                gitCommitAmend(text, 19)
-              } else if (text.startsWith("git commit -m")){
-                gitCommitM(text, 14)
-              } else if (text === `git push origin ${currentBranch.currentBranchName}`) {
-                gitPush()
-              } else if (text.startsWith("git branch -m")) {
-                gitBranchM(text, 14)
-              } else if (text.startsWith("git branch -D")) {
-                gitBranchForceD(text, 14)
-              } else if (text.startsWith("git branch -d")) {
-                gitBranchD(text, 14)
-              } else if (text.startsWith("git branch ") && afterCommandBranchName.test(text.substring(11))){
-                gitBranch(text, 11)
-              } else if (text.startsWith("git checkout -b ")) {
-                gitCheckoutB(text, 16)
-              } else if (text.startsWith("git checkout ")) {
-                gitCheckout(text, 13)
-              } else if (text.startsWith("touch ")) {
-                touch(text, 6)
-              } else if (text.startsWith("git rm --cashed")) {
-                gitRmCashed(text, 16)
-              } else if (text.startsWith("git reset --mixed HEAD~")) {
-                gitResetOption(text, 23, "mixed")
-                console.log("mixedです")
-              } else if (text.startsWith("git reset --hard HEAD~")) {
-                gitResetOption(text, 22, "hard")
-                console.log("hardです")
-              } else if (text.startsWith("git reset --soft HEAD~")) {
-                gitResetOption(text, 22, "soft")
-                console.log("softです")
-              } else if (text.startsWith("git reset")) {
-                gitReset()
-              } else if (text.startsWith("git rm")) {
-                gitRm(text, 7)
-              } else if (text.startsWith("rm")) {
-                Rm(text, 3)
+              if (gitInit === "Initialized empty Git repository") {
+                if (text.startsWith("git add .") || text.startsWith("git add -A")){
+                  gitAddA()
+                } else if (text.startsWith("git add ")){
+                  gitAdd(text, 8)
+                } else if (text.startsWith("kakunin")){
+                  forCheck(text, 8)
+                } else if (text.startsWith("git commit --amend")){
+                  gitCommitAmend(text, 19)
+                } else if (text.startsWith("git commit -m")){
+                  gitCommitM(text, 14)
+                } else if (text === `git push origin ${currentBranch.currentBranchName}`) {
+                  gitPush()
+                } else if (text.startsWith("git branch -m")) {
+                  gitBranchM(text, 14)
+                } else if (text.startsWith("git branch -D")) {
+                  gitBranchForceD(text, 14)
+                } else if (text.startsWith("git branch -d")) {
+                  gitBranchD(text, 14)
+                } else if (text.startsWith("git branch ") && afterCommandBranchName.test(text.substring(11))){
+                  gitBranch(text, 11)
+                } else if (text.startsWith("git checkout -b ")) {
+                  gitCheckoutB(text, 16)
+                } else if (text.startsWith("git checkout ")) {
+                  gitCheckout(text, 13)
+                } else if (text.startsWith("touch ")) {
+                  touch(text, 6)
+                } else if (text.startsWith("git rm --cashed")) {
+                  gitRmCashed(text, 16)
+                } else if (text.startsWith("git reset --mixed HEAD~")) {
+                  gitResetOption(text, 23, "mixed")
+                  console.log("mixedです")
+                } else if (text.startsWith("git reset --hard HEAD~")) {
+                  gitResetOption(text, 22, "hard")
+                  console.log("hardです")
+                } else if (text.startsWith("git reset --soft HEAD~")) {
+                  gitResetOption(text, 22, "soft")
+                  console.log("softです")
+                } else if (text.startsWith("git reset")) {
+                  gitReset()
+                } else if (text.startsWith("git rm")) {
+                  gitRm(text, 7)
+                } else if (text.startsWith("rm")) {
+                  Rm(text, 3)
+                } else {
+                  setAddText(`zsh: command not found: ${text}`)
+                }
               } else {
-                setAddText(`zsh: command not found: ${text}`)
-            }
+                text === "git init" ? gitSetUp() : setAddText(`error:fatal: Not a git repository (or any of the parent directories): .git`)
+              }
             setText("")
           }}}
         />
