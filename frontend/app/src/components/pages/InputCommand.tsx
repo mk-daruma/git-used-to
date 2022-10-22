@@ -46,8 +46,6 @@ const InputCommand: React.FC = () => {
   const exceptCurrentBranchParentIndexFiles = indexFiles.filter((indexFile) => indexFile.parentBranch !== currentBranch.currentBranchName)
   const currentBranchLastestThreeCommits = commitMessages.filter((commitMessage) => commitMessage.parentBranch === currentBranch.currentBranchName).slice(-3)
   const differTextStatusRemoteRepositoryFiles = currentBranchParentRepositoryFiles.filter(repositoryFile => currentBranchParentRemoteRepositoryFiles.some(remoteRepositoryFile => repositoryFile.fileName === remoteRepositoryFile.fileName && repositoryFile.textStatus !== remoteRepositoryFile.textStatus))
-  const hasNoRemoteCommitMessages = currentBranchParentCommitMessages.filter(commitMessage => !currentBranchParentRemoteCommitMessages.some(remoteCommitMessage => remoteCommitMessage.remoteMessage === commitMessage.message))
-  const hasNoRemoteRepositoryFiles = currentBranchParentRepositoryFiles.filter(repositoryFile => !currentBranchParentRemoteRepositoryFiles.some(remoteRepositoryFile => repositoryFile.fileName === remoteRepositoryFile.fileName))
 
   const gitAddA = () => {
     currentBranchParentWorktreeFiles.forEach((worktreeFile) =>
@@ -244,13 +242,20 @@ const InputCommand: React.FC = () => {
   }
 
   const gitPush = () => {
+    const checkExistsRemoteBranches =
+      remoteBranches.some(remoteBranch => remoteBranch.remoteBranchName === currentBranch.currentBranchName)
+      ? [...remoteBranches]
+      : [...remoteBranches, {remoteBranchName :currentBranch.currentBranchName, remoteBranchId: currentBranch.currentBranchId}]
+    const hasNoRemoteCommitMessages = currentBranchParentCommitMessages.filter(commitMessage => !currentBranchParentRemoteCommitMessages.some(remoteCommitMessage => remoteCommitMessage.remoteMessage === commitMessage.message))
+    const hasNoRemoteRepositoryFiles = currentBranchParentRepositoryFiles.filter(repositoryFile => !currentBranchParentRemoteRepositoryFiles.some(remoteRepositoryFile => repositoryFile.fileName === remoteRepositoryFile.fileName))
+
     if (!remoteBranches.some(remoteBranch => remoteBranch.remoteBranchName === currentBranch.currentBranchName)) {
       setRemoteBranches((remoteBranch) => [...remoteBranch,{
         remoteBranchName: currentBranch.currentBranchName,
         remoteBranchId: ""
       }])
     }
-    remoteBranches.forEach(remoteBranch => {
+    checkExistsRemoteBranches.forEach(remoteBranch => {
       hasNoRemoteCommitMessages.forEach(hasNoRemoteCommitMessage => {
         if (remoteBranch.remoteBranchName === hasNoRemoteCommitMessage.parentBranch){
           setRemoteCommitMessages((commitMessage) => [...commitMessage,{
