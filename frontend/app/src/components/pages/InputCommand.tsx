@@ -780,6 +780,23 @@ const InputCommand: React.FC = () => {
     )
   }
 
+  const forCheck2 = (text :string, str :number) => {
+    setWorktreeFiles(
+      worktreeFiles.map(worktreeFile =>
+        worktreeFile.fileName === text.substring(str)
+        && worktreeFile.parentBranch === currentBranch.currentBranchName
+        ? {
+          fileName: worktreeFile.fileName,
+          parentBranch: worktreeFile.parentBranch,
+          textStatus: "こんにちは",
+          parentBranchId: worktreeFile.parentBranchId,
+          worktreeFileId: worktreeFile.worktreeFileId
+          }
+        : worktreeFile
+      )
+    )
+  }
+
   return(
     <Input
           className={classes.input}
@@ -802,6 +819,8 @@ const InputCommand: React.FC = () => {
                   gitAdd(text, 8)
                 } else if (text.startsWith("kakunin")){
                   forCheck(text, 8)
+                } else if (text.startsWith("kakunin2")){
+                  forCheck2(text, 9)
                 } else if (text.startsWith("git commit --amend")){
                   gitCommitAmend(text, 19)
                 } else if (text.startsWith("git commit -m")){
