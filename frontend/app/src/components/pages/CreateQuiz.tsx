@@ -996,7 +996,7 @@ const CreateQuiz: React.FC = () => {
   const updateBranches =
     branches.filter(branch => initialBranches.some(initBranch =>
       branch.branchName !== initBranch.branchName
-      && branch.branchName === initBranch.branchName
+      && branch.branchId === initBranch.branchId
     ))
   const updateWorktreeFiles =
     worktreeFiles.filter(worktreeFile => initialWorktreeFiles.some(initWorkfile =>
