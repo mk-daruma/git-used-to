@@ -1,4 +1,4 @@
-// import { CreateQuizBranch } from "interfaces"
+import { QuizBranch } from "interfaces"
 import client from "lib/api/client"
 
 export const createQuizBranch = (data :any) => {
@@ -7,9 +7,9 @@ export const createQuizBranch = (data :any) => {
   }
 }
 
-// export const updateQuizBranch = (id: number | undefined | null, data: これから作成) => {
-//   return client.post(`quiz_branches/${id}`, data)
-// }
+export const updateQuizBranch = (id: number | undefined | null, data: QuizBranch) => {
+  return client.patch(`quiz_branches/${id}`, data)
+}
 
 export const getQuizBranch = (id: number | undefined | null) => {
   return client.get(`quiz_branches/${id}`)

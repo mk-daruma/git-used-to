@@ -86,18 +86,18 @@ export interface QuizFirtsOrLastData {
   quizId : number
 }
 
-export interface CreateQuizBranch {
+export interface QuizBranch {
   quizBranchName: string
   quizFirstOrLastId : number
 }
 
-export interface CreateQuizWortreeFileData {
+export interface QuizWortreeFileData {
   quizWorktreeFileName: string
   quizWorktreeFileTextStatus: string
   quizBranchId: number
 }
 
-export interface CreateQuizIndexFileData {
+export interface QuizIndexFileData {
   quizIndexFileName: string
   quizIndexFileTextStatus: string
   quizBranchId: number

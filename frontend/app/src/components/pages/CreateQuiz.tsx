@@ -11,11 +11,11 @@ import { createQuiz, getQuiz } from "lib/api/quizzes";
 import Terminal from "./Terminal";
 import QuizBranchArea from "./QuizBranchArea";
 import { createQuizFirstOrLast, getQuizFirstOrLast } from "lib/api/quiz_first_or_lasts";
-import { createQuizBranch, getQuizBranch } from "lib/api/quiz_branches";
-import { createQuizWorktreeFile } from "lib/api/quiz_worktree_files";
+import { createQuizBranch, getQuizBranch, updateQuizBranch } from "lib/api/quiz_branches";
+import { createQuizWorktreeFile, updateQuizWorktreeFile } from "lib/api/quiz_worktree_files";
 import { createQuizCommitMessage, getQuizCommitMessage } from "lib/api/quiz_commit_messages";
 import { createQuizRepositoryFile } from "lib/api/quiz_repository_files";
-import { createQuizIndexFile } from "lib/api/quiz_index_files";
+import { createQuizIndexFile, updateQuizIndexFile } from "lib/api/quiz_index_files";
 import { CreateQuizHistoryOfCommittedFile } from "lib/api/quiz_history_of_committed_files";
 import { createQuizRemoteBranch, getQuizRemoteBranch } from "lib/api/quiz_remote_branches";
 import { createQuizRemoteCommitMessage, getQuizRemoteCommitMessage } from "lib/api/quiz_remote_commit_messages";
@@ -997,6 +997,8 @@ const CreateQuiz: React.FC = () => {
     branches.filter(branch => initialBranches.some(initBranch =>
       branch.branchName !== initBranch.branchName
       && branch.branchId === initBranch.branchId
+      && branch.branchId
+      && branch.branchName
     ))
   const updateWorktreeFiles =
     worktreeFiles.filter(worktreeFile => initialWorktreeFiles.some(initWorkfile =>
@@ -1046,10 +1048,6 @@ const CreateQuiz: React.FC = () => {
     e.preventDefault
 
     try {
-      //更新
-      console.log("updateWorktreeFiles", updateWorktreeFiles)
-      console.log("updateIndexFiles", updateIndexFiles)
-      console.log("updateBranches", updateBranches)
 
       //削除
       console.log("deleteBranches", deleteBranches)
@@ -1142,6 +1140,39 @@ const CreateQuiz: React.FC = () => {
 
       const quizRemoteRepositoryFileRes = await createQuizRemoteRepositoryFile(createNewBranchRemoteRepositoryFiles.flat())
 
+      // 更新
+      updateBranches.forEach(updateBranch => {
+        updateQuizBranch(
+          Number(updateBranch.branchId),
+          {
+            quizBranchName: updateBranch.branchName,
+            quizFirstOrLastId: Number(quizFirstOrLastId)
+          }
+        )
+      })
+      updateWorktreeFiles.forEach(updateWorktreeFile => {
+        updateQuizWorktreeFile(
+          Number(updateWorktreeFile.worktreeFileId),
+          {
+            quizWorktreeFileName: updateWorktreeFile.fileName,
+            quizWorktreeFileTextStatus: updateWorktreeFile.textStatus,
+            quizBranchId: Number(updateWorktreeFile.parentBranchId)
+          }
+        )
+      })
+      updateIndexFiles.forEach(updateIndexFile => {
+        updateQuizIndexFile(
+          Number(updateIndexFile.indexFileId),
+          {
+            quizIndexFileName: updateIndexFile.fileName,
+            quizIndexFileTextStatus: updateIndexFile.textStatus,
+            quizBranchId: Number(updateIndexFile.parentBranchId)
+          }
+        )
+      })
+
+      // 削除用の関数
+
       //確認
       console.log("既存ブランチからworkFile新規作成",quizWorktreeFileRes)
       console.log("既存ブランチからindexFile新規作成",quizIndexFileRes)
@@ -1150,10 +1181,6 @@ const CreateQuiz: React.FC = () => {
       console.log("既存ブランチからRepositoryFile新規作成",quizRepositoryFileRes)
       console.log("既存ブランチからRemoteCommitMessage新規作成",QuizRemoteCommitMessageRes)
       console.log("既存ブランチからRemoteRepositoryFile新規作成",quizRemoteRepositoryFileRes)
-      // 更新用の関数
-
-      // 削除用の関数
-
     } catch (err) {
       console.log(err)
     }
@@ -1167,30 +1194,39 @@ const CreateQuiz: React.FC = () => {
   useEffect(() => {
     console.log("commitMessages", commitMessages)
   },[commitMessages])
+
   useEffect(() => {
     console.log("repositoryFiles", repositoryFiles)
   },[repositoryFiles])
+
   useEffect(() => {
     console.log("worktreeFiles", worktreeFiles)
   },[worktreeFiles])
+
   useEffect(() => {
     console.log("indexFiles", indexFiles)
   },[indexFiles])
+
   useEffect(() => {
     console.log("branches", branches)
   },[branches])
+
   useEffect(() => {
     console.log("currentBranch", currentBranch)
   },[currentBranch])
+
   useEffect(() => {
     console.log("fileHistoryForCansellCommit", fileHistoryForCansellCommits)
   },[fileHistoryForCansellCommits])
+
   useEffect(() => {
     console.log("remoteBranches", remoteBranches)
   },[remoteBranches])
+
   useEffect(() => {
     console.log("remoteCommitMessages", remoteCommitMessages)
   },[remoteCommitMessages])
+
   useEffect(() => {
     console.log("remoteRepositoryFiles", remoteRepositoryFiles)
   },[remoteRepositoryFiles])
