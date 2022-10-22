@@ -1166,16 +1166,34 @@ const CreateQuiz: React.FC = () => {
 
   useEffect(() => {
     console.log("commitMessages", commitMessages)
+  },[commitMessages])
+  useEffect(() => {
     console.log("repositoryFiles", repositoryFiles)
+  },[repositoryFiles])
+  useEffect(() => {
     console.log("worktreeFiles", worktreeFiles)
+  },[worktreeFiles])
+  useEffect(() => {
     console.log("indexFiles", indexFiles)
+  },[indexFiles])
+  useEffect(() => {
     console.log("branches", branches)
+  },[branches])
+  useEffect(() => {
     console.log("currentBranch", currentBranch)
+  },[currentBranch])
+  useEffect(() => {
     console.log("fileHistoryForCansellCommit", fileHistoryForCansellCommits)
+  },[fileHistoryForCansellCommits])
+  useEffect(() => {
     console.log("remoteBranches", remoteBranches)
+  },[remoteBranches])
+  useEffect(() => {
     console.log("remoteCommitMessages", remoteCommitMessages)
+  },[remoteCommitMessages])
+  useEffect(() => {
     console.log("remoteRepositoryFiles", remoteRepositoryFiles)
-  },[commitMessages, indexFiles, repositoryFiles, worktreeFiles, branches, currentBranch, fileHistoryForCansellCommits, remoteBranches, remoteCommitMessages, remoteRepositoryFiles])
+  },[remoteRepositoryFiles])
 
   return(
     <QuizContext.Provider
