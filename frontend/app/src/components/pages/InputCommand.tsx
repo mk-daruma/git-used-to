@@ -364,6 +364,10 @@ const InputCommand: React.FC = () => {
   const gitBranchM = (text :string, str :number) => {
     if (afterCommandMultipleStrings(text, str)?.length === 2
         && branches.some(branch => branch.branchName === afterCommandMultipleStrings(text, str)![0])) {
+      setCurrentBranch({
+        currentBranchName: afterCommandMultipleStrings(text, str)![1],
+        currentBranchId: currentBranch.currentBranchId
+      })
       setBranches(branches.map((branch) =>
         branch.branchName === afterCommandMultipleStrings(text, str)![0]
         ? {
