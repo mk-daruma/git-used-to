@@ -11,15 +11,15 @@ import { createQuiz, getQuiz } from "lib/api/quizzes";
 import Terminal from "./Terminal";
 import QuizBranchArea from "./QuizBranchArea";
 import { createQuizFirstOrLast, getQuizFirstOrLast } from "lib/api/quiz_first_or_lasts";
-import { createQuizBranch, getQuizBranch, updateQuizBranch } from "lib/api/quiz_branches";
-import { createQuizWorktreeFile, updateQuizWorktreeFile } from "lib/api/quiz_worktree_files";
-import { createQuizCommitMessage, getQuizCommitMessage } from "lib/api/quiz_commit_messages";
-import { createQuizRepositoryFile } from "lib/api/quiz_repository_files";
-import { createQuizIndexFile, updateQuizIndexFile } from "lib/api/quiz_index_files";
-import { CreateQuizHistoryOfCommittedFile } from "lib/api/quiz_history_of_committed_files";
-import { createQuizRemoteBranch, getQuizRemoteBranch } from "lib/api/quiz_remote_branches";
-import { createQuizRemoteCommitMessage, getQuizRemoteCommitMessage } from "lib/api/quiz_remote_commit_messages";
-import { createQuizRemoteRepositoryFile } from "lib/api/quiz_remote_repository_file";
+import { createQuizBranch, deleteQuizBranch, getQuizBranch, updateQuizBranch } from "lib/api/quiz_branches";
+import { createQuizWorktreeFile, deleteQuizWorktreeFile, updateQuizWorktreeFile } from "lib/api/quiz_worktree_files";
+import { createQuizCommitMessage, deleteQuizCommitMessage, getQuizCommitMessage } from "lib/api/quiz_commit_messages";
+import { createQuizRepositoryFile, deleteQuizRepositoryFile } from "lib/api/quiz_repository_files";
+import { createQuizIndexFile, deleteQuizIndexFile, updateQuizIndexFile } from "lib/api/quiz_index_files";
+import { CreateQuizHistoryOfCommittedFile, deleteQuizHistoryOfCommittedFile } from "lib/api/quiz_history_of_committed_files";
+import { createQuizRemoteBranch, deleteQuizRemoteBranch, getQuizRemoteBranch } from "lib/api/quiz_remote_branches";
+import { createQuizRemoteCommitMessage, deleteQuizRemoteCommitMessage, getQuizRemoteCommitMessage } from "lib/api/quiz_remote_commit_messages";
+import { createQuizRemoteRepositoryFile, deleteQuizRemoteRepositoryFile } from "lib/api/quiz_remote_repository_file";
 
 export const QuizContext = createContext({} as {
   quizTitle: string
@@ -992,7 +992,6 @@ const CreateQuiz: React.FC = () => {
       quizRemoteBranchId: filtedcommitMessage.parentRemoteBranchId
     }))
 
-  //更新用関数
   const updateBranches =
     branches.filter(branch => initialBranches.some(initBranch =>
       branch.branchName !== initBranch.branchName
@@ -1019,29 +1018,47 @@ const CreateQuiz: React.FC = () => {
     initialBranches.filter(initialBranch => !branches.some(branch =>
       initialBranch.branchId === branch.branchId
     ))
+  const deleteCommitMessages =
+    initialCommitMessages.filter(initCommit =>
+      !commitMessages.some(commitMessage => initCommit.commitMessageId === commitMessage.commitMessageId)
+      && !deleteBranches.some(deleteBranch => initCommit.parentBranch === deleteBranch.branchName)
+    )
   const deleteWorktreeFiles =
-    initialWorktreeFiles.filter(initWorkfile => !worktreeFiles.some(worktreeFile =>
-      initWorkfile.worktreeFileId === worktreeFile.worktreeFileId
-    ))
+    initialWorktreeFiles.filter(initWorkfile =>
+      !worktreeFiles.some(worktreeFile => initWorkfile.worktreeFileId === worktreeFile.worktreeFileId)
+      && !deleteBranches.some(deleteBranch => initWorkfile.parentBranch === deleteBranch.branchName)
+    )
   const deleteIndexFiles =
     initialIndexFiles.filter(initIndexFile => !indexFiles.some(indexFile =>
       initIndexFile.indexFileId === indexFile.indexFileId
-    ))
-  const deleteCommitMessages =
-    initialCommitMessages.filter(initCommit => !commitMessages.some(commitMessage =>
-      initCommit.commitMessageId === commitMessage.commitMessageId
+      && !deleteBranches.some(deleteBranch => initIndexFile.parentBranch === deleteBranch.branchName)
     ))
   const deleteRepositoryFiles =
     initialRepositoryFiles.filter(initialRepositoryFile => !repositoryFiles.some(repositoryFile =>
       initialRepositoryFile.repositoryFileId === repositoryFile.repositoryFileId
+      && !deleteBranches.some(deleteBranch => initialRepositoryFile.parentBranch === deleteBranch.branchName)
+      && !deleteCommitMessages.some(deleteCommitMessage =>  initialRepositoryFile.parentCommitMessage === deleteCommitMessage.message)
     ))
-  const deleteFileHistoryForCansellCommit =
+  const deleteFileHistoryForCansellCommits =
     initialFileHistoryForCansellCommits.filter(initialFileHistoryForCansellCommit => !fileHistoryForCansellCommits.some(fileHistoryForCansellCommit =>
       initialFileHistoryForCansellCommit.historyFileId === fileHistoryForCansellCommit.historyFileId
+      && !deleteBranches.some(deleteBranch => initialFileHistoryForCansellCommit.parentBranch === deleteBranch.branchName)
+      && !deleteCommitMessages.some(deleteCommitMessage =>  initialFileHistoryForCansellCommit.parentCommitMessage === deleteCommitMessage.message)
     ))
   const deleteRemoteBranches =
     initialRemoteBranches.filter(initialRemoteBranch => !remoteBranches.some(remoteBranch =>
       initialRemoteBranch.remoteBranchId === remoteBranch.remoteBranchId
+    ))
+  const deleteRemoteCommitMessages =
+    initialRemoteCommitMessages.filter(initialRemoteCommitMessage => !remoteCommitMessages.some(remoteCommitMessage =>
+      initialRemoteCommitMessage.remoteCommitMessageId === remoteCommitMessage.remoteCommitMessageId
+      && !deleteRemoteBranches.some(deleteRemoteBranches => initialRemoteCommitMessage.parentRemoteBranch === deleteRemoteBranches.remoteBranchName)
+    ))
+  const deleteRemoteRepositoryFiles =
+    initialRemoteRepositoryFiles.filter(initialRemoteRepositoryFile => !remoteRepositoryFiles.some(remoteRepositoryFile =>
+      remoteRepositoryFile.remoteRepositoryFileId === initialRemoteRepositoryFile.remoteRepositoryFileId
+      && !deleteRemoteBranches.some(deleteRemoteBranches => initialRemoteRepositoryFile.parentRemoteBranch === deleteRemoteBranches.remoteBranchName)
+      && !deleteCommitMessages.some(deleteCommitMessage =>  initialRemoteRepositoryFile.parentRemoteCommitMessage === deleteCommitMessage.message)
     ))
 
   const handleUpdateQuizData = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -1055,7 +1072,7 @@ const CreateQuiz: React.FC = () => {
       console.log("deleteWorktreeFiles", deleteWorktreeFiles)
       console.log("deleteIndexFiles", deleteIndexFiles)
       console.log("deleteRepositoryFiles", deleteRepositoryFiles)
-      console.log("deleteFileHistoryForCansellCommit", deleteFileHistoryForCansellCommit)
+      console.log("deleteFileHistoryForCansellCommit", deleteFileHistoryForCansellCommits)
       console.log("deleteRemoteBranches", deleteRemoteBranches)
 
       //新規作成用の関数(branchも新規作成の場合)
@@ -1137,10 +1154,8 @@ const CreateQuiz: React.FC = () => {
           }))
         ))
       : []
-
       const quizRemoteRepositoryFileRes = await createQuizRemoteRepositoryFile(createNewBranchRemoteRepositoryFiles.flat())
 
-      // 更新
       updateBranches.forEach(updateBranch => {
         updateQuizBranch(
           Number(updateBranch.branchId),
@@ -1171,7 +1186,15 @@ const CreateQuiz: React.FC = () => {
         )
       })
 
-      // 削除用の関数
+      deleteBranches.forEach(deleteBranch => deleteQuizBranch(Number(deleteBranch.branchId)))
+      deleteCommitMessages.forEach(deleteCommitMessage => deleteQuizCommitMessage(Number(deleteCommitMessage.commitMessageId)))
+      deleteWorktreeFiles.forEach(deleteWorktreeFile => deleteQuizWorktreeFile(Number(deleteWorktreeFile.worktreeFileId)))
+      deleteIndexFiles.forEach(deleteIndexFile => deleteQuizIndexFile(Number(deleteIndexFile.indexFileId)))
+      deleteRepositoryFiles.forEach(deleteRepositoryFile => deleteQuizRepositoryFile(Number(deleteRepositoryFile.repositoryFileId)))
+      deleteFileHistoryForCansellCommits.forEach(deleteFileHistoryForCansellCommit => deleteQuizHistoryOfCommittedFile(Number(deleteFileHistoryForCansellCommit.historyFileId)))
+      deleteRemoteRepositoryFiles.forEach(deleteRemoteRepositoryFile => deleteQuizRemoteRepositoryFile(Number(deleteRemoteRepositoryFile.remoteRepositoryFileId)))
+      deleteRemoteCommitMessages.forEach(deleteRemoteCommitMessage => deleteQuizRemoteCommitMessage(Number(deleteRemoteCommitMessage.remoteCommitMessageId)))
+      deleteRemoteBranches.forEach(deleteRemoteBranch => deleteQuizRemoteBranch(Number(deleteRemoteBranch.remoteBranchId)))
 
       //確認
       console.log("既存ブランチからworkFile新規作成",quizWorktreeFileRes)
