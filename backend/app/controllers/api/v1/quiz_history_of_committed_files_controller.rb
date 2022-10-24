@@ -5,7 +5,7 @@ class Api::V1::QuizHistoryOfCommittedFilesController < ApplicationController
   def create
     quiz_history_of_committed_file_hash = []
     params.require(:_json).map do |param|
-      quiz_history_of_committed_file = QuizHistoryOfCommittedFile.new(param.permit(:quiz_history_of_committed_file_name, :quiz_history_of_committed_file_text_status, :quiz_history_of_committed_file_past_text_status, :quiz_history_of_committed_file_parent_past_commit_message, :quiz_commit_message_id, :quiz_branch_id).to_h)
+      quiz_history_of_committed_file = QuizHistoryOfCommittedFile.new(param.permit(:quiz_history_of_committed_file_name, :quiz_history_of_committed_file_status, :quiz_history_of_committed_file_text_status, :quiz_history_of_committed_file_past_text_status, :quiz_history_of_committed_file_parent_past_commit_message, :quiz_commit_message_id, :quiz_branch_id).to_h)
       if quiz_history_of_committed_file.save
         quiz_history_of_committed_file_hash.push(quiz_history_of_committed_file)
       else
@@ -36,6 +36,6 @@ class Api::V1::QuizHistoryOfCommittedFilesController < ApplicationController
   end
 
   def quiz_history_of_committed_file_params
-    params.require(:quiz_history_of_committed_file).permit(:quiz_history_of_committed_file_name, :quiz_history_of_committed_file_text_status, :quiz_history_of_committed_file_past_text_status, :quiz_history_of_committed_file_parent_past_commit_message, :quiz_commit_message_id, :quiz_branch_id)
+    params.require(:quiz_history_of_committed_file).permit(:quiz_history_of_committed_file_name,:quiz_history_of_committed_file_status, :quiz_history_of_committed_file_text_status, :quiz_history_of_committed_file_past_text_status, :quiz_history_of_committed_file_parent_past_commit_message, :quiz_commit_message_id, :quiz_branch_id)
   end
 end

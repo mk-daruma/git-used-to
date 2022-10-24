@@ -110,8 +110,8 @@ export const QuizContext = createContext({} as {
 
   setFileHistoryForCansellCommits:React.Dispatch<React.SetStateAction<{
     fileName: string
-    textStatus: string
     fileStatus: string
+    textStatus: string
     pastTextStatus: string
     parentBranch: string
     parentCommitMessage: string
@@ -243,6 +243,7 @@ export const QuizContext = createContext({} as {
 
   initialFileHistoryForCansellCommits: {
     fileName: string
+    fileStatus: string
     textStatus: string
     pastTextStatus: string
     parentBranch: string
@@ -255,6 +256,7 @@ export const QuizContext = createContext({} as {
 
   setInitialFileHistoryForCansellCommits:React.Dispatch<React.SetStateAction<{
     fileName: string
+    fileStatus: string
     textStatus: string
     pastTextStatus: string
     parentBranch: string
@@ -395,8 +397,8 @@ const CreateQuiz: React.FC = () => {
   }])
   const [fileHistoryForCansellCommits, setFileHistoryForCansellCommits] = useState([{
     fileName: "",
-    textStatus: "",
     fileStatus: "",
+    textStatus: "",
     pastTextStatus: "",
     parentBranch: "",
     parentCommitMessage: "",
@@ -459,6 +461,7 @@ const CreateQuiz: React.FC = () => {
   }])
   const [initialFileHistoryForCansellCommits, setInitialFileHistoryForCansellCommits] = useState([{
     fileName: "",
+    fileStatus: "",
     textStatus: "",
     pastTextStatus: "",
     parentBranch: "",
@@ -587,6 +590,7 @@ const CreateQuiz: React.FC = () => {
           && historyFile.fileName !== "")
         .map((filteredHistoryFile :any) =>({
           quizHistoryOfCommittedFileName: filteredHistoryFile.fileName,
+          quizHistoryOfCommittedFileStatus: filteredHistoryFile.fileStatus,
           quizHistoryOfCommittedFileTextStatus: filteredHistoryFile.textStatus,
           quizHistoryOfCommittedFilePastTextStatus: filteredHistoryFile.pastTextStatus,
           quizHistoryOfCommittedFileParentPastCommitMessage: filteredHistoryFile.parentPastCommitMessage,
@@ -759,9 +763,10 @@ const CreateQuiz: React.FC = () => {
     }])
   }
 
-  const addFileHistoryForCansellCommits = (array :any, fileName :any, textStatus :any, pastTextStatus :any, parentBranch :any, parentCommitMessage :any, parentPastCommitMessage :any, parentBranchId :any, parentCommitMessageId :any, historyFileId: any) => {
+  const addFileHistoryForCansellCommits = (array :any, fileName :any, fileStatus :any, textStatus :any, pastTextStatus :any, parentBranch :any, parentCommitMessage :any, parentPastCommitMessage :any, parentBranchId :any, parentCommitMessageId :any, historyFileId: any) => {
     array((historyFiles :any) => [...historyFiles,{
       fileName: fileName,
+      fileStatus: fileStatus,
       textStatus: textStatus,
       pastTextStatus: pastTextStatus,
       parentBranch: parentBranch,
@@ -895,6 +900,7 @@ const CreateQuiz: React.FC = () => {
                   addFileHistoryForCansellCommits(
                     getFileHistoryForCansellCommit,
                     historyFile.quizHistoryOfCommittedFileName,
+                    historyFile.quizHistoryOfCommittedFileStatus,
                     historyFile.quizHistoryOfCommittedFileTextStatus,
                     historyFile.quizHistoryOfCommittedFilePastTextStatus,
                     branch.quizBranchName, message.quizCommitMessage,
@@ -1105,6 +1111,7 @@ const CreateQuiz: React.FC = () => {
               && !historyFile.parentCommitMessageId)
             .map((filteredHistoryFile :any) =>({
               quizHistoryOfCommittedFileName: filteredHistoryFile.fileName,
+              quizHistoryOfCommittedFileStatus: filteredHistoryFile.fileStatus,
               quizHistoryOfCommittedFileTextStatus: filteredHistoryFile.textStatus,
               quizHistoryOfCommittedFilePastTextStatus: filteredHistoryFile.pastTextStatus,
               quizHistoryOfCommittedFileParentPastCommitMessage: filteredHistoryFile.parentPastCommitMessage,
