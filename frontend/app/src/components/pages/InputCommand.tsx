@@ -148,9 +148,12 @@ const InputCommand: React.FC = () => {
         && !currentBranchParentCommitMessages.every(commitMessages => commitMessages.message === text.substring(str))
         && !currentBranchParentIndexFiles.every(indexFile => currentBranchParentRepositoryFiles.some(repositoryFile => indexFile.fileName === repositoryFile.fileName && indexFile.textStatus === repositoryFile.textStatus))
         || indexFiles.some(indexFile => indexFile.fileName !== "" && /[\S+]/.test(text.substring(str-1)))
-        && !currentBranchParentCommitMessages.every(commitMessages => commitMessages.message === text.substring(str))
-        && !currentBranchParentRepositoryFiles.every(repositoryFile => currentBranchParentIndexFiles.some(indexFile => indexFile.fileName === repositoryFile.fileName && indexFile.textStatus === repositoryFile.textStatus))
-    ) {
+          && !currentBranchParentCommitMessages.every(commitMessages => commitMessages.message === text.substring(str))
+          && !currentBranchParentRepositoryFiles.every(repositoryFile => currentBranchParentIndexFiles.some(indexFile => indexFile.fileName === repositoryFile.fileName && indexFile.textStatus === repositoryFile.textStatus))
+        || indexFiles.some(indexFile => indexFile.fileName !== "" && /[\S+]/.test(text.substring(str-1)))
+          && !currentBranchParentCommitMessages.some(commitMessage => commitMessage.message)
+          && !currentBranchParentRepositoryFiles.some(repositoryFile => repositoryFile.fileName)
+      ) {
       setCommitMessages(commitMessage => [...commitMessage,{
         message: text.substring(str),
         parentBranch: currentBranch.currentBranchName,
