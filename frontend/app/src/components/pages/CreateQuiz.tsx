@@ -838,7 +838,7 @@ const CreateQuiz: React.FC = () => {
             )
           )
           const ResQuizBranches = await getQuizBranch(branch.id)
-          ResQuizBranches.data.dataWorktreeFiles.map((worktree :any) => {
+          ResQuizBranches.data.dataWorktreeFiles.forEach((worktree :any) => {
             getWorktreeFiles.forEach(getWorktreeFile =>
               addWorktreeFiles(
                 getWorktreeFile,
@@ -850,7 +850,7 @@ const CreateQuiz: React.FC = () => {
               )
             )
           })
-          ResQuizBranches.data.dataIndexFiles.map((indexFile :any) => {
+          ResQuizBranches.data.dataIndexFiles.forEach((indexFile :any) => {
             getIndexFiles.forEach(getIndexFile =>
               addIndexFile(
                 getIndexFile,
@@ -862,7 +862,7 @@ const CreateQuiz: React.FC = () => {
               )
             )
           })
-          ResQuizBranches.data.dataMessages.map(async (message :any) => {
+          ResQuizBranches.data.dataMessages.forEach(async (message :any) => {
             getCommitMessages.forEach(getCommitMessage =>
               addCommitMessages(
                 getCommitMessage,
@@ -875,7 +875,7 @@ const CreateQuiz: React.FC = () => {
             const ResQuizCommitMessages = await getQuizCommitMessage(message.id)
             await Promise.all(
               ResQuizCommitMessages.data.dataRepositoryFiles.map((data :any) => {
-                getRepositoryFiles.forEach(getRepositoryFile =>
+                return getRepositoryFiles.forEach(getRepositoryFile =>
                   addRepositoryFiles(
                     getRepositoryFile,
                     data.quizRepositoryFileName,
@@ -891,7 +891,7 @@ const CreateQuiz: React.FC = () => {
             )
             await Promise.all(
               ResQuizCommitMessages.data.dataHistoryOfCommittedFiles.map((historyFile :any) => {
-                getFileHistoryForCansellCommits.forEach(getFileHistoryForCansellCommit =>
+                return getFileHistoryForCansellCommits.forEach(getFileHistoryForCansellCommit =>
                   addFileHistoryForCansellCommits(
                     getFileHistoryForCansellCommit,
                     historyFile.quizHistoryOfCommittedFileName,
@@ -931,7 +931,7 @@ const CreateQuiz: React.FC = () => {
           const ResQuizRemoteCommitMessages = await getQuizRemoteCommitMessage(message.id)
           await Promise.all(
             ResQuizRemoteCommitMessages.data.dataRemoteRepositoryFiles.map((data :any) => {
-              getRemoteRepositoryFiles.forEach(getRemoteRepositoryFile =>
+              return getRemoteRepositoryFiles.forEach(getRemoteRepositoryFile =>
                 addRemoteRepositoryFiles(
                   getRemoteRepositoryFile,
                   data.quizRemoteRepositoryFileName,
@@ -1065,8 +1065,6 @@ const CreateQuiz: React.FC = () => {
     ))
 
   const handleUpdateQuizData = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault
-
     try {
 
       //削除
