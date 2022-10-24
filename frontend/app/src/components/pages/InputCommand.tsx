@@ -235,8 +235,10 @@ const InputCommand: React.FC = () => {
               }])
             }}
           )
-          setRepositoryFiles (repositoryFile => repositoryFile.map((repositoryFile) =>
-          indexFile.fileName === repositoryFile.fileName && indexFile.textStatus !== repositoryFile.textStatus
+          setRepositoryFiles (repositoryFile => repositoryFile.map(repositoryFile =>
+          indexFile.fileName === repositoryFile.fileName
+          && indexFile.textStatus !== repositoryFile.textStatus
+          && repositoryFile.parentBranch === currentBranch.currentBranchName
             ? {
               fileName: indexFile.fileName,
               textStatus: indexFile.textStatus,
