@@ -329,6 +329,24 @@ const InputCommand: React.FC = () => {
         remoteBranchId: ""
       }])
     }
+    rmRemoteRepositoryFiles.forEach(rmRemoteRepositoryFile => {
+      setRemoteRepositoryFiles((repositoryFile) =>
+        repositoryFile.map(repositoryFile =>
+          repositoryFile.parentRemoteBranch === currentBranch.currentBranchName
+          && repositoryFile.fileName === rmRemoteRepositoryFile.fileName
+          ? {
+            fileName: "",
+            textStatus: "",
+            parentRemoteBranch: "",
+            parentRemoteCommitMessage: "",
+            parentRemoteBranchId: "",
+            parentRemoteCommitMessageId: "",
+            remoteRepositoryFileId: ""
+            }
+          : repositoryFile
+        )
+      )
+    })
     checkExistsRemoteBranches.forEach(remoteBranch => {
       hasNoRemoteCommitMessages.forEach(hasNoRemoteCommitMessage => {
         if (remoteBranch.remoteBranchName === hasNoRemoteCommitMessage.parentBranch){
@@ -370,24 +388,6 @@ const InputCommand: React.FC = () => {
             remoteRepositoryFileId: ""
           }])
         }
-      })
-      rmRemoteRepositoryFiles.forEach(rmRemoteRepositoryFile => {
-        setRemoteRepositoryFiles((repositoryFile) =>
-          repositoryFile.map(repositoryFile =>
-            remoteBranch.remoteBranchName === rmRemoteRepositoryFile.parentRemoteBranch
-            && repositoryFile.fileName === rmRemoteRepositoryFile.fileName
-            ? {
-              fileName: "",
-              textStatus: "",
-              parentRemoteBranch: "",
-              parentRemoteCommitMessage: "",
-              parentRemoteBranchId: "",
-              parentRemoteCommitMessageId: "",
-              remoteRepositoryFileId: ""
-              }
-            : repositoryFile
-          )
-        )
       })
     })
   }
