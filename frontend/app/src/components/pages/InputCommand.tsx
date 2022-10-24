@@ -48,6 +48,18 @@ const InputCommand: React.FC = () => {
   const differTextStatusRemoteRepositoryFiles = currentBranchParentRepositoryFiles.filter(repositoryFile => currentBranchParentRemoteRepositoryFiles.some(remoteRepositoryFile => repositoryFile.fileName === remoteRepositoryFile.fileName && repositoryFile.textStatus !== remoteRepositoryFile.textStatus))
 
   const gitAddA = () => {
+    setIndexFiles(indexFiles.map(indexFile =>
+      !currentBranchParentWorktreeFiles.some(worktreeFile => worktreeFile.fileName === indexFile.fileName)
+      && indexFile.parentBranch === currentBranch.currentBranchName
+      ? {
+        fileName :"",
+        textStatus: "",
+        parentBranch: "",
+        parentBranchId: "",
+        indexFileId: ""
+        }
+      : indexFile
+    ))
     currentBranchParentWorktreeFiles.forEach((worktreeFile) =>
     {if (!currentBranchParentIndexFiles.some(IndexFile => IndexFile.fileName === worktreeFile.fileName)){
       setIndexFiles (indexFile => [...indexFile,{
@@ -63,19 +75,20 @@ const InputCommand: React.FC = () => {
         && indexFile.fileName === worktreeFile.fileName
         && indexFile.parentBranch === currentBranch.currentBranchName
         ? {
-        fileName :worktreeFile.fileName,
-        textStatus: worktreeFile.textStatus,
-        parentBranch: currentBranch.currentBranchName,
-        parentBranchId: indexFile.parentBranchId,
-        indexFileId: indexFile.indexFileId
-        }
-        : indexFile))
+          fileName :worktreeFile.fileName,
+          textStatus: worktreeFile.textStatus,
+          parentBranch: currentBranch.currentBranchName,
+          parentBranchId: indexFile.parentBranchId,
+          indexFileId: indexFile.indexFileId
+          }
+        : indexFile
+      ))
     }}
     )
   }
 
   const gitAdd = (text :string, str :number) => {
-    if (afterCommandMultipleStrings(text, str)?.every(afterCommandMultipleString => worktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandMultipleString))) {
+    if (afterCommandMultipleStrings(text, str)?.every(afterCommandMultipleString => worktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandMultipleString && worktreeFile.parentBranch === currentBranch.currentBranchName))) {
       afterCommandMultipleStrings(text, str)?.map((afterCommandMultipleString) => (
         currentBranchParentWorktreeFiles
         .filter((worktreeFile) =>worktreeFile.fileName === afterCommandMultipleString)
@@ -94,16 +107,32 @@ const InputCommand: React.FC = () => {
               && indexFile.fileName === worktreeFile.fileName
               && indexFile.parentBranch === currentBranch.currentBranchName
               ? {
-              fileName :worktreeFile.fileName,
-              textStatus: worktreeFile.textStatus,
-              parentBranch: currentBranch.currentBranchName,
-              parentBranchId: worktreeFile.parentBranchId,
-              indexFileId: indexFile.indexFileId
-              }
-              : indexFile))
+                fileName :worktreeFile.fileName,
+                textStatus: worktreeFile.textStatus,
+                parentBranch: currentBranch.currentBranchName,
+                parentBranchId: worktreeFile.parentBranchId,
+                indexFileId: indexFile.indexFileId
+                }
+              : indexFile
+            ))
           }}
         )
       ))
+    } else if (afterCommandMultipleStrings(text, str)?.every(afterCommandMultipleString => !worktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandMultipleString && worktreeFile.parentBranch == currentBranch.currentBranchName))
+              && afterCommandMultipleStrings(text, str)?.every(afterCommandMultipleString => indexFiles.some(indexFile => indexFile.fileName === afterCommandMultipleString && indexFile.parentBranch === currentBranch.currentBranchName))) {
+      setIndexFiles(indexFiles.map(indexFile =>
+        afterCommandMultipleStrings(text, str)?.some(afterCommandMultipleString => indexFile.fileName === afterCommandMultipleString)
+        && indexFile.parentBranch === currentBranch.currentBranchName
+        ? {
+          fileName :"",
+          textStatus: "",
+          parentBranch: "",
+          parentBranchId: "",
+          indexFileId: ""
+          }
+        : indexFile
+        )
+      )
     } else {
       setAddText(`error: pathspec '${text.substring(str)}' did not match any file(s) known to git`)
     }
@@ -111,19 +140,52 @@ const InputCommand: React.FC = () => {
 
   const gitCommitM = (text :string, str :number) => {
     //地獄的にみづらい。リファクタリング必要。
-    if (indexFiles.some(indexFile =>
-      indexFile.fileName !== ""&& /[\S+]/.test(text.substring(str-1)))
-        && commitMessages.every(commitMessages => commitMessages.message !== text.substring(str))
-        && !currentBranchParentIndexFiles.every(currentBranchParentIndexFiles =>
-          currentBranchParentRepositoryFiles.some(currentBranchParentRepositoryFile =>
-            currentBranchParentIndexFiles.fileName === currentBranchParentRepositoryFile.fileName
-            && currentBranchParentIndexFiles.textStatus === currentBranchParentRepositoryFile.textStatus))){
+    if (indexFiles.some(indexFile => indexFile.fileName !== "" && /[\S+]/.test(text.substring(str-1)))
+        && !currentBranchParentCommitMessages.every(commitMessages => commitMessages.message === text.substring(str))
+        && !currentBranchParentIndexFiles.every(indexFile => currentBranchParentRepositoryFiles.some(repositoryFile => indexFile.fileName === repositoryFile.fileName && indexFile.textStatus === repositoryFile.textStatus))
+        || indexFiles.some(indexFile => indexFile.fileName !== "" && /[\S+]/.test(text.substring(str-1)))
+        && !currentBranchParentCommitMessages.every(commitMessages => commitMessages.message === text.substring(str))
+        && !currentBranchParentRepositoryFiles.every(repositoryFile => currentBranchParentIndexFiles.some(indexFile => indexFile.fileName === repositoryFile.fileName && indexFile.textStatus === repositoryFile.textStatus))
+    ) {
       setCommitMessages(commitMessage => [...commitMessage,{
         message: text.substring(str),
         parentBranch: currentBranch.currentBranchName,
         parentBranchId: currentBranch.currentBranchId,
         commitMessageId: ""
       }])
+      currentBranchParentRepositoryFiles
+      .filter(repositoryFile => repositoryFile.fileName)
+      .forEach(filtedrepositoryFile =>
+        {if (!currentBranchParentIndexFiles.some(indexFile => indexFile.fileName === filtedrepositoryFile.fileName)) {
+          setRepositoryFiles(repositoryFiles.map(repositoryFile =>
+            repositoryFile.fileName === filtedrepositoryFile.fileName
+            && repositoryFile.parentBranch === currentBranch.currentBranchName
+            ? {
+              fileName: "",
+              textStatus: "",
+              parentBranch: "",
+              parentCommitMessage: "",
+              parentBranchId: "",
+              parentCommitMessageId: "",
+              repositoryFileId: ""
+              }
+            : repositoryFile
+            )
+          )
+          setFileHistoryForCansellCommits (fileHistoryForCansellCommit => [...fileHistoryForCansellCommit,{
+            fileName :filtedrepositoryFile.fileName,
+            textStatus: "",
+            fileStatus: "deleted",
+            pastTextStatus: filtedrepositoryFile.textStatus,
+            parentBranch: currentBranch.currentBranchName,
+            parentCommitMessage: text.substring(str),
+            parentPastCommitMessage: filtedrepositoryFile.parentCommitMessage,
+            parentBranchId: currentBranch.currentBranchId,
+            parentCommitMessageId: "",
+            historyFileId: ""
+          }])
+        }}
+      )
       currentBranchParentIndexFiles
       .filter((indexFile) => indexFile.fileName !== "")
       .forEach((indexFile) =>
@@ -140,6 +202,7 @@ const InputCommand: React.FC = () => {
           setFileHistoryForCansellCommits (fileHistoryForCansellCommit => [...fileHistoryForCansellCommit,{
             fileName :indexFile.fileName,
             textStatus: indexFile.textStatus,
+            fileStatus: "exists",
             pastTextStatus: "",
             parentBranch: currentBranch.currentBranchName,
             parentCommitMessage: text.substring(str),
@@ -154,6 +217,7 @@ const InputCommand: React.FC = () => {
               setFileHistoryForCansellCommits (fileHistoryForCansellCommit => [...fileHistoryForCansellCommit,{
                 fileName :indexFile.fileName,
                 textStatus: indexFile.textStatus,
+                fileStatus: "exists",
                 pastTextStatus: repo.textStatus,
                 parentBranch: currentBranch.currentBranchName,
                 parentCommitMessage: text.substring(str),
@@ -165,7 +229,7 @@ const InputCommand: React.FC = () => {
             }}
           )
           setRepositoryFiles (repositoryFile => repositoryFile.map((repositoryFile) =>
-            indexFile.textStatus !== repositoryFile.textStatus && indexFile.fileName === repositoryFile.fileName
+          indexFile.fileName === repositoryFile.fileName && indexFile.textStatus !== repositoryFile.textStatus
             ? {
               fileName: indexFile.fileName,
               textStatus: indexFile.textStatus,
@@ -175,7 +239,8 @@ const InputCommand: React.FC = () => {
               parentCommitMessageId: "",
               repositoryFileId: ""
               }
-            : repositoryFile))
+            : repositoryFile
+          ))
         }}
       )
     } else {
@@ -225,6 +290,7 @@ const InputCommand: React.FC = () => {
           ? {
             fileName :historyFile.fileName,
             textStatus: historyFile.textStatus,
+            fileStatus: historyFile.fileStatus,
             pastTextStatus: historyFile.pastTextStatus,
             parentBranch: historyFile.parentBranch,
             parentCommitMessage: text.substring(str),
@@ -349,6 +415,7 @@ const InputCommand: React.FC = () => {
         setFileHistoryForCansellCommits(fileHistoryForCansellCommit => [...fileHistoryForCansellCommit,{
           fileName :historyFile.fileName,
           textStatus: historyFile.textStatus,
+          fileStatus: historyFile.fileStatus,
           pastTextStatus: historyFile.pastTextStatus,
           parentBranch: text.substring(str),
           parentCommitMessage: historyFile.parentCommitMessage,
@@ -521,7 +588,7 @@ const InputCommand: React.FC = () => {
         && repositoryFile.parentBranch === indexFile.parentBranch)
       )
     )
-    currentBranchParentRepositoryFiles.map(repositoryFile =>
+    currentBranchParentRepositoryFiles.forEach(repositoryFile =>
       setIndexFiles(indexFile =>
         indexFile
         .map((indexFile) =>
@@ -539,6 +606,17 @@ const InputCommand: React.FC = () => {
         )
       )
     )
+    currentBranchParentRepositoryFiles.forEach(repositoryFile =>
+      {if (!currentBranchParentIndexFiles.some(indexFile => indexFile.fileName === repositoryFile.fileName)) {
+        setIndexFiles(indexFiles => [...indexFiles,{
+          fileName: repositoryFile.fileName,
+          parentBranch: repositoryFile.parentBranch,
+          textStatus: repositoryFile.textStatus,
+          parentBranchId: repositoryFile.parentBranchId,
+          indexFileId: ""
+        }])
+      }}
+    )
   }
 
   const gitResetOption = (text :string, str :number, option:string) => {
@@ -552,19 +630,16 @@ const InputCommand: React.FC = () => {
           fileHistory.parentCommitMessage === forResetCurrentBranchCommitMessages[forResetCurrentBranchCommitMessages.length -1].message
         )
 
-        lastestFileHistoryForCansellCommits.map(fileHistoryForCansellCommit =>
+        lastestFileHistoryForCansellCommits.forEach(fileHistoryForCansellCommit =>
           repositoryFiles.forEach((repositoryFile) =>
-          {if (fileHistoryForCansellCommit.parentCommitMessage === repositoryFile.parentCommitMessage
-              && repositoryFile.parentBranch === currentBranch.currentBranchName
-              && fileHistoryForCansellCommit.parentBranch === currentBranch.currentBranchName) {
-                resetedHistoryFiles.push(fileHistoryForCansellCommit)
-            }}
-          )
+          {if (fileHistoryForCansellCommit.parentCommitMessage === repositoryFile.parentCommitMessage && repositoryFile.parentBranch === currentBranch.currentBranchName && fileHistoryForCansellCommit.parentBranch === currentBranch.currentBranchName || fileHistoryForCansellCommit.fileStatus === "deleted") {
+            resetedHistoryFiles.push(fileHistoryForCansellCommit)
+          }})
         )
-        lastestFileHistoryForCansellCommits.map(fileHistoryForCansellCommit =>
+        lastestFileHistoryForCansellCommits.forEach(fileHistoryForCansellCommit =>
           setRepositoryFiles(repositoryFile =>
             repositoryFile.map((repositoryFile) =>
-            fileHistoryForCansellCommit.pastTextStatus
+              fileHistoryForCansellCommit.pastTextStatus
               && fileHistoryForCansellCommit.fileName === repositoryFile.fileName
               && fileHistoryForCansellCommit.parentCommitMessage === repositoryFile.parentCommitMessage
               && repositoryFile.parentBranch === currentBranch.currentBranchName
@@ -593,9 +668,24 @@ const InputCommand: React.FC = () => {
                 }
               : repositoryFile
           )))
+          lastestFileHistoryForCansellCommits.forEach(fileHistoryForCansellCommit =>
+            currentBranchParentCommitMessages.forEach(commitMessage =>
+              {if (commitMessage.message === fileHistoryForCansellCommit.parentPastCommitMessage && !repositoryFiles.some(repositoryFile => repositoryFile.fileName === fileHistoryForCansellCommit.fileName)) {
+                setRepositoryFiles(repositoryFiles => [...repositoryFiles,{
+                  fileName: fileHistoryForCansellCommit.fileName,
+                  textStatus: fileHistoryForCansellCommit.pastTextStatus,
+                  parentBranch: currentBranch.currentBranchName,
+                  parentCommitMessage: fileHistoryForCansellCommit.parentPastCommitMessage,
+                  parentBranchId: currentBranch.currentBranchId,
+                  parentCommitMessageId: commitMessage.commitMessageId,
+                  repositoryFileId: ""
+                }])
+              }}
+            )
+          )
           if (option === "mixed" || option === "hard") {
             console.log("mixedかhard")
-            lastestFileHistoryForCansellCommits.map(fileHistoryForCansellCommit =>
+            lastestFileHistoryForCansellCommits.forEach(fileHistoryForCansellCommit =>
               setIndexFiles((indexFile) =>
                 indexFile.map((indexFile) =>
                 fileHistoryForCansellCommit.pastTextStatus
@@ -623,10 +713,21 @@ const InputCommand: React.FC = () => {
                 )
               )
             )
+            lastestFileHistoryForCansellCommits.forEach(fileHistoryForCansellCommit =>
+              {if (!indexFiles.some(indexFile => indexFile.fileName === fileHistoryForCansellCommit.fileName) && fileHistoryForCansellCommit.fileStatus === "deleted" ) {
+                setIndexFiles(indexFiles => [...indexFiles,{
+                  fileName: fileHistoryForCansellCommit.fileName,
+                  textStatus: fileHistoryForCansellCommit.pastTextStatus,
+                  parentBranch: fileHistoryForCansellCommit.parentBranch,
+                  parentBranchId: fileHistoryForCansellCommit.parentBranchId,
+                  indexFileId: ""
+                }])
+              }}
+            )
           }
           if (option === "hard") {
             console.log("hardだけ")
-            lastestFileHistoryForCansellCommits.map(fileHistoryForCansellCommit =>
+            lastestFileHistoryForCansellCommits.forEach(fileHistoryForCansellCommit =>
               setWorktreeFiles((worktreeFile) =>
               worktreeFile.map((worktreeFile) =>
                 fileHistoryForCansellCommit.pastTextStatus
@@ -653,6 +754,17 @@ const InputCommand: React.FC = () => {
                 : worktreeFile
                 )
               )
+            )
+            lastestFileHistoryForCansellCommits.forEach(fileHistoryForCansellCommit =>
+              {if (!worktreeFiles.some(worktreeFile => worktreeFile.fileName === fileHistoryForCansellCommit.fileName) && fileHistoryForCansellCommit.fileStatus === "deleted" ) {
+                setWorktreeFiles(worktreeFiles => [...worktreeFiles,{
+                  fileName: fileHistoryForCansellCommit.fileName,
+                  textStatus: fileHistoryForCansellCommit.pastTextStatus,
+                  parentBranch: fileHistoryForCansellCommit.parentBranch,
+                  parentBranchId: fileHistoryForCansellCommit.parentBranchId,
+                  worktreeFileId: ""
+                }])
+              }}
             )
           }
         resetedCommitMessages.push(forResetCurrentBranchCommitMessages.pop())

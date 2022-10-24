@@ -97,6 +97,7 @@ export const QuizContext = createContext({} as {
 
   fileHistoryForCansellCommits: {
     fileName: string
+    fileStatus: string
     textStatus: string
     pastTextStatus: string
     parentBranch: string
@@ -110,6 +111,7 @@ export const QuizContext = createContext({} as {
   setFileHistoryForCansellCommits:React.Dispatch<React.SetStateAction<{
     fileName: string
     textStatus: string
+    fileStatus: string
     pastTextStatus: string
     parentBranch: string
     parentCommitMessage: string
@@ -394,6 +396,7 @@ const CreateQuiz: React.FC = () => {
   const [fileHistoryForCansellCommits, setFileHistoryForCansellCommits] = useState([{
     fileName: "",
     textStatus: "",
+    fileStatus: "",
     pastTextStatus: "",
     parentBranch: "",
     parentCommitMessage: "",
