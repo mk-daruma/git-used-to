@@ -88,11 +88,30 @@ const InputCommand: React.FC = () => {
   }
 
   const gitAdd = (text :string, str :number) => {
-    if (afterCommandMultipleStrings(text, str)?.every(afterCommandMultipleString => worktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandMultipleString && worktreeFile.parentBranch === currentBranch.currentBranchName))) {
-      afterCommandMultipleStrings(text, str)?.map((afterCommandMultipleString) => (
+    if (afterCommandMultipleStrings(text, str)?.every(afterCommandMultipleString =>
+          !currentBranchParentWorktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandMultipleString) && currentBranchParentIndexFiles.some(indexFile => indexFile.fileName === afterCommandMultipleString)
+          || currentBranchParentWorktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandMultipleString)
+      )) {
+      afterCommandMultipleStrings(text, str)?.filter((afterCommandMultipleString :string) => !currentBranchParentWorktreeFiles.some(worktreeFile => afterCommandMultipleString === worktreeFile.fileName))
+      .forEach((afterCommandMultipleString) => (
+        setIndexFiles(indexFiles.map(indexFile =>
+          afterCommandMultipleString === indexFile.fileName
+          && indexFile.parentBranch === currentBranch.currentBranchName
+          ? {
+            fileName :"",
+            textStatus: "",
+            parentBranch: "",
+            parentBranchId: "",
+            indexFileId: ""
+            }
+          : indexFile
+          )
+        )
+      ))
+      afterCommandMultipleStrings(text, str)?.forEach((afterCommandMultipleString) => (
         currentBranchParentWorktreeFiles
-        .filter((worktreeFile) =>worktreeFile.fileName === afterCommandMultipleString)
-        .forEach((worktreeFile) =>
+        .filter(worktreeFile => worktreeFile.fileName === afterCommandMultipleString)
+        .forEach(worktreeFile =>
           {if (!currentBranchParentIndexFiles.some(IndexFile => IndexFile.fileName === worktreeFile.fileName)){
             setIndexFiles (indexFile => [...indexFile,{
               fileName :worktreeFile.fileName,
@@ -118,21 +137,6 @@ const InputCommand: React.FC = () => {
           }}
         )
       ))
-    } else if (afterCommandMultipleStrings(text, str)?.every(afterCommandMultipleString => !worktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandMultipleString && worktreeFile.parentBranch == currentBranch.currentBranchName))
-              && afterCommandMultipleStrings(text, str)?.every(afterCommandMultipleString => indexFiles.some(indexFile => indexFile.fileName === afterCommandMultipleString && indexFile.parentBranch === currentBranch.currentBranchName))) {
-      setIndexFiles(indexFiles.map(indexFile =>
-        afterCommandMultipleStrings(text, str)?.some(afterCommandMultipleString => indexFile.fileName === afterCommandMultipleString)
-        && indexFile.parentBranch === currentBranch.currentBranchName
-        ? {
-          fileName :"",
-          textStatus: "",
-          parentBranch: "",
-          parentBranchId: "",
-          indexFileId: ""
-          }
-        : indexFile
-        )
-      )
     } else {
       setAddText(`error: pathspec '${text.substring(str)}' did not match any file(s) known to git`)
     }
