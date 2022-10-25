@@ -4,7 +4,17 @@ class Api::V1::QuizHistoryOfCommittedFilesController < ApplicationController
   def create
     quiz_history_of_committed_file_hash = []
     params.require(:_json).map do |param|
-      quiz_history_of_committed_file = QuizHistoryOfCommittedFile.new(param.permit(:quiz_history_of_committed_file_name, :quiz_history_of_committed_file_status, :quiz_history_of_committed_file_text_status, :quiz_history_of_committed_file_past_text_status, :quiz_history_of_committed_file_parent_past_commit_message, :quiz_commit_message_id, :quiz_branch_id).to_h)
+      quiz_history_of_committed_file = QuizHistoryOfCommittedFile.new(
+        param.permit(
+          :quiz_history_of_committed_file_name,
+          :quiz_history_of_committed_file_status,
+          :quiz_history_of_committed_file_text_status,
+          :quiz_history_of_committed_file_past_text_status,
+          :quiz_history_of_committed_file_parent_past_commit_message,
+          :quiz_commit_message_id,
+          :quiz_branch_id,
+        ).to_h
+      )
       if quiz_history_of_committed_file.save
         quiz_history_of_committed_file_hash.push(quiz_history_of_committed_file)
       else
@@ -12,12 +22,19 @@ class Api::V1::QuizHistoryOfCommittedFilesController < ApplicationController
         return
       end
     end
-    render json: { status: 'SUCCESS', data: quiz_history_of_committed_file_hash }
+    render json: {
+      status: 'SUCCESS',
+      data: quiz_history_of_committed_file_hash,
+    }
   end
 
   def destroy
     quiz_history_of_committed_file = @quiz_history_of_committed_file.destroy
-    render json: { status: 'SUCCESS', message: 'Deleted the post', data: quiz_history_of_committed_file }
+    render json: {
+      status: 'SUCCESS',
+      message: 'Deleted the post',
+      data: quiz_history_of_committed_file,
+    }
   end
 
   private

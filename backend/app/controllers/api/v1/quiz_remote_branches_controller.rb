@@ -4,7 +4,12 @@ class Api::V1::QuizRemoteBranchesController < ApplicationController
   def create
     quiz_remote_branch_hash = []
     params.require(:_json).map do |param|
-      quiz_remote_branch = QuizRemoteBranch.new(param.permit(:quiz_remote_branch_name, :quiz_first_or_last_id).to_h)
+      quiz_remote_branch = QuizRemoteBranch.new(
+        param.permit(
+          :quiz_remote_branch_name,
+          :quiz_first_or_last_id,
+        ).to_h
+      )
       if quiz_remote_branch.save
         quiz_remote_branch_hash.push(quiz_remote_branch)
       else
@@ -12,17 +17,28 @@ class Api::V1::QuizRemoteBranchesController < ApplicationController
         return
       end
     end
-    render json: { status: 'SUCCESS', data: quiz_remote_branch_hash }
+    render json: {
+      status: 'SUCCESS',
+      data: quiz_remote_branch_hash,
+    }
   end
 
   def show
     quiz_remote_commit_messages = @quiz_remote_branch.quiz_remote_commit_messages
-    render json: { status: 'SUCCESS', message: 'Loaded quizzes', data_remote_messages: quiz_remote_commit_messages }
+    render json: {
+      status: 'SUCCESS',
+      message: 'Loaded quizzes',
+      data_remote_messages: quiz_remote_commit_messages,
+    }
   end
 
   def destroy
     quiz_remote_branch = @quiz_remote_branch.destroy
-    render json: { status: 'SUCCESS', message: 'Deleted the post', data: quiz_remote_branch }
+    render json: {
+      status: 'SUCCESS',
+      message: 'Deleted the post',
+      data: quiz_remote_branch,
+    }
   end
 
   private

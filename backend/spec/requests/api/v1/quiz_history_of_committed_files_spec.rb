@@ -21,5 +21,4 @@ RSpec.describe "Api::V1::QuizHistoryOfCommittedFiles", type: :request do
       expect(response).to have_http_status(:success)
     end
   end
-
 end

@@ -28,5 +28,4 @@ RSpec.describe "Api::V1::QuizRemoteBranches", type: :request do
       expect(response).to have_http_status(:success)
     end
   end
-
 end

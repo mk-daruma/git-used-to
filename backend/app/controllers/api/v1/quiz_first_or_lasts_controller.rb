@@ -5,7 +5,10 @@ class Api::V1::QuizFirstOrLastsController < ApplicationController
   def create
     quiz_first_or_last = QuizFirstOrLast.new(quiz_first_or_last_params)
     if quiz_first_or_last.save
-      render json: { status: 'SUCCESS', data: quiz_first_or_last }
+      render json: {
+        status: 'SUCCESS',
+        data: quiz_first_or_last,
+      }
     else
       render json: quiz_first_or_last.errors
     end
@@ -14,12 +17,21 @@ class Api::V1::QuizFirstOrLastsController < ApplicationController
   def show
     quiz_branches = @quiz_first_or_last.quiz_branches
     quiz_remote_branches = @quiz_first_or_last.quiz_remote_branches
-    render json: { status: 'SUCCESS', message: 'Loaded quizzes', data_branches: quiz_branches, data_remote_branches: quiz_remote_branches }
+    render json: {
+      status: 'SUCCESS',
+      message: 'Loaded quizzes',
+      data_branches: quiz_branches,
+      data_remote_branches: quiz_remote_branches,
+    }
   end
 
   def destroy
     quiz_first_or_last = @quiz_first_or_last.destroy
-    render json: { status: 'SUCCESS', message: 'Deleted the post', data: quiz_first_or_last }
+    render json: {
+      status: 'SUCCESS',
+      message: 'Deleted the post',
+      data: quiz_first_or_last,
+    }
   end
 
   private
