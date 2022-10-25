@@ -1,7 +1,7 @@
 import { QuizBranch } from "interfaces"
 import client from "lib/api/client"
 
-export const createQuizBranch = (data :any) => {
+export const createQuizBranch = (data :QuizBranch) => {
   if (Object.keys(data).length > 0) {
     return client.post("quiz_branches", data)
   }
