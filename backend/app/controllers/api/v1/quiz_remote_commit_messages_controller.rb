@@ -38,7 +38,7 @@ class Api::V1::QuizRemoteCommitMessagesController < ApplicationController
       status: 'SUCCESS',
       message: 'Deleted the post',
       data: quiz_remote_commit_message,
-    Å}
+    }
   end
 
   private
