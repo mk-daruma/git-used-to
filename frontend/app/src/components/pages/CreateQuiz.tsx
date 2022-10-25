@@ -584,7 +584,7 @@ const CreateQuiz: React.FC = () => {
   const getRemoteCommitMessages = [setRemoteCommitMessages, setInitialRemoteCommitMessages]
   const getRemoteRepositoryFiles = [setRemoteRepositoryFiles, setInitialRemoteRepositoryFiles]
 
-  const handleGetQuizData = async () => {
+  const handleGetQuizData = async (quizFirstOrLastStatus :number) => {
     try {
       setGitInit("Initialized empty Git repository")
 
@@ -593,8 +593,8 @@ const CreateQuiz: React.FC = () => {
       setQuizTitle(ResQuiz.data.quizData.quizTitle)
       setQuizIntroduction(ResQuiz.data.quizData.quizIntroduction)
 
-      const ResQuizOfLast = await getQuizFirstOrLast(ResQuiz.data.quizFirstOrLastsData[0].id)
-      setQuizFirstOrLastId(ResQuiz.data.quizFirstOrLastsData[0].id)
+      const ResQuizOfLast = await getQuizFirstOrLast(ResQuiz.data.quizFirstOrLastsData[quizFirstOrLastStatus].id)
+      setQuizFirstOrLastId(ResQuiz.data.quizFirstOrLastsData[quizFirstOrLastStatus].id)
 
       setCurrentBranch({
         currentBranchName: ResQuizOfLast.data.dataBranches[0].quizBranchName,
@@ -727,7 +727,8 @@ const CreateQuiz: React.FC = () => {
   }
 
   useEffect(() => {
-    location.pathname === (`/quiz/edit/${id}`) && handleGetQuizData()
+    location.pathname === (`/quiz/edit/${id}`)&& handleGetQuizData(0)
+    location.pathname === (`/quiz/init/edit/${id}`)&& handleGetQuizData(1)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

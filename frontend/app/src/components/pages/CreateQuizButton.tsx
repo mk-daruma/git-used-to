@@ -69,16 +69,19 @@ const CreateOrUpdateQuizButton: React.FC = () => {
 
   const handleCreateQuizSubmit = (argBranches :any, argsWorktreeFiles :any, argIndexFiles :any, argCommitMessages :any, argFileHistoryForCansellCommits :any, argRepositoryFiles :any, argRemoteBranches :any, argRemoteCommitMessages :any, argRemoteRepositoryFiles :any) => async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    const quizFirtsOrLastStatus = "last"
-
     try {
       const aboutQuizRes = await createQuiz(aboutQuizData)
 
       const quizFirtsOrLastData: QuizFirtsOrLastData | undefined =
       location.pathname === "/quiz"
       ? {
-          quizFirstOrLastStatus: quizFirtsOrLastStatus,
+          quizFirstOrLastStatus: "last",
           quizId: aboutQuizRes?.data.data.id
+        }
+      : location.pathname === (`/quiz/init/${id}`)
+      ? {
+          quizFirstOrLastStatus: "first",
+          quizId: id
         }
       : undefined
 
@@ -86,7 +89,7 @@ const CreateOrUpdateQuizButton: React.FC = () => {
 
       const quizBranchData = argBranches.map((branch :any) => ({
         quizBranchName: branch.branchName,
-        quizFirstOrLastId: location.pathname === "/quiz" ? quizFirtsOrLastRes?.data.data.id : quizFirstOrLastId
+        quizFirstOrLastId: location.pathname === "/quiz" || location.pathname === (`/quiz/init/${id}`) ? quizFirtsOrLastRes?.data.data.id : quizFirstOrLastId
       }))
 
       const quizBranchRes = await createQuizBranch(quizBranchData)
@@ -543,7 +546,31 @@ const CreateOrUpdateQuizButton: React.FC = () => {
         Submit
       </Button>
       }
-    {location.pathname === (`/quiz/edit/${id}`) &&
+    {location.pathname === (`/quiz/init/${id}`) &&
+      <Button
+          type="submit"
+          variant="contained"
+          size="large"
+          fullWidth
+          color="default"
+          className={classes.submitBtn}
+          onClick={
+            handleCreateQuizSubmit(
+              branches,
+              worktreeFiles,
+              indexFiles,
+              commitMessages,
+              fileHistoryForCansellCommits,
+              repositoryFiles,
+              remoteBranches,
+              remoteCommitMessages,
+              remoteRepositoryFiles
+              )}
+        >
+        Submit
+      </Button>
+      }
+    {(location.pathname === (`/quiz/edit/${id}`) || location.pathname === (`/quiz/init/edit/${id}`))  &&
       <Button
           type="submit"
           variant="contained"
