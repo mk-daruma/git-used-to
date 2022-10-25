@@ -32,7 +32,7 @@ const InputCommand: React.FC = () => {
     remoteCommitMessages, setRemoteCommitMessages,
     addText, setAddText,
     gitInit, setGitInit,
-    commands, setCommands
+    setCommands
   } = useContext(QuizContext)
 
   const currentBranchParentWorktreeFiles = worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch === currentBranch.currentBranchName)
@@ -44,7 +44,6 @@ const InputCommand: React.FC = () => {
   const currentBranchParentRemoteRepositoryFiles = remoteRepositoryFiles.filter(remoteRepositoryFile => remoteRepositoryFile.parentRemoteBranch === currentBranch.currentBranchName)
   const exceptCurrentBranchParentWorktreeFiles = worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch !== currentBranch.currentBranchName)
   const exceptCurrentBranchParentIndexFiles = indexFiles.filter((indexFile) => indexFile.parentBranch !== currentBranch.currentBranchName)
-  const currentBranchLastestThreeCommits = commitMessages.filter((commitMessage) => commitMessage.parentBranch === currentBranch.currentBranchName).slice(-3)
   const differTextStatusRemoteRepositoryFiles = currentBranchParentRepositoryFiles.filter(repositoryFile => currentBranchParentRemoteRepositoryFiles.some(remoteRepositoryFile => repositoryFile.fileName === remoteRepositoryFile.fileName && repositoryFile.textStatus !== remoteRepositoryFile.textStatus))
 
   const gitAddA = () => {
@@ -89,7 +88,7 @@ const InputCommand: React.FC = () => {
 
   const gitAdd = (text :string, str :number) => {
     if (afterCommandMultipleStrings(text, str)?.every(afterCommandMultipleString =>
-          !currentBranchParentWorktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandMultipleString) && currentBranchParentIndexFiles.some(indexFile => indexFile.fileName === afterCommandMultipleString)
+          (!currentBranchParentWorktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandMultipleString) && currentBranchParentIndexFiles.some(indexFile => indexFile.fileName === afterCommandMultipleString))
           || currentBranchParentWorktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandMultipleString)
       )) {
       const rmFiles = afterCommandMultipleStrings(text, str)?.filter((afterCommandMultipleString :string) => !currentBranchParentWorktreeFiles.some(worktreeFile => afterCommandMultipleString === worktreeFile.fileName))
@@ -142,16 +141,11 @@ const InputCommand: React.FC = () => {
   }
 
   const gitCommitM = (text :string, str :number) => {
-    //地獄的にみづらい。リファクタリング必要。
-    if (indexFiles.some(indexFile => indexFile.fileName !== "" && /[\S+]/.test(text.substring(str-1)))
-        && !currentBranchParentCommitMessages.every(commitMessages => commitMessages.message === text.substring(str))
-        && !currentBranchParentIndexFiles.every(indexFile => currentBranchParentRepositoryFiles.some(repositoryFile => indexFile.fileName === repositoryFile.fileName && indexFile.textStatus === repositoryFile.textStatus))
-        || indexFiles.some(indexFile => indexFile.fileName !== "" && /[\S+]/.test(text.substring(str-1)))
-          && !currentBranchParentCommitMessages.every(commitMessages => commitMessages.message === text.substring(str))
-          && !currentBranchParentRepositoryFiles.every(repositoryFile => currentBranchParentIndexFiles.some(indexFile => indexFile.fileName === repositoryFile.fileName && indexFile.textStatus === repositoryFile.textStatus))
-        || indexFiles.some(indexFile => indexFile.fileName !== "" && /[\S+]/.test(text.substring(str-1)))
-          && !currentBranchParentCommitMessages.some(commitMessage => commitMessage.message)
-          && !currentBranchParentRepositoryFiles.some(repositoryFile => repositoryFile.fileName)
+    const commonConditions = indexFiles.some(indexFile => indexFile.fileName !== "" && /[\S+]/.test(text.substring(str-1))) && !currentBranchParentCommitMessages.some(commitMessages => commitMessages.message === text.substring(str))
+
+    if ((commonConditions && !currentBranchParentIndexFiles.every(indexFile => currentBranchParentRepositoryFiles.some(repositoryFile => indexFile.fileName === repositoryFile.fileName && indexFile.textStatus === repositoryFile.textStatus)))
+        || (commonConditions && !currentBranchParentRepositoryFiles.every(repositoryFile => currentBranchParentIndexFiles.some(indexFile => indexFile.fileName === repositoryFile.fileName && indexFile.textStatus === repositoryFile.textStatus)))
+        || (commonConditions && !currentBranchParentRepositoryFiles.some(repositoryFile => repositoryFile.fileName))
       ) {
       setCommitMessages(commitMessage => [...commitMessage,{
         message: text.substring(str),
@@ -659,7 +653,7 @@ const InputCommand: React.FC = () => {
 
         lastestFileHistoryForCansellCommits.forEach(fileHistoryForCansellCommit =>
           repositoryFiles.forEach((repositoryFile) =>
-          {if (fileHistoryForCansellCommit.parentCommitMessage === repositoryFile.parentCommitMessage && repositoryFile.parentBranch === currentBranch.currentBranchName && fileHistoryForCansellCommit.parentBranch === currentBranch.currentBranchName || fileHistoryForCansellCommit.fileStatus === "deleted") {
+          {if ((fileHistoryForCansellCommit.parentCommitMessage === repositoryFile.parentCommitMessage && repositoryFile.parentBranch === currentBranch.currentBranchName && fileHistoryForCansellCommit.parentBranch === currentBranch.currentBranchName) || fileHistoryForCansellCommit.fileStatus === "deleted") {
             resetedHistoryFiles.push(fileHistoryForCansellCommit)
           }})
         )
