@@ -92,22 +92,21 @@ const InputCommand: React.FC = () => {
           !currentBranchParentWorktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandMultipleString) && currentBranchParentIndexFiles.some(indexFile => indexFile.fileName === afterCommandMultipleString)
           || currentBranchParentWorktreeFiles.some(worktreeFile => worktreeFile.fileName === afterCommandMultipleString)
       )) {
-      afterCommandMultipleStrings(text, str)?.filter((afterCommandMultipleString :string) => !currentBranchParentWorktreeFiles.some(worktreeFile => afterCommandMultipleString === worktreeFile.fileName))
-      .forEach((afterCommandMultipleString) => (
-        setIndexFiles(indexFiles.map(indexFile =>
-          afterCommandMultipleString === indexFile.fileName
-          && indexFile.parentBranch === currentBranch.currentBranchName
-          ? {
-            fileName :"",
-            textStatus: "",
-            parentBranch: "",
-            parentBranchId: "",
-            indexFileId: ""
-            }
-          : indexFile
-          )
+      const rmFiles = afterCommandMultipleStrings(text, str)?.filter((afterCommandMultipleString :string) => !currentBranchParentWorktreeFiles.some(worktreeFile => afterCommandMultipleString === worktreeFile.fileName))
+
+      setIndexFiles(indexFiles.map(indexFile =>
+        rmFiles?.some(rmFile => rmFile === indexFile.fileName)
+        && indexFile.parentBranch === currentBranch.currentBranchName
+        ? {
+          fileName :"",
+          textStatus: "",
+          parentBranch: "",
+          parentBranchId: "",
+          indexFileId: ""
+          }
+        : indexFile
         )
-      ))
+      )
       afterCommandMultipleStrings(text, str)?.forEach((afterCommandMultipleString) => (
         currentBranchParentWorktreeFiles
         .filter(worktreeFile => worktreeFile.fileName === afterCommandMultipleString)
