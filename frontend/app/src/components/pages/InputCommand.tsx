@@ -697,7 +697,7 @@ const InputCommand: React.FC = () => {
           )))
           lastestFileHistoryForCansellCommits.forEach(fileHistoryForCansellCommit =>
             currentBranchParentCommitMessages.forEach(commitMessage =>
-              {if (commitMessage.message === fileHistoryForCansellCommit.parentPastCommitMessage && !repositoryFiles.some(repositoryFile => repositoryFile.fileName === fileHistoryForCansellCommit.fileName)) {
+              {if (commitMessage.message === fileHistoryForCansellCommit.parentPastCommitMessage && !repositoryFiles.some(repositoryFile => repositoryFile.fileName === fileHistoryForCansellCommit.fileName && repositoryFile.parentBranch === fileHistoryForCansellCommit.parentBranch)) {
                 setRepositoryFiles(repositoryFiles => [...repositoryFiles,{
                   fileName: fileHistoryForCansellCommit.fileName,
                   textStatus: fileHistoryForCansellCommit.pastTextStatus,
@@ -741,7 +741,7 @@ const InputCommand: React.FC = () => {
               )
             )
             lastestFileHistoryForCansellCommits.forEach(fileHistoryForCansellCommit =>
-              {if (!indexFiles.some(indexFile => indexFile.fileName === fileHistoryForCansellCommit.fileName) && fileHistoryForCansellCommit.fileStatus === "deleted" ) {
+              {if (!indexFiles.some(indexFile => indexFile.fileName === fileHistoryForCansellCommit.fileName && indexFile.parentBranch === currentBranch.currentBranchName) && fileHistoryForCansellCommit.fileStatus === "deleted" ) {
                 setIndexFiles(indexFiles => [...indexFiles,{
                   fileName: fileHistoryForCansellCommit.fileName,
                   textStatus: fileHistoryForCansellCommit.pastTextStatus,
@@ -783,7 +783,7 @@ const InputCommand: React.FC = () => {
               )
             )
             lastestFileHistoryForCansellCommits.forEach(fileHistoryForCansellCommit =>
-              {if (!worktreeFiles.some(worktreeFile => worktreeFile.fileName === fileHistoryForCansellCommit.fileName) && fileHistoryForCansellCommit.fileStatus === "deleted" ) {
+              {if (!worktreeFiles.some(worktreeFile => worktreeFile.fileName === fileHistoryForCansellCommit.fileName && worktreeFile.parentBranch === currentBranch.currentBranchName) && fileHistoryForCansellCommit.fileStatus === "deleted" ) {
                 setWorktreeFiles(worktreeFiles => [...worktreeFiles,{
                   fileName: fileHistoryForCansellCommit.fileName,
                   textStatus: fileHistoryForCansellCommit.pastTextStatus,
