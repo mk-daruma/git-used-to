@@ -1,10 +1,7 @@
-import React, { useContext, useState, createContext, useEffect } from "react";
-import { useHistory, useLocation, useParams } from "react-router-dom";
-
-import { makeStyles, Theme } from "@material-ui/core";
+import React, { useState, createContext, useEffect } from "react";
+import { useLocation, useParams } from "react-router-dom";
 
 import AboutQuiz from "./AboutQuiz";
-import { AuthContext } from "App";
 
 import { getQuiz } from "lib/api/quizzes";
 import Terminal from "./Terminal";
