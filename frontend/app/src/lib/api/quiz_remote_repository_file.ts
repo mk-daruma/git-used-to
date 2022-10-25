@@ -7,10 +7,6 @@ export const createQuizRemoteRepositoryFile = (data: any) => {
   }
 }
 
-// export const updateQuizRemoteRepositoryFile = (id: number | undefined | null, data: これから作成) => {
-//   return client.post(`quiz_remote_repository_files/${id}`, data)
-// }
-
 export const deleteQuizRemoteRepositoryFile = (id: number | undefined | null) => {
   return client.delete(`quiz_remote_repository_files/${id}`)
 }

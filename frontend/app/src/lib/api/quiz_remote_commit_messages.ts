@@ -7,10 +7,6 @@ export const createQuizRemoteCommitMessage = (data: any) => {
   }
 }
 
-// export const updateQuizRemoteCommitMessage = (id: number | undefined | null, data: これから作成) => {
-//   return client.post(`quiz_commit_messages/${id}`, data)
-// }
-
 export const getQuizRemoteCommitMessage = (id: number | undefined | null) => {
   return client.get(`quiz_remote_commit_messages/${id}`)
 }

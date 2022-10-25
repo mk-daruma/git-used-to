@@ -1,4 +1,4 @@
-import { CreateQuizCommitMessage } from "interfaces"
+// import { CreateQuizCommitMessage } from "interfaces"
 import client from "lib/api/client"
 
 export const createQuizCommitMessage = (data: any) => {
@@ -6,10 +6,6 @@ export const createQuizCommitMessage = (data: any) => {
     return client.post("quiz_commit_messages", data)
   }
 }
-
-// export const updateQuizCommitMessage = (id: number | undefined | null, data: これから作成) => {
-//   return client.post(`quiz_commit_messages/${id}`, data)
-// }
 
 export const getQuizCommitMessage = (id: number | undefined | null) => {
   return client.get(`quiz_commit_messages/${id}`)
