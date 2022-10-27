@@ -31,7 +31,7 @@ class Api::V1::QuizBranchesController < ApplicationController
     render json: {
       status: 'SUCCESS',
       message: 'Loaded quizzes',
-      data_worktree_Files: quiz_worktree_files,
+      data_worktree_files: quiz_worktree_files,
       data_index_files: quiz_index_files,
       data_messages: quiz_commit_messages,
     }
