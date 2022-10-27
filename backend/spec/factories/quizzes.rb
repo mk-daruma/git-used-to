@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :quiz do
-    user { nil }
-    quiz_title { "MyString" }
-    quiz_introduction { "MyText" }
-    quiz_type { "MyString" }
+    user { FactoryBot.create(:user) }
+    quiz_title { Faker::Alphanumeric.alpha(number: 5) }
+    quiz_introduction { Faker::Alphanumeric.alpha(number: 10) }
+    quiz_type { "first" }
   end
 end
