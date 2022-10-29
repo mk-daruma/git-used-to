@@ -9,6 +9,7 @@ RSpec.describe "Api::V1::QuizHistoryOfCommittedFiles", type: :request do
       {
       _json: [{
         quiz_history_of_committed_file_name: "作成確認用",
+        quiz_history_of_committed_file_status: "exists",
         quiz_history_of_committed_file_text_status: "おはようございます",
         quiz_history_of_committed_file_past_text_status: "こんにちは",
         quiz_history_of_committed_file_parent_past_commit_message: "過去のコミットメッセージ",
@@ -21,6 +22,7 @@ RSpec.describe "Api::V1::QuizHistoryOfCommittedFiles", type: :request do
       {
       _json: [{
           quiz_history_of_committed_file_name: "複数作成確認用1",
+          quiz_history_of_committed_file_status: "exists",
           quiz_history_of_committed_file_text_status: "おはようございます",
           quiz_history_of_committed_file_past_text_status: "こんにちは",
           quiz_history_of_committed_file_parent_past_commit_message: "過去のコミットメッセージ",
@@ -29,6 +31,7 @@ RSpec.describe "Api::V1::QuizHistoryOfCommittedFiles", type: :request do
         },
         {
           quiz_history_of_committed_file_name: "複数作成確認用2",
+          quiz_history_of_committed_file_status: "exists",
           quiz_history_of_committed_file_text_status: "おはようございます",
           quiz_history_of_committed_file_past_text_status: "こんにちは",
           quiz_history_of_committed_file_parent_past_commit_message: "過去のコミットメッセージ",
