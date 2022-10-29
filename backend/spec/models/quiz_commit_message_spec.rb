@@ -1,5 +1,36 @@
 require 'rails_helper'
 
 RSpec.describe QuizCommitMessage, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe "validates presence" do
+    context "全てのカラムに値が入力されている場合" do
+      let(:quiz_commit_message) { create(:quiz_commit_message) }
+
+      it "quiz_commit_messageのレコード作成が成功すること" do
+        expect(quiz_commit_message).to be_valid
+      end
+    end
+
+    context "quiz_commit_message_nameの値が入力されていない場合" do
+      let(:quiz_commit_message) { build(:quiz_commit_message, quiz_commit_message: nil) }
+
+      it "エラーになること" do
+        quiz_commit_message.valid?
+        expect(quiz_commit_message.errors.messages[:quiz_commit_message]).to include "can't be blank"
+      end
+    end
+  end
+
+  describe "dependent: :destroy" do
+    context "quiz_commit_messageのデータが削除された場合" do
+      let(:quiz_commit_message) { create(:quiz_commit_message) }
+      let!(:quiz_history_of_committed_file) { create(:quiz_history_of_committed_file, quiz_commit_message:quiz_commit_message) }
+      let!(:quiz_repository_file) { create(:quiz_repository_file, quiz_commit_message:quiz_commit_message) }
+
+      it "quiz_commit_messageに紐づいている2つの異なるテーブルのデータも削除されること" do
+        expect do
+          quiz_commit_message.destroy
+        end.to change(QuizHistoryOfCommittedFile, :count).by(-1).and change(QuizRepositoryFile, :count).by(-1)
+      end
+    end
+  end
 end

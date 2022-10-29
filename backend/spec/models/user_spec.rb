@@ -40,4 +40,17 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe "dependent: :destroy" do
+    context "userのデータが削除された場合" do
+      let(:user) { create(:user) }
+      let!(:quiz) { create(:quiz, user:user) }
+
+      it "userに紐づいているquizのデータも削除されること" do
+        expect do
+          user.destroy
+        end.to change(Quiz, :count).by(-1)
+      end
+    end
+  end
 end
