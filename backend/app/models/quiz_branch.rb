@@ -5,4 +5,6 @@ class QuizBranch < ApplicationRecord
   has_many :quiz_index_files, dependent: :destroy
   has_many :quiz_history_of_committed_files, dependent: :destroy
   has_many :quiz_repository_files, dependent: :destroy
+
+  validates :quiz_branch_name, presence: true
 end
