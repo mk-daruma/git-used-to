@@ -38,6 +38,7 @@ const CreateOrUpdateQuizButton: React.FC = () => {
     branches,
     initialBranches,
     remoteBranches,
+    gitInit,
     initialRemoteBranches,
     worktreeFiles,
     initialWorktreeFiles,
@@ -519,6 +520,9 @@ const CreateOrUpdateQuizButton: React.FC = () => {
     }
   }
 
+  const blankCheck = (str :string) => /[^\s]+/g.test(str)
+  const removeButtonDisabled = !blankCheck(quizTitle) || !blankCheck(quizIntroduction) || !blankCheck(quizType) || gitInit === "not a git repository" ? true : false
+
   return(
     <>
     {location.pathname === "/quiz" &&
@@ -528,7 +532,7 @@ const CreateOrUpdateQuizButton: React.FC = () => {
         size="large"
         fullWidth
         color="default"
-        disabled={!quizTitle || !quizIntroduction || !quizType ? true : false}
+        disabled={removeButtonDisabled}
         className={classes.submitBtn}
         onClick={
           handleCreateQuizSubmit(
@@ -554,6 +558,7 @@ const CreateOrUpdateQuizButton: React.FC = () => {
           fullWidth
           color="default"
           className={classes.submitBtn}
+          disabled={gitInit === "not a git repository" ? true : false}
           onClick={
             handleCreateQuizSubmit(
               branches,
@@ -577,7 +582,7 @@ const CreateOrUpdateQuizButton: React.FC = () => {
           size="large"
           fullWidth
           color="default"
-          disabled={!quizTitle || !quizIntroduction || !quizType ? true : false}
+          disabled={removeButtonDisabled}
           className={classes.submitBtn}
           onClick={handleUpdateQuizData}
         >
