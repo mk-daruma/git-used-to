@@ -1,33 +1,37 @@
 require 'rails_helper'
 
 RSpec.describe "QuizIndexFiles", type: :request do
-  let(:quiz_branch) { create(:quiz_branch) }
-  let(:quiz_index_file) { create(:quiz_index_file) }
-  let(:quiz_index_file2) { create(:quiz_index_file, quiz_index_file_text_status: "こんにちは") }
+  let(:branch) { create(:quiz_branch) }
+  let(:index_file) { create(:quiz_index_file) }
+  let(:index_file2) { create(:quiz_index_file, quiz_index_file_text_status: "こんにちは") }
 
   describe "GET /create" do
     let(:params) do
       {
-      _json: [{
-        quiz_index_file_name: "ファイル名",
-        quiz_index_file_text_status: "こんにちは",
-        quiz_branch_id: quiz_branch.id
-        }]
-    }
+        _json: [
+          {
+            quiz_index_file_name: "ファイル名",
+            quiz_index_file_text_status: "こんにちは",
+            quiz_branch_id: branch.id,
+          },
+        ],
+      }
     end
     let(:mulch_params) do
       {
-      _json: [{
-          quiz_index_file_name: "ファイル名",
-          quiz_index_file_text_status: "こんにちは",
-          quiz_branch_id: quiz_branch.id
-        },
-        {
-          quiz_index_file_name: "ファイル名2",
-          quiz_index_file_text_status: "おはようございます",
-          quiz_branch_id: quiz_branch.id
-        }]
-    }
+        _json: [
+          {
+            quiz_index_file_name: "ファイル名",
+            quiz_index_file_text_status: "こんにちは",
+            quiz_branch_id: branch.id,
+          },
+          {
+            quiz_index_file_name: "ファイル名2",
+            quiz_index_file_text_status: "おはようございます",
+            quiz_branch_id: branch.id,
+          },
+        ],
+      }
     end
 
     context "送られてきた配列内のファイル情報が一つの場合" do
@@ -56,27 +60,27 @@ RSpec.describe "QuizIndexFiles", type: :request do
   describe "GET /update" do
     let!(:update) do
       {
-      quiz_index_file: {
-        quiz_index_file_name: quiz_index_file2.quiz_index_file_name,
-        quiz_index_file_text_status: quiz_index_file2.quiz_index_file_text_status,
-        quiz_branch_id: quiz_index_file.quiz_branch_id
-        }
-    }
+        quiz_index_file: {
+          quiz_index_file_name: index_file2.quiz_index_file_name,
+          quiz_index_file_text_status: index_file2.quiz_index_file_text_status,
+          quiz_branch_id: index_file2.quiz_branch_id,
+        },
+      }
     end
+
     it "データ更新が成功すること" do
-      patch api_v1_quiz_index_file_path(quiz_index_file.id), params: update
+      patch api_v1_quiz_index_file_path(index_file.id), params: update
       res = JSON.parse(response.body)
       expect(res["status"]).to eq("SUCCESS")
-      expect(res["data"]["quiz_index_file_name"]).to eq(quiz_index_file2.quiz_index_file_name)
-      expect(res["data"]["quiz_index_file_text_status"]).to eq(quiz_index_file2.quiz_index_file_text_status)
+      expect(res["data"]["quiz_index_file_name"]).to eq(index_file2.quiz_index_file_name)
+      expect(res["data"]["quiz_index_file_text_status"]).to eq(index_file2.quiz_index_file_text_status)
       expect(response).to have_http_status(:success)
     end
   end
 
-
   describe "GET /destroy" do
     it "データ削除が成功すること" do
-      delete api_v1_quiz_index_file_path(quiz_index_file.id)
+      delete api_v1_quiz_index_file_path(index_file.id)
       res = JSON.parse(response.body)
       expect(res["status"]).to eq("SUCCESS")
       expect(res["message"]).to include("Deleted the post")

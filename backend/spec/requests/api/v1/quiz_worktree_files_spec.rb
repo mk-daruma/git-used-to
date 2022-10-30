@@ -1,33 +1,37 @@
 require 'rails_helper'
 
 RSpec.describe "Api::V1::QuizWorktreeFiles", type: :request do
-  let(:quiz_branch) { create(:quiz_branch) }
-  let(:quiz_worktree_file) { create(:quiz_worktree_file) }
-  let(:quiz_worktree_file2) { create(:quiz_worktree_file, quiz_worktree_file_text_status: "こんにちは") }
+  let(:branch) { create(:quiz_branch) }
+  let(:worktree_file) { create(:quiz_worktree_file) }
+  let(:worktree_file2) { create(:quiz_worktree_file, quiz_worktree_file_text_status: "こんにちは") }
 
   describe "GET /create" do
     let(:params) do
       {
-      _json: [{
-        quiz_worktree_file_name: "ファイル名",
-        quiz_worktree_file_text_status: "こんにちは",
-        quiz_branch_id: quiz_branch.id
-        }]
-    }
+        _json: [
+          {
+            quiz_worktree_file_name: "ファイル名",
+            quiz_worktree_file_text_status: "こんにちは",
+            quiz_branch_id: branch.id,
+          },
+        ],
+      }
     end
     let(:mulch_params) do
       {
-      _json: [{
-          quiz_worktree_file_name: "ファイル名",
-          quiz_worktree_file_text_status: "こんにちは",
-          quiz_branch_id: quiz_branch.id
-        },
-        {
-          quiz_worktree_file_name: "ファイル名2",
-          quiz_worktree_file_text_status: "おはようございます",
-          quiz_branch_id: quiz_branch.id
-        }]
-    }
+        _json: [
+          {
+            quiz_worktree_file_name: "ファイル名",
+            quiz_worktree_file_text_status: "こんにちは",
+            quiz_branch_id: branch.id,
+          },
+          {
+            quiz_worktree_file_name: "ファイル名2",
+            quiz_worktree_file_text_status: "おはようございます",
+            quiz_branch_id: branch.id,
+          },
+        ],
+      }
     end
 
     context "送られてきた配列内のファイル情報が一つの場合" do
@@ -56,27 +60,27 @@ RSpec.describe "Api::V1::QuizWorktreeFiles", type: :request do
   describe "GET /update" do
     let!(:update) do
       {
-      quiz_worktree_file: {
-        quiz_worktree_file_name: quiz_worktree_file2.quiz_worktree_file_name,
-        quiz_worktree_file_text_status: quiz_worktree_file2.quiz_worktree_file_text_status,
-        quiz_branch_id: quiz_worktree_file.quiz_branch_id
-        }
-    }
+        quiz_worktree_file: {
+          quiz_worktree_file_name: worktree_file2.quiz_worktree_file_name,
+          quiz_worktree_file_text_status: worktree_file2.quiz_worktree_file_text_status,
+          quiz_branch_id: worktree_file.quiz_branch_id,
+        },
+      }
     end
+
     it "データ更新が成功すること" do
-      patch api_v1_quiz_worktree_file_path(quiz_worktree_file.id), params: update
+      patch api_v1_quiz_worktree_file_path(worktree_file.id), params: update
       res = JSON.parse(response.body)
       expect(res["status"]).to eq("SUCCESS")
-      expect(res["data"]["quiz_worktree_file_name"]).to eq(quiz_worktree_file2.quiz_worktree_file_name)
-      expect(res["data"]["quiz_worktree_file_text_status"]).to eq(quiz_worktree_file2.quiz_worktree_file_text_status)
+      expect(res["data"]["quiz_worktree_file_name"]).to eq(worktree_file2.quiz_worktree_file_name)
+      expect(res["data"]["quiz_worktree_file_text_status"]).to eq(worktree_file2.quiz_worktree_file_text_status)
       expect(response).to have_http_status(:success)
     end
   end
 
-
   describe "GET /destroy" do
     it "データ削除が成功すること" do
-      delete api_v1_quiz_worktree_file_path(quiz_worktree_file.id)
+      delete api_v1_quiz_worktree_file_path(worktree_file.id)
       res = JSON.parse(response.body)
       expect(res["status"]).to eq("SUCCESS")
       expect(res["message"]).to include("Deleted the post")

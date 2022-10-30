@@ -30,7 +30,7 @@ RSpec.describe "Api::V1::Users", type: :request do
       {
         user_name: user2.user_name,
         user_self_introduction: user2.user_self_introduction,
-        image: user2.image
+        image: user2.image,
       }
     end
 

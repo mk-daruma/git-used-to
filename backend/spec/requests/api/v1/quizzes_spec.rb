@@ -4,10 +4,10 @@ RSpec.describe "Api::V1::Quizzes", type: :request do
   let(:user) { create(:user) }
   let!(:quiz) { create(:quiz) }
   let!(:quiz2) { create(:quiz) }
-  let!(:quiz_first_or_last) { create(:quiz_first_or_last, quiz:quiz)}
-  let!(:quiz_first_or_last2) { create(:quiz_first_or_last, quiz:quiz)}
-  let!(:quiz_first_or_last3) { create(:quiz_first_or_last, quiz:quiz2)}
-  let!(:quiz_first_or_last4) { create(:quiz_first_or_last, quiz:quiz2)}
+  let!(:quiz_first_or_last) { create(:quiz_first_or_last, quiz: quiz) }
+  let!(:quiz_first_or_last2) { create(:quiz_first_or_last, quiz: quiz) }
+  let!(:quiz_first_or_last3) { create(:quiz_first_or_last, quiz: quiz2) }
+  let!(:quiz_first_or_last4) { create(:quiz_first_or_last, quiz: quiz2) }
   let(:param) do
     {
       quiz: {
@@ -15,18 +15,18 @@ RSpec.describe "Api::V1::Quizzes", type: :request do
         quiz_title: "作成確認用",
         quiz_introduction: "これはcureateでデータが保存できるか確認するための値です",
         quiz_type: "user",
-      }
+      },
     }
   end
   let(:update) do
-  {
-    quiz: {
-      user_id: user.id,
-      quiz_title: quiz2.quiz_title,
-      quiz_introduction: quiz2.quiz_introduction,
-      quiz_type: quiz.quiz_type,
+    {
+      quiz: {
+        user_id: user.id,
+        quiz_title: quiz2.quiz_title,
+        quiz_introduction: quiz2.quiz_introduction,
+        quiz_type: quiz.quiz_type,
+      },
     }
-  }
   end
 
   describe "GET /index" do

@@ -1,6 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe Quiz, type: :model do
+  def fake_alphanumeric(num)
+    Faker::Alphanumeric.alpha(number: num)
+  end
+
+  def err_message(karam)
+    quiz.errors.messages[karam]
+  end
+
   describe "validates presence" do
     context "全ての値が入力され、quiz_introductionの文字数が30文字の場合" do
       let(:quiz) { create(:quiz) }
@@ -11,20 +19,20 @@ RSpec.describe Quiz, type: :model do
     end
 
     context "全ての値が入力され、quiz_introductionの文字数が30文字未満の場合" do
-      let(:quiz) { build(:quiz, quiz_introduction: Faker::Alphanumeric.alpha(number: 29)) }
+      let(:quiz) { build(:quiz, quiz_introduction: fake_alphanumeric(29)) }
 
       it "エラーになること" do
         quiz.valid?
-        expect(quiz.errors.messages[:quiz_introduction]).to include "is too short (minimum is 30 characters)"
+        expect(err_message(:quiz_introduction)).to include "is too short (minimum is 30 characters)"
       end
     end
 
     context "全ての値が入力され、quiz_introductionの文字数が201文以上の場合" do
-      let(:quiz) { build(:quiz, quiz_introduction: Faker::Alphanumeric.alpha(number: 201)) }
+      let(:quiz) { build(:quiz, quiz_introduction: fake_alphanumeric(201)) }
 
       it "エラーになること" do
         quiz.valid?
-        expect(quiz.errors.messages[:quiz_introduction]).to include "is too long (maximum is 200 characters)"
+        expect(err_message(:quiz_introduction)).to include "is too long (maximum is 200 characters)"
       end
     end
 
@@ -33,7 +41,7 @@ RSpec.describe Quiz, type: :model do
 
       it "エラーになること" do
         quiz.valid?
-        expect(quiz.errors.messages[:quiz_title]).to include "can't be blank"
+        expect(err_message(:quiz_title)).to include "can't be blank"
       end
     end
 
@@ -42,7 +50,7 @@ RSpec.describe Quiz, type: :model do
 
       it "エラーになること" do
         quiz.valid?
-        expect(quiz.errors.messages[:quiz_introduction]).to include "can't be blank"
+        expect(err_message(:quiz_introduction)).to include "can't be blank"
       end
     end
   end
@@ -50,7 +58,7 @@ RSpec.describe Quiz, type: :model do
   describe "dependent: :destroy" do
     context "quizのデータが削除された場合" do
       let(:quiz) { create(:quiz) }
-      let!(:quiz_first_or_last) { create(:quiz_first_or_last, quiz:quiz) }
+      let!(:quiz_first_or_last) { create(:quiz_first_or_last, quiz: quiz) }
 
       it "quizに紐づいているquiz_first_or_lastのデータも削除されること" do
         expect do
