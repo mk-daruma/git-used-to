@@ -1,8 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe "Api::V1::Users", type: :request do
+  let!(:image_path) { File.join(Rails.root, 'spec/fixtures/images/sample2.jpeg') }
+  let!(:image) { Rack::Test::UploadedFile.new(image_path) }
   let(:user) { create(:user, user_self_introduction: "こんにちは") }
-  let(:user2) { create(:user, user_self_introduction: "こんばんわ") }
+  let!(:user2) { create(:user, user_self_introduction: "こんばんわ", image: image) }
   let!(:user_quiz1) { create(:quiz, user: user) }
   let!(:user_quiz2) { create(:quiz, user: user) }
   let!(:user2_quiz1) { create(:quiz, user: user2) }
@@ -30,17 +32,18 @@ RSpec.describe "Api::V1::Users", type: :request do
       {
         user_name: user2.user_name,
         user_self_introduction: user2.user_self_introduction,
-        image: user2.image,
+        image: image,
       }
     end
 
     it "userデータの編集が成功すること" do
+      expect(user.image.url.split("/").last).not_to eq(user2.image.url.split("/").last)
       put api_v1_user_path(user.id), params: params
       res = JSON.parse(response.body)
       expect(res["status"]).to eq(200)
       expect(res["data"]["user_name"]).to eq(user2.user_name)
       expect(res["data"]["user_self_introduction"]).to eq(user2.user_self_introduction)
-      # expect(res["data"]["image"]).to eq(user2.image) 本来は画像テストも行うべきだが、テスト方法がわからないため一旦後回し
+      expect(res["data"]["image"]["url"].split("/").last).to eq(user2.image.url.split("/").last)
       expect(response).to have_http_status(200)
     end
   end
