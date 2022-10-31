@@ -73,3 +73,65 @@ export interface RedirectChangeUserPasswordData {
 export interface RedirectChangeUserPasswordFormData extends FormData {
   append(name: keyof RedirectChangeUserPasswordData, value: String | Blob, fileName?: string): any
 }
+
+export interface AboutQuizData {
+  quizTitle: string
+  quizIntroduction: string
+  quizType: string
+  userId: number | undefined
+}
+
+export interface QuizFirtsOrLastData {
+  quizFirstOrLastStatus: string
+  quizId : number
+}
+
+export interface QuizBranch {
+  quizBranchName: string
+  quizFirstOrLastId : number
+}
+
+export interface QuizWortreeFileData {
+  quizWorktreeFileName: string
+  quizWorktreeFileTextStatus: string
+  quizBranchId: number
+}
+
+export interface QuizIndexFileData {
+  quizIndexFileName: string
+  quizIndexFileTextStatus: string
+  quizBranchId: number
+}
+
+export interface CreateQuizHistoryOfCommittedFileData {
+  quizHistoryOfCommittedFileName: string
+  quizHistoryOfCommittedFileTextStatus: string
+  quizHistoryOfCommittedFilePastTextStatus: string
+  quizHistoryOfCommittedFileParentPastCommitMessage: string
+  quizBranchId: number
+  quizCommitMessageId: number
+}
+
+export interface CreateQuizCommitMessage {
+  quizCommitMessage: string
+  quizBranchId: number
+}
+
+export interface CreateQuizRepositoryFileData {
+  quizRepositoryFileName: string
+  quizRepositoryFileStatus: string
+  quizRepositoryFileTextStatus: string
+  quizCommitMessageId: number
+}
+
+export interface CreateQuizRemoteCommitMessage {
+  quizRemoteCommitMessage: string
+  quizRemoteBranchId: number
+}
+
+export interface CreateQuizRemoteRepositoryFileData {
+  quizRemoteRepositoryFileName: string
+  quizRemoteRepositoryFileStatus: string
+  quizRemoteRepositoryFileTextStatus: string
+  quizRemoteCommitMessageId: number
+}

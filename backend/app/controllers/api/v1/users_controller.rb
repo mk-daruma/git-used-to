@@ -1,7 +1,14 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :set_user, only: [:edit, :update]
+  before_action :set_user, only: [:show, :update]
+  before_action :user_params, only: [:update]
 
-  def edit
+  def show
+    quizzes = @user.quizzes
+    render json: {
+      status: 'SUCCESS',
+      message: 'Loaded quizzes',
+      data: quizzes,
+    }
   end
 
   def update
@@ -10,9 +17,15 @@ class Api::V1::UsersController < ApplicationController
     @user.image = user_params[:image] if user_params[:image] != ""
 
     if @user.save
-      render json: { status: 200, data: @user }
+      render json: {
+        status: 200,
+        data: @user,
+      }
     else
-      render json: { status: 500, message: '更新に失敗しました' }
+      render json: {
+        status: 500,
+        message: '更新に失敗しました',
+      }
     end
   end
 
@@ -23,6 +36,11 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def user_params
-    params.permit(:user_name, :user_self_introduction, :image, :id)
+    params.permit(
+      :user_name,
+      :user_self_introduction,
+      :image,
+      :id,
+    )
   end
 end

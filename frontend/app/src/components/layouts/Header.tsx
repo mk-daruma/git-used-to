@@ -14,6 +14,9 @@ import { AuthContext } from "App"
 import HeaderMenuList from "components/layouts/HeaderMenuList"
 
 const useStyles = makeStyles((theme: Theme) => ({
+  appBar: {
+    backgroundColor: '#3a3a3a',
+  },
   iconButton: {
     marginRight: theme.spacing(2),
   },
@@ -66,7 +69,7 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="static" className={classes.appBar}>
         <Toolbar>
           <IconButton
             edge="start"

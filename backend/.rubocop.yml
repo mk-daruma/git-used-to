@@ -4,6 +4,9 @@ inherit_from:
 Rails:
   Enabled: true
 
+Layout/LineLength:
+  Max: 115
+
 AllCops:
   Exclude:
     - 'bin/*'

@@ -10,7 +10,113 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_12_084041) do
+ActiveRecord::Schema.define(version: 2022_10_24_135436) do
+
+  create_table "quiz_branches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "quiz_branch_name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "quiz_first_or_last_id", null: false
+    t.index ["quiz_first_or_last_id"], name: "index_quiz_branches_on_quiz_first_or_last_id"
+  end
+
+  create_table "quiz_commit_messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "quiz_branch_id", null: false
+    t.text "quiz_commit_message"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["quiz_branch_id"], name: "index_quiz_commit_messages_on_quiz_branch_id"
+  end
+
+  create_table "quiz_first_or_lasts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "quiz_id", null: false
+    t.string "quiz_first_or_last_status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["quiz_id"], name: "index_quiz_first_or_lasts_on_quiz_id"
+  end
+
+  create_table "quiz_history_of_committed_files", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "quiz_history_of_committed_file_name"
+    t.string "quiz_history_of_committed_file_text_status"
+    t.string "quiz_history_of_committed_file_past_text_status"
+    t.text "quiz_history_of_committed_file_parent_past_commit_message"
+    t.bigint "quiz_branch_id", null: false
+    t.bigint "quiz_commit_message_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "quiz_history_of_committed_file_status"
+    t.index ["quiz_branch_id"], name: "index_quiz_history_of_committed_files_on_quiz_branch_id"
+    t.index ["quiz_commit_message_id"], name: "index_quiz_history_of_committed_files_on_quiz_commit_message_id"
+  end
+
+  create_table "quiz_index_files", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "quiz_index_file_name"
+    t.string "quiz_index_file_text_status"
+    t.bigint "quiz_branch_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["quiz_branch_id"], name: "index_quiz_index_files_on_quiz_branch_id"
+  end
+
+  create_table "quiz_remote_branches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "quiz_remote_branch_name"
+    t.bigint "quiz_first_or_last_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["quiz_first_or_last_id"], name: "index_quiz_remote_branches_on_quiz_first_or_last_id"
+  end
+
+  create_table "quiz_remote_commit_messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "quiz_remote_commit_message"
+    t.bigint "quiz_remote_branch_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["quiz_remote_branch_id"], name: "index_quiz_remote_commit_messages_on_quiz_remote_branch_id"
+  end
+
+  create_table "quiz_remote_repository_files", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "quiz_remote_repository_file_name"
+    t.string "quiz_remote_repository_file_text_status"
+    t.bigint "quiz_remote_commit_message_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "quiz_remote_branch_id", null: false
+    t.index ["quiz_remote_branch_id"], name: "index_quiz_remote_repository_files_on_quiz_remote_branch_id"
+    t.index ["quiz_remote_commit_message_id"], name: "index_quiz_remote_repository_files_on_remote_commit_message_id"
+  end
+
+  create_table "quiz_repository_files", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "quiz_commit_message_id", null: false
+    t.string "quiz_repository_file_name"
+    t.string "quiz_repository_file_status"
+    t.string "quiz_repository_file_text_status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "quiz_branch_id", null: false
+    t.index ["quiz_branch_id"], name: "index_quiz_repository_files_on_quiz_branch_id"
+    t.index ["quiz_commit_message_id"], name: "index_quiz_repository_files_on_quiz_commit_message_id"
+  end
+
+  create_table "quiz_worktree_files", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "quiz_branch_id", null: false
+    t.string "quiz_worktree_file_name"
+    t.string "quiz_worktree_file_status"
+    t.string "quiz_worktree_file_text_status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["quiz_branch_id"], name: "index_quiz_worktree_files_on_quiz_branch_id"
+  end
+
+  create_table "quizzes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "quiz_title"
+    t.text "quiz_introduction"
+    t.string "quiz_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_quizzes_on_user_id"
+  end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "provider", default: "email", null: false
@@ -43,4 +149,16 @@ ActiveRecord::Schema.define(version: 2022_08_12_084041) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "quiz_branches", "quiz_first_or_lasts"
+  add_foreign_key "quiz_commit_messages", "quiz_branches"
+  add_foreign_key "quiz_first_or_lasts", "quizzes"
+  add_foreign_key "quiz_history_of_committed_files", "quiz_branches"
+  add_foreign_key "quiz_history_of_committed_files", "quiz_commit_messages"
+  add_foreign_key "quiz_index_files", "quiz_branches"
+  add_foreign_key "quiz_remote_branches", "quiz_first_or_lasts"
+  add_foreign_key "quiz_remote_commit_messages", "quiz_remote_branches"
+  add_foreign_key "quiz_remote_repository_files", "quiz_remote_commit_messages"
+  add_foreign_key "quiz_repository_files", "quiz_commit_messages"
+  add_foreign_key "quiz_worktree_files", "quiz_branches"
+  add_foreign_key "quizzes", "users"
 end

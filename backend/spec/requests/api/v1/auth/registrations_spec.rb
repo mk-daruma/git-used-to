@@ -25,7 +25,7 @@ RSpec.describe "Api::V1::Auth::Registrations", type: :request do
         post api_v1_user_registration_path, params: params
         res = JSON.parse(response.body)
         expect(res["status"]).to eq("error")
-        expect(res["errors"]["full_messages"]).to include("Password confirmation doesn't match Password") # rubocop:disable Layout/LineLength
+        expect(res["errors"]["full_messages"]).to include("Password confirmation doesn't match Password")
         expect(response).to have_http_status(422)
       end
     end
@@ -62,7 +62,7 @@ RSpec.describe "Api::V1::Auth::Registrations", type: :request do
         delete api_v1_user_registration_path, headers: headers
         res = JSON.parse(response.body)
         expect(res["status"]).to eq("success")
-        expect(res["message"]).to include("Account with UID '#{current_user.uid}' has been destroyed.") # rubocop:disable LineLength
+        expect(res["message"]).to include("Account with UID '#{current_user.uid}' has been destroyed.")
         expect(response).to have_http_status(200)
       end
     end
