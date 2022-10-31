@@ -1,4 +1,4 @@
-import { CreateQuizRemoteCommitMessage } from "interfaces"
+// import { CreateQuizRemoteCommitMessage } from "interfaces"
 import client from "lib/api/client"
 
 export const createQuizRemoteCommitMessage = (data: any) => {
