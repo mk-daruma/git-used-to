@@ -374,28 +374,24 @@ export const QuizContext = createContext({} as {
     fileName: string
     textStatus: string
     parentBranch: string
-    parentCommitMessage: string
   }[]
 
   setAnswerRepositoryFiles:React.Dispatch<React.SetStateAction<{
     fileName: string
     textStatus: string
     parentBranch: string
-    parentCommitMessage: string
   }[]>>
 
   answerRemoteRepositoryFiles: {
     fileName: string
     textStatus: string
     parentRemoteBranch: string
-    parentRemoteCommitMessage: string
   }[]
 
   setAnswerRemoteRepositoryFiles:React.Dispatch<React.SetStateAction<{
     fileName: string
     textStatus: string
     parentRemoteBranch: string
-    parentRemoteCommitMessage: string
   }[]>>
 
   commands: {
@@ -561,7 +557,6 @@ const CreateQuiz: React.FC = () => {
     fileName: "",
     textStatus: "",
     parentRemoteBranch: "",
-    parentRemoteCommitMessage: ""
   }])
   const [answerWorktreeFiles, setAnswerWorktreeFiles] = useState([{
     fileName: "",
@@ -576,8 +571,7 @@ const CreateQuiz: React.FC = () => {
   const [answerRepositoryFiles, setAnswerRepositoryFiles] = useState([{
     fileName: "",
     textStatus: "",
-    parentBranch: "",
-    parentCommitMessage: ""
+    parentBranch: ""
   }])
   const [commands, setCommands] = useState([{
     text:"play with git-used-to!!",
@@ -819,9 +813,77 @@ const CreateQuiz: React.FC = () => {
     }
   }
 
+  const handleGetQuizAnswer = async () => {
+    try {
+      const ResQuiz = await getQuiz(Number(id))
+
+      const ResQuizOfLast = await getQuizFirstOrLast(ResQuiz.data.quizFirstOrLastsData[0].id)
+
+      console.log("ResQuiz",ResQuiz)
+      console.log("ResQuizOfLast",ResQuizOfLast)
+
+      await ResQuizOfLast.data.dataBranches.forEach(async (branch :any) => {
+        setAnswerBranches(branches => [...branches,{
+          branchName: branch.quizBranchName,
+        }])
+        const ResQuizBranches = await getQuizBranch(branch.id)
+        ResQuizBranches.data.dataWorktreeFiles.forEach((worktree :any) => {
+          setAnswerWorktreeFiles(worktreeFile => [...worktreeFile,{
+            fileName: worktree.quizWorktreeFileName,
+            parentBranch: branch.quizBranchName,
+            textStatus: worktree.quizWorktreeFileTextStatus
+          }])
+        })
+        ResQuizBranches.data.dataIndexFiles.forEach((indexFile :any) => {
+          setAnswerIndexFiles(indexFiles => [...indexFiles,{
+            fileName: indexFile.quizIndexFileName,
+            parentBranch: branch.quizBranchName,
+            textStatus: indexFile.quizIndexFileTextStatus
+          }])
+        })
+        ResQuizBranches.data.dataMessages.forEach(async (message :any) => {
+          const ResQuizCommitMessages = await getQuizCommitMessage(message.id)
+          await Promise.all(
+            ResQuizCommitMessages.data.dataRepositoryFiles.map((data :any) => {
+              return setAnswerRepositoryFiles(repositoryFile => [...repositoryFile,{
+                fileName: data.quizRepositoryFileName,
+                textStatus: data.quizRepositoryFileTextStatus,
+                parentBranch: branch.quizBranchName
+              }])
+            })
+          )
+        }
+      )})
+      await ResQuizOfLast.data.dataRemoteBranches.map(async (remoteBranch :any) => {
+        setAnswerRemoteBranches((branches :any) => [...branches,{
+          remoteBranchName: remoteBranch.quizRemoteBranchName
+        }])
+        const ResQuizRemoteBranches = await getQuizRemoteBranch(remoteBranch.id)
+        ResQuizRemoteBranches.data.dataRemoteMessages.map(async (message :any) => {
+          const ResQuizRemoteCommitMessages = await getQuizRemoteCommitMessage(message.id)
+          await Promise.all(
+            ResQuizRemoteCommitMessages.data.dataRemoteRepositoryFiles.map((data :any) => {
+              return setAnswerRemoteRepositoryFiles(repositoryFile => [...repositoryFile,{
+                fileName: data.quizRemoteRepositoryFileName,
+                textStatus: data.quizRemoteRepositoryFileTextStatus,
+                parentRemoteBranch: remoteBranch.quizRemoteBranchName,
+              }])
+            })
+          )
+        })
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   useEffect(() => {
     location.pathname === (`/quiz/edit/${id}`)&& handleGetQuizData(0)
     location.pathname === (`/quiz/init/edit/${id}`)&& handleGetQuizData(1)
+    if (location.pathname === (`/quiz/answer/${id}`)) {
+      handleGetQuizData(1)
+      handleGetQuizAnswer()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -864,6 +926,30 @@ const CreateQuiz: React.FC = () => {
   useEffect(() => {
     console.log("remoteRepositoryFiles", remoteRepositoryFiles)
   },[remoteRepositoryFiles])
+
+  useEffect(() => {
+    console.log("answerBranches", answerBranches)
+  },[answerBranches])
+
+  useEffect(() => {
+    console.log("answerRemoteBranches", answerRemoteBranches)
+  },[answerRemoteBranches])
+
+  useEffect(() => {
+    console.log("answerWorktreeFiles", answerWorktreeFiles)
+  },[answerWorktreeFiles])
+
+  useEffect(() => {
+    console.log("answerIndexFiles", answerIndexFiles)
+  },[answerIndexFiles])
+
+  useEffect(() => {
+    console.log("answerRepositoryFiles", answerRepositoryFiles)
+  },[answerRepositoryFiles])
+
+  useEffect(() => {
+    console.log("answerRemoteRepositoryFiles", answerRemoteRepositoryFiles)
+  },[answerRemoteRepositoryFiles])
 
   return(
     <QuizContext.Provider
