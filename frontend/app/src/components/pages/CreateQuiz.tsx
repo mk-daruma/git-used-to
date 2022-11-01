@@ -310,98 +310,6 @@ export const QuizContext = createContext({} as {
     remoteCommitMessageId: string
   }[]>>
 
-  answerBranches: {
-    branchName: string
-    branchId: string
-  }[]
-
-  setAnswerBranches: React.Dispatch<React.SetStateAction<{
-    branchName: string
-    branchId: string
-  }[]>>
-
-  answerRemoteBranches: {
-    remoteBranchName: string
-    remoteBranchId: string
-  }[]
-
-  setAnswerRemoteBranches: React.Dispatch<React.SetStateAction<{
-    remoteBranchName: string
-    remoteBranchId: string
-  }[]>>
-
-  answerWorktreeFiles: {
-    fileName: string
-    parentBranch: string
-    textStatus: string
-    parentBranchId: string
-    worktreeFileId: string
-  }[]
-
-  setAnswerWorktreeFiles: React.Dispatch<React.SetStateAction<{
-    fileName: string
-    parentBranch: string
-    textStatus: string
-    parentBranchId: string
-    worktreeFileId: string
-  }[]>>
-
-  answerIndexFiles: {
-    fileName: string
-    parentBranch: string
-    textStatus: string
-    parentBranchId: string
-    indexFileId: string
-  }[]
-
-  setAnswerIndexFiles: React.Dispatch<React.SetStateAction<{
-    fileName: string
-    parentBranch: string
-    textStatus: string
-    parentBranchId: string
-    indexFileId: string
-  }[]>>
-
-  answerRepositoryFiles: {
-    fileName: string
-    textStatus: string
-    parentBranch: string
-    parentCommitMessage: string
-    parentBranchId: string
-    parentCommitMessageId: string
-    repositoryFileId: string
-  }[]
-
-  setAnswerRepositoryFiles:React.Dispatch<React.SetStateAction<{
-    fileName: string
-    textStatus: string
-    parentBranch: string
-    parentCommitMessage: string
-    parentBranchId: string
-    parentCommitMessageId: string
-    repositoryFileId: string
-  }[]>>
-
-  answerRemoteRepositoryFiles: {
-    fileName: string
-    textStatus: string
-    parentRemoteBranch: string
-    parentRemoteCommitMessage: string
-    parentRemoteBranchId: string
-    parentRemoteCommitMessageId: string
-    remoteRepositoryFileId: string
-  }[]
-
-  setAnswerRemoteRepositoryFiles:React.Dispatch<React.SetStateAction<{
-    fileName: string
-    textStatus: string
-    parentRemoteBranch: string
-    parentRemoteCommitMessage: string
-    parentRemoteBranchId: string
-    parentRemoteCommitMessageId: string
-    remoteRepositoryFileId: string
-  }[]>>
-
   initialBranches: {
     branchName: string
     branchId: string
@@ -420,6 +328,74 @@ export const QuizContext = createContext({} as {
   setInitialRemoteBranches: React.Dispatch<React.SetStateAction<{
     remoteBranchName: string
     remoteBranchId: string
+  }[]>>
+
+  answerBranches: {
+    branchName: string
+  }[]
+
+  setAnswerBranches: React.Dispatch<React.SetStateAction<{
+    branchName: string
+  }[]>>
+
+  answerRemoteBranches: {
+    remoteBranchName: string
+  }[]
+
+  setAnswerRemoteBranches: React.Dispatch<React.SetStateAction<{
+    remoteBranchName: string
+  }[]>>
+
+  answerWorktreeFiles: {
+    fileName: string
+    parentBranch: string
+    textStatus: string
+  }[]
+
+  setAnswerWorktreeFiles: React.Dispatch<React.SetStateAction<{
+    fileName: string
+    parentBranch: string
+    textStatus: string
+  }[]>>
+
+  answerIndexFiles: {
+    fileName: string
+    parentBranch: string
+    textStatus: string
+  }[]
+
+  setAnswerIndexFiles: React.Dispatch<React.SetStateAction<{
+    fileName: string
+    parentBranch: string
+    textStatus: string
+  }[]>>
+
+  answerRepositoryFiles: {
+    fileName: string
+    textStatus: string
+    parentBranch: string
+    parentCommitMessage: string
+  }[]
+
+  setAnswerRepositoryFiles:React.Dispatch<React.SetStateAction<{
+    fileName: string
+    textStatus: string
+    parentBranch: string
+    parentCommitMessage: string
+  }[]>>
+
+  answerRemoteRepositoryFiles: {
+    fileName: string
+    textStatus: string
+    parentRemoteBranch: string
+    parentRemoteCommitMessage: string
+  }[]
+
+  setAnswerRemoteRepositoryFiles:React.Dispatch<React.SetStateAction<{
+    fileName: string
+    textStatus: string
+    parentRemoteBranch: string
+    parentRemoteCommitMessage: string
   }[]>>
 
   commands: {
@@ -576,44 +552,32 @@ const CreateQuiz: React.FC = () => {
     remoteBranchId: ""
     }])
   const [answerBranches, setAnswerBranches] = useState([{
-    branchName: "master",
-    branchId: ""
+    branchName: "master"
     }])
   const [answerRemoteBranches, setAnswerRemoteBranches] = useState([{
-    remoteBranchName: "",
-    remoteBranchId: ""
+    remoteBranchName: ""
     }])
   const [answerRemoteRepositoryFiles, setAnswerRemoteRepositoryFiles] = useState([{
     fileName: "",
     textStatus: "",
     parentRemoteBranch: "",
-    parentRemoteCommitMessage: "",
-    parentRemoteBranchId: "",
-    parentRemoteCommitMessageId: "",
-    remoteRepositoryFileId: ""
+    parentRemoteCommitMessage: ""
   }])
   const [answerWorktreeFiles, setAnswerWorktreeFiles] = useState([{
     fileName: "",
     parentBranch: "",
-    textStatus: "",
-    parentBranchId: "",
-    worktreeFileId: ""
+    textStatus: ""
   }])
   const [answerIndexFiles, setAnswerIndexFiles] = useState([{
     fileName: "",
     parentBranch: "",
-    textStatus: "",
-    parentBranchId: "",
-    indexFileId: ""
+    textStatus: ""
   }])
   const [answerRepositoryFiles, setAnswerRepositoryFiles] = useState([{
     fileName: "",
     textStatus: "",
     parentBranch: "",
-    parentCommitMessage: "",
-    parentBranchId: "",
-    parentCommitMessageId: "",
-    repositoryFileId: ""
+    parentCommitMessage: ""
   }])
   const [commands, setCommands] = useState([{
     text:"play with git-used-to!!",
