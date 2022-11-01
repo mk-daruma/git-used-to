@@ -15,6 +15,7 @@ import { createQuizRemoteRepositoryFile, deleteQuizRemoteRepositoryFile } from "
 import { createQuizRemoteCommitMessage, deleteQuizRemoteCommitMessage } from "lib/api/quiz_remote_commit_messages";
 import { AuthContext } from "App";
 import { useHistory, useLocation, useParams } from "react-router-dom";
+import { execPath } from "process";
 
 const useStyles = makeStyles((theme: Theme) => ({
   submitBtn: {
@@ -54,6 +55,12 @@ const CreateOrUpdateQuizButton: React.FC = () => {
     initialCommitMessages,
     remoteCommitMessages,
     initialRemoteCommitMessages,
+    answerBranches,
+    answerRemoteBranches,
+    answerWorktreeFiles,
+    answerIndexFiles,
+    answerRepositoryFiles,
+    answerRemoteRepositoryFiles,
   } = useContext(QuizContext)
 
   const quizType = "user"
@@ -520,6 +527,20 @@ const CreateOrUpdateQuizButton: React.FC = () => {
     }
   }
 
+  const handleAnswerQuiz = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault
+    const aa = branches.filter(branch => branch.branchName)
+    const bb = answerBranches.filter(branch => branch.branchName)
+
+    aa.every(branch => bb.some(ansBranch => ansBranch.branchName === branch.branchName))
+    ? console.log("branch正解!")
+    : console.log("branch不正解!")
+
+    worktreeFiles.every(worktreeFile => answerWorktreeFiles.some(ansWorktreeFile => ansWorktreeFile.fileName === worktreeFile.fileName && ansWorktreeFile.textStatus === worktreeFile.textStatus))
+    ? console.log("work正解!")
+    : console.log("work不正解!")
+  }
+
   const blankCheck = (str :string) => /[^\s]+/g.test(str)
   const removeButtonDisabled = !blankCheck(quizTitle) || !blankCheck(quizIntroduction) || !blankCheck(quizType) || gitInit === "not a git repository" ? true : false
 
@@ -587,6 +608,20 @@ const CreateOrUpdateQuizButton: React.FC = () => {
           onClick={handleUpdateQuizData}
         >
         Submit
+      </Button>
+      }
+    {location.pathname === (`/quiz/answer/${id}`)  &&
+      <Button
+          type="submit"
+          variant="contained"
+          size="large"
+          fullWidth
+          color="default"
+          disabled={removeButtonDisabled}
+          className={classes.submitBtn}
+          onClick={handleAnswerQuiz}
+        >
+        check the answer!
       </Button>
       }
     </>
