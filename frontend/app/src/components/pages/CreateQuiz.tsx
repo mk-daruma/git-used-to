@@ -544,7 +544,7 @@ const CreateQuiz: React.FC = () => {
     remoteCommitMessageId: ""
   }])
   const [initialBranches, setInitialBranches] = useState([{
-    branchName: "master",
+    branchName: "",
     branchId: ""
     }])
   const [initialRemoteBranches, setInitialRemoteBranches] = useState([{
@@ -552,7 +552,7 @@ const CreateQuiz: React.FC = () => {
     remoteBranchId: ""
     }])
   const [answerBranches, setAnswerBranches] = useState([{
-    branchName: "master"
+    branchName: ""
     }])
   const [answerRemoteBranches, setAnswerRemoteBranches] = useState([{
     remoteBranchName: ""
