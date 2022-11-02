@@ -135,3 +135,8 @@ export interface CreateQuizRemoteRepositoryFileData {
   quizRemoteRepositoryFileTextStatus: string
   quizRemoteCommitMessageId: number
 }
+
+export interface createQuizAnswerRecordData {
+  userId: number
+  quizId: number
+}
