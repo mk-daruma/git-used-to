@@ -15,7 +15,6 @@ import { createQuizRemoteRepositoryFile, deleteQuizRemoteRepositoryFile } from "
 import { createQuizRemoteCommitMessage, deleteQuizRemoteCommitMessage } from "lib/api/quiz_remote_commit_messages";
 import { AuthContext } from "App";
 import { useHistory, useLocation, useParams } from "react-router-dom";
-import { execPath } from "process";
 
 const useStyles = makeStyles((theme: Theme) => ({
   submitBtn: {
@@ -529,16 +528,23 @@ const CreateOrUpdateQuizButton: React.FC = () => {
 
   const handleAnswerQuiz = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault
-    const aa = branches.filter(branch => branch.branchName)
-    const bb = answerBranches.filter(branch => branch.branchName)
 
-    aa.every(branch => bb.some(ansBranch => ansBranch.branchName === branch.branchName))
-    ? console.log("branch正解!")
-    : console.log("branch不正解!")
+    const checkTheAnswer = (objs :any) => (prop1 :string, prop2 :string, prop3 :string) => (answerObjs :any) =>
+    answerObjs.every((answerObj :any) => objs.some((obj :any) => obj?.[prop1] === answerObj?.[prop1] && obj?.[prop2] === answerObj?.[prop2] && obj?.[prop3] === answerObj?.[prop3]))
+    && objs.every((obj :any) => answerObjs.some((answerObj :any) => obj?.[prop1] === answerObj?.[prop1] && obj?.[prop2] === answerObj?.[prop2] && obj?.[prop3] === answerObj?.[prop3]))
 
-    worktreeFiles.every(worktreeFile => answerWorktreeFiles.some(ansWorktreeFile => ansWorktreeFile.fileName === worktreeFile.fileName && ansWorktreeFile.textStatus === worktreeFile.textStatus))
-    ? console.log("work正解!")
-    : console.log("work不正解!")
+    // 空白問題を解決する必要あり。
+    // どこで空白を削除するか検討中。
+    // const removeEmptyArray = (objs :any, prop :string) => objs.filter((obj :any) => obj?.[prop])
+
+    checkTheAnswer(branches)("branchName", "", "")(answerBranches)
+    && checkTheAnswer(worktreeFiles)("fileName", "textStatus", "parentBranch")(answerWorktreeFiles)
+    && checkTheAnswer(indexFiles)("fileName", "textStatus", "parentBranch")(answerIndexFiles)
+    && checkTheAnswer(repositoryFiles)("fileName", "textStatus", "parentBranch")(answerRepositoryFiles)
+    && checkTheAnswer(remoteBranches)("remoteBranchName", "", "")(answerRemoteBranches)
+    && checkTheAnswer(remoteRepositoryFiles)("fileName", "textStatus", "parentBranch")(answerRemoteRepositoryFiles)
+    ? console.log("正解!")
+    : console.log("不正解!")
   }
 
   const blankCheck = (str :string) => /[^\s]+/g.test(str)
