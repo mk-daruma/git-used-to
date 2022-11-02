@@ -4,10 +4,12 @@ class Api::V1::UsersController < ApplicationController
 
   def show
     quizzes = @user.quizzes
+    quiz_answer_records = @user.quiz_answer_records
     render json: {
       status: 'SUCCESS',
       message: 'Loaded quizzes',
       data: quizzes,
+      data_answer_records: quiz_answer_records,
     }
   end
 
