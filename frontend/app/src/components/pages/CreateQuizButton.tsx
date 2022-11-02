@@ -15,6 +15,7 @@ import { createQuizRemoteRepositoryFile, deleteQuizRemoteRepositoryFile } from "
 import { createQuizRemoteCommitMessage, deleteQuizRemoteCommitMessage } from "lib/api/quiz_remote_commit_messages";
 import { AuthContext } from "App";
 import { useHistory, useLocation, useParams } from "react-router-dom";
+import { createQuizAnswerRecord } from "lib/api/quiz_answer_records";
 
 const useStyles = makeStyles((theme: Theme) => ({
   submitBtn: {
@@ -529,6 +530,11 @@ const CreateOrUpdateQuizButton: React.FC = () => {
   const handleAnswerQuiz = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault
 
+    const quizAnswerRecordData = {
+      userId: Number(currentUser?.id),
+      quizId: Number(id)
+    }
+
     const checkTheAnswer = (objs :any) => (prop1 :string, prop2 :string, prop3 :string) => (answerObjs :any) =>
     answerObjs.every((answerObj :any) => objs.some((obj :any) => obj?.[prop1] === answerObj?.[prop1] && obj?.[prop2] === answerObj?.[prop2] && obj?.[prop3] === answerObj?.[prop3]))
     && objs.every((obj :any) => answerObjs.some((answerObj :any) => obj?.[prop1] === answerObj?.[prop1] && obj?.[prop2] === answerObj?.[prop2] && obj?.[prop3] === answerObj?.[prop3]))
@@ -543,7 +549,7 @@ const CreateOrUpdateQuizButton: React.FC = () => {
     && checkTheAnswer(repositoryFiles)("fileName", "textStatus", "parentBranch")(answerRepositoryFiles)
     && checkTheAnswer(remoteBranches)("remoteBranchName", "", "")(answerRemoteBranches)
     && checkTheAnswer(remoteRepositoryFiles)("fileName", "textStatus", "parentBranch")(answerRemoteRepositoryFiles)
-    ? console.log("正解!")
+    ? createQuizAnswerRecord(quizAnswerRecordData)
     : console.log("不正解!")
   }
 
