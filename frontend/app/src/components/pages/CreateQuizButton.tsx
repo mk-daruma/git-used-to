@@ -16,6 +16,7 @@ import { createQuizRemoteCommitMessage, deleteQuizRemoteCommitMessage } from "li
 import { AuthContext } from "App";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { createQuizAnswerRecord } from "lib/api/quiz_answer_records";
+import { getUserQuizzes } from "lib/api/users";
 
 const useStyles = makeStyles((theme: Theme) => ({
   submitBtn: {
@@ -527,7 +528,7 @@ const CreateOrUpdateQuizButton: React.FC = () => {
     }
   }
 
-  const handleAnswerQuiz = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleAnswerQuiz = async(e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault
 
     const quizAnswerRecordData = {
@@ -554,14 +555,23 @@ const CreateOrUpdateQuizButton: React.FC = () => {
     const removeEmptyRemoteRepositoryFiles = removeEmptyArray(remoteRepositoryFiles, "fileName")
     const removeEmptyAnswerRemoteRepositoryFiles = removeEmptyArray(answerRemoteRepositoryFiles, "fileName")
 
-    checkTheAnswer(removeEmptyBranches)("branchName", "", "")(removeEmptyAnsBranches)
-    && checkTheAnswer(removeEmptyWorktreeFiles)("fileName", "textStatus", "parentBranch")(removeEmptyAnswerWorktreeFiles)
-    && checkTheAnswer(removeEmptyIndexFiles)("fileName", "textStatus", "parentBranch")(removeEmptyAnswerIndexFiles)
-    && checkTheAnswer(removeEmptyRepositoryFiles)("fileName", "textStatus", "parentBranch")(removeEmptyAnswerRepositoryFiles)
-    && checkTheAnswer(removeEmptyRemoteBranch)("remoteBranchName", "", "")(removeEmptyAnsRemoteBranch)
-    && checkTheAnswer(removeEmptyRemoteRepositoryFiles)("fileName", "textStatus", "parentBranch")(removeEmptyAnswerRemoteRepositoryFiles)
-    ? createQuizAnswerRecord(quizAnswerRecordData)
-    : console.log("不正解!")
+
+    if (
+      checkTheAnswer(removeEmptyBranches)("branchName", "", "")(removeEmptyAnsBranches)
+      && checkTheAnswer(removeEmptyWorktreeFiles)("fileName", "textStatus", "parentBranch")(removeEmptyAnswerWorktreeFiles)
+      && checkTheAnswer(removeEmptyIndexFiles)("fileName", "textStatus", "parentBranch")(removeEmptyAnswerIndexFiles)
+      && checkTheAnswer(removeEmptyRepositoryFiles)("fileName", "textStatus", "parentBranch")(removeEmptyAnswerRepositoryFiles)
+      && checkTheAnswer(removeEmptyRemoteBranch)("remoteBranchName", "", "")(removeEmptyAnsRemoteBranch)
+      && checkTheAnswer(removeEmptyRemoteRepositoryFiles)("fileName", "textStatus", "parentBranch")(removeEmptyAnswerRemoteRepositoryFiles)
+    ) {
+      const res = await getUserQuizzes(currentUser?.id)
+
+      !res.data.dataAnswerRecords.some((answerRecords :any) => answerRecords.userId === Number(currentUser?.id) && answerRecords.quizId === Number(id))
+      ? console.log(createQuizAnswerRecord(quizAnswerRecordData))
+      : alert("正解!")
+    } else {
+      console.log("不正解!")
+    }
   }
 
   const blankCheck = (str :string) => /[^\s]+/g.test(str)
