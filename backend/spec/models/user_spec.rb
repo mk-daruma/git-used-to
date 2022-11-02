@@ -45,11 +45,18 @@ RSpec.describe User, type: :model do
     context "userのデータが削除された場合" do
       let(:user) { create(:user) }
       let!(:quiz) { create(:quiz, user: user) }
+      let!(:quiz_answer_record) { create(:quiz_answer_record, user: user) }
 
       it "userに紐づいているquizのデータも削除されること" do
         expect do
           user.destroy
-        end.to change(Quiz, :count).by(-1)
+        end.to change(Quiz, :count).by(-1).and change(QuizAnswerRecord, :count).by(-1)
+      end
+
+      it "userに紐づいているquiz_answer_recordのデータも削除されること" do
+        expect do
+          user.destroy
+        end.to change(QuizAnswerRecord, :count).by(-1)
       end
     end
   end
