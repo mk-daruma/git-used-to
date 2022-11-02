@@ -1,5 +1,5 @@
 require 'rails_helper'
 
 RSpec.describe QuizAnswerRecord, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  pending "quiz_answer_recordモデルには、外部キーの設定のみのためテストを書いていない。"
 end
