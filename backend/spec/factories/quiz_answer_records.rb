@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :quiz_answer_record do
-    user { nil }
-    quiz { nil }
+    user { FactoryBot.create(:user) }
+    quiz { FactoryBot.create(:quiz) }
   end
 end
