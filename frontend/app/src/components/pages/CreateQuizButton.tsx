@@ -536,19 +536,30 @@ const CreateOrUpdateQuizButton: React.FC = () => {
     }
 
     const checkTheAnswer = (objs :any) => (prop1 :string, prop2 :string, prop3 :string) => (answerObjs :any) =>
-    answerObjs.every((answerObj :any) => objs.some((obj :any) => obj?.[prop1] === answerObj?.[prop1] && obj?.[prop2] === answerObj?.[prop2] && obj?.[prop3] === answerObj?.[prop3]))
-    && objs.every((obj :any) => answerObjs.some((answerObj :any) => obj?.[prop1] === answerObj?.[prop1] && obj?.[prop2] === answerObj?.[prop2] && obj?.[prop3] === answerObj?.[prop3]))
+      answerObjs.every((answerObj :any) => objs.some((obj :any) => obj?.[prop1] === answerObj?.[prop1] && obj?.[prop2] === answerObj?.[prop2] && obj?.[prop3] === answerObj?.[prop3]))
+      && objs.every((obj :any) => answerObjs.some((answerObj :any) => obj?.[prop1] === answerObj?.[prop1] && obj?.[prop2] === answerObj?.[prop2] && obj?.[prop3] === answerObj?.[prop3]))
 
-    // 空白問題を解決する必要あり。
-    // どこで空白を削除するか検討中。
-    // const removeEmptyArray = (objs :any, prop :string) => objs.filter((obj :any) => obj?.[prop])
+    const removeEmptyArray = (objs :any, prop :string) => objs.filter((obj :any) => obj?.[prop])
 
-    checkTheAnswer(branches)("branchName", "", "")(answerBranches)
-    && checkTheAnswer(worktreeFiles)("fileName", "textStatus", "parentBranch")(answerWorktreeFiles)
-    && checkTheAnswer(indexFiles)("fileName", "textStatus", "parentBranch")(answerIndexFiles)
-    && checkTheAnswer(repositoryFiles)("fileName", "textStatus", "parentBranch")(answerRepositoryFiles)
-    && checkTheAnswer(remoteBranches)("remoteBranchName", "", "")(answerRemoteBranches)
-    && checkTheAnswer(remoteRepositoryFiles)("fileName", "textStatus", "parentBranch")(answerRemoteRepositoryFiles)
+    const removeEmptyBranches = removeEmptyArray(branches, "branchName")
+    const removeEmptyAnsBranches = removeEmptyArray(answerBranches, "branchName")
+    const removeEmptyWorktreeFiles = removeEmptyArray(worktreeFiles, "fileName")
+    const removeEmptyAnswerWorktreeFiles = removeEmptyArray(answerWorktreeFiles, "fileName")
+    const removeEmptyIndexFiles = removeEmptyArray(indexFiles, "fileName")
+    const removeEmptyAnswerIndexFiles = removeEmptyArray(answerIndexFiles, "fileName")
+    const removeEmptyRepositoryFiles = removeEmptyArray(repositoryFiles, "fileName")
+    const removeEmptyAnswerRepositoryFiles = removeEmptyArray(answerRepositoryFiles, "fileName")
+    const removeEmptyRemoteBranch = removeEmptyArray(remoteBranches, "remoteBranchName")
+    const removeEmptyAnsRemoteBranch = removeEmptyArray(answerRemoteBranches, "remoteBranchName")
+    const removeEmptyRemoteRepositoryFiles = removeEmptyArray(remoteRepositoryFiles, "fileName")
+    const removeEmptyAnswerRemoteRepositoryFiles = removeEmptyArray(answerRemoteRepositoryFiles, "fileName")
+
+    checkTheAnswer(removeEmptyBranches)("branchName", "", "")(removeEmptyAnsBranches)
+    && checkTheAnswer(removeEmptyWorktreeFiles)("fileName", "textStatus", "parentBranch")(removeEmptyAnswerWorktreeFiles)
+    && checkTheAnswer(removeEmptyIndexFiles)("fileName", "textStatus", "parentBranch")(removeEmptyAnswerIndexFiles)
+    && checkTheAnswer(removeEmptyRepositoryFiles)("fileName", "textStatus", "parentBranch")(removeEmptyAnswerRepositoryFiles)
+    && checkTheAnswer(removeEmptyRemoteBranch)("remoteBranchName", "", "")(removeEmptyAnsRemoteBranch)
+    && checkTheAnswer(removeEmptyRemoteRepositoryFiles)("fileName", "textStatus", "parentBranch")(removeEmptyAnswerRemoteRepositoryFiles)
     ? createQuizAnswerRecord(quizAnswerRecordData)
     : console.log("不正解!")
   }
