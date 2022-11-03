@@ -81,24 +81,25 @@ const CreateOrUpdateQuizButton: React.FC = () => {
     try {
       const aboutQuizRes = await createQuiz(aboutQuizData)
 
-      const quizFirtsOrLastData: QuizFirtsOrLastData | undefined =
-      location.pathname === "/quiz"
-      ? {
-          quizFirstOrLastStatus: "last",
-          quizId: aboutQuizRes?.data.data.id
-        }
-      : location.pathname === (`/quiz/init/${id}`)
-      ? {
-          quizFirstOrLastStatus: "first",
-          quizId: id
-        }
-      : undefined
+      const quizFirtsOrLastData: any =
+        location.pathname === "/quiz"
+        ? [
+            {
+              quizFirstOrLastStatus: "last",
+              quizId: aboutQuizRes?.data.data.id
+            },
+            {
+              quizFirstOrLastStatus: "first",
+              quizId: aboutQuizRes?.data.data.id
+            }
+          ]
+        : undefined
 
       const quizFirtsOrLastRes = await createQuizFirstOrLast(quizFirtsOrLastData)
 
       const quizBranchData = argBranches.map((branch :any) => ({
         quizBranchName: branch.branchName,
-        quizFirstOrLastId: location.pathname === "/quiz" || location.pathname === (`/quiz/init/${id}`) ? quizFirtsOrLastRes?.data.data.id : quizFirstOrLastId
+        quizFirstOrLastId: location.pathname === "/quiz" ? quizFirtsOrLastRes?.data.data[0].id : quizFirstOrLastId
       }))
 
       const quizBranchRes = await createQuizBranch(quizBranchData)
@@ -210,7 +211,7 @@ const CreateOrUpdateQuizButton: React.FC = () => {
         .filter((branch :any) => branch.remoteBranchName)
         .map((branch :any) => ({
           quizRemoteBranchName: branch.remoteBranchName,
-          quizFirstOrLastId: quizFirtsOrLastRes === undefined ? quizFirstOrLastId : quizFirtsOrLastRes.data.data.id
+          quizFirstOrLastId: quizFirtsOrLastRes === undefined ? quizFirstOrLastId : quizFirtsOrLastRes.data.data[0].id
         }
       ))
 
@@ -575,6 +576,7 @@ const CreateOrUpdateQuizButton: React.FC = () => {
   }
 
   const blankCheck = (str :string) => /[^\s]+/g.test(str)
+
   const removeButtonDisabled = !blankCheck(quizTitle) || !blankCheck(quizIntroduction) || !blankCheck(quizType) || gitInit === "not a git repository" ? true : false
 
   return(
@@ -600,31 +602,6 @@ const CreateOrUpdateQuizButton: React.FC = () => {
             remoteCommitMessages,
             remoteRepositoryFiles
             )}
-        >
-        Submit
-      </Button>
-      }
-    {location.pathname === (`/quiz/init/${id}`) &&
-      <Button
-          type="submit"
-          variant="contained"
-          size="large"
-          fullWidth
-          color="default"
-          className={classes.submitBtn}
-          disabled={gitInit === "not a git repository" ? true : false}
-          onClick={
-            handleCreateQuizSubmit(
-              branches,
-              worktreeFiles,
-              indexFiles,
-              commitMessages,
-              fileHistoryForCansellCommits,
-              repositoryFiles,
-              remoteBranches,
-              remoteCommitMessages,
-              remoteRepositoryFiles
-              )}
         >
         Submit
       </Button>
