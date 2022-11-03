@@ -84,6 +84,18 @@ const UserQuizzes: React.FC = () => {
         >
           初期値を編集
         </Button>
+        <Button
+          type="submit"
+          variant="contained"
+          size="large"
+          fullWidth
+          color="default"
+          className={classes.submitBtn}
+          component={Link}
+          to={`/quiz/answer/${userQuiz.id}`}
+        >
+          解答する
+        </Button>
       </>
       ))}
     </>

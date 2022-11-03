@@ -59,11 +59,18 @@ RSpec.describe Quiz, type: :model do
     context "quizのデータが削除された場合" do
       let(:quiz) { create(:quiz) }
       let!(:quiz_first_or_last) { create(:quiz_first_or_last, quiz: quiz) }
+      let!(:quiz_answer_record) { create(:quiz_answer_record, quiz: quiz) }
 
-      it "quizに紐づいているquiz_first_or_lastのデータも削除されること" do
+      it "quizに紐づいているquiz_first_or_last/quiz_answer_recordのデータも削除されること" do
         expect do
           quiz.destroy
         end.to change(QuizFirstOrLast, :count).by(-1)
+      end
+
+      it "quizに紐づいているquiz_answer_recordのデータも削除されること" do
+        expect do
+          quiz.destroy
+        end.to change(QuizAnswerRecord, :count).by(-1)
       end
     end
   end

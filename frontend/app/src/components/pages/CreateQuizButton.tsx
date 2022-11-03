@@ -15,6 +15,8 @@ import { createQuizRemoteRepositoryFile, deleteQuizRemoteRepositoryFile } from "
 import { createQuizRemoteCommitMessage, deleteQuizRemoteCommitMessage } from "lib/api/quiz_remote_commit_messages";
 import { AuthContext } from "App";
 import { useHistory, useLocation, useParams } from "react-router-dom";
+import { createQuizAnswerRecord } from "lib/api/quiz_answer_records";
+import { getUserQuizzes } from "lib/api/users";
 
 const useStyles = makeStyles((theme: Theme) => ({
   submitBtn: {
@@ -54,6 +56,12 @@ const CreateOrUpdateQuizButton: React.FC = () => {
     initialCommitMessages,
     remoteCommitMessages,
     initialRemoteCommitMessages,
+    answerBranches,
+    answerRemoteBranches,
+    answerWorktreeFiles,
+    answerIndexFiles,
+    answerRepositoryFiles,
+    answerRemoteRepositoryFiles,
   } = useContext(QuizContext)
 
   const quizType = "user"
@@ -520,6 +528,52 @@ const CreateOrUpdateQuizButton: React.FC = () => {
     }
   }
 
+  const handleAnswerQuiz = async(e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault
+
+    const quizAnswerRecordData = {
+      userId: Number(currentUser?.id),
+      quizId: Number(id)
+    }
+
+    const checkTheAnswer = (objs :any) => (prop1 :string, prop2 :string, prop3 :string) => (answerObjs :any) =>
+      answerObjs.every((answerObj :any) => objs.some((obj :any) => obj?.[prop1] === answerObj?.[prop1] && obj?.[prop2] === answerObj?.[prop2] && obj?.[prop3] === answerObj?.[prop3]))
+      && objs.every((obj :any) => answerObjs.some((answerObj :any) => obj?.[prop1] === answerObj?.[prop1] && obj?.[prop2] === answerObj?.[prop2] && obj?.[prop3] === answerObj?.[prop3]))
+
+    const removeEmptyArray = (objs :any, prop :string) => objs.filter((obj :any) => obj?.[prop])
+
+    const removeEmptyBranches = removeEmptyArray(branches, "branchName")
+    const removeEmptyAnsBranches = removeEmptyArray(answerBranches, "branchName")
+    const removeEmptyWorktreeFiles = removeEmptyArray(worktreeFiles, "fileName")
+    const removeEmptyAnswerWorktreeFiles = removeEmptyArray(answerWorktreeFiles, "fileName")
+    const removeEmptyIndexFiles = removeEmptyArray(indexFiles, "fileName")
+    const removeEmptyAnswerIndexFiles = removeEmptyArray(answerIndexFiles, "fileName")
+    const removeEmptyRepositoryFiles = removeEmptyArray(repositoryFiles, "fileName")
+    const removeEmptyAnswerRepositoryFiles = removeEmptyArray(answerRepositoryFiles, "fileName")
+    const removeEmptyRemoteBranch = removeEmptyArray(remoteBranches, "remoteBranchName")
+    const removeEmptyAnsRemoteBranch = removeEmptyArray(answerRemoteBranches, "remoteBranchName")
+    const removeEmptyRemoteRepositoryFiles = removeEmptyArray(remoteRepositoryFiles, "fileName")
+    const removeEmptyAnswerRemoteRepositoryFiles = removeEmptyArray(answerRemoteRepositoryFiles, "fileName")
+
+
+    if (
+      checkTheAnswer(removeEmptyBranches)("branchName", "", "")(removeEmptyAnsBranches)
+      && checkTheAnswer(removeEmptyWorktreeFiles)("fileName", "textStatus", "parentBranch")(removeEmptyAnswerWorktreeFiles)
+      && checkTheAnswer(removeEmptyIndexFiles)("fileName", "textStatus", "parentBranch")(removeEmptyAnswerIndexFiles)
+      && checkTheAnswer(removeEmptyRepositoryFiles)("fileName", "textStatus", "parentBranch")(removeEmptyAnswerRepositoryFiles)
+      && checkTheAnswer(removeEmptyRemoteBranch)("remoteBranchName", "", "")(removeEmptyAnsRemoteBranch)
+      && checkTheAnswer(removeEmptyRemoteRepositoryFiles)("fileName", "textStatus", "parentBranch")(removeEmptyAnswerRemoteRepositoryFiles)
+    ) {
+      const res = await getUserQuizzes(currentUser?.id)
+
+      !res.data.dataAnswerRecords.some((answerRecords :any) => answerRecords.userId === Number(currentUser?.id) && answerRecords.quizId === Number(id))
+      ? console.log(createQuizAnswerRecord(quizAnswerRecordData))
+      : alert("正解!")
+    } else {
+      console.log("不正解!")
+    }
+  }
+
   const blankCheck = (str :string) => /[^\s]+/g.test(str)
   const removeButtonDisabled = !blankCheck(quizTitle) || !blankCheck(quizIntroduction) || !blankCheck(quizType) || gitInit === "not a git repository" ? true : false
 
@@ -587,6 +641,20 @@ const CreateOrUpdateQuizButton: React.FC = () => {
           onClick={handleUpdateQuizData}
         >
         Submit
+      </Button>
+      }
+    {location.pathname === (`/quiz/answer/${id}`)  &&
+      <Button
+          type="submit"
+          variant="contained"
+          size="large"
+          fullWidth
+          color="default"
+          disabled={removeButtonDisabled}
+          className={classes.submitBtn}
+          onClick={handleAnswerQuiz}
+        >
+        check the answer!
       </Button>
       }
     </>
