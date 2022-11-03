@@ -6,22 +6,55 @@ RSpec.describe "Api::V1::QuizFirstOrLasts", type: :request do
   let!(:first_or_last2) { create(:quiz_first_or_last) }
   let(:param) do
     {
-      quiz_first_or_last: {
-        quiz_first_or_last_status: "作成確認用",
-        quiz_id: quiz.id,
-      },
+      _json: [
+        {
+          quiz_first_or_last_status: "作成確認用",
+          quiz_id: quiz.id,
+        },
+      ],
+    }
+  end
+  let(:mulch_params) do
+    {
+      _json: [
+        {
+          quiz_first_or_last_status: "作成確認用2",
+          quiz_id: quiz.id,
+        },
+        {
+          quiz_first_or_last_status: "作成確認用3",
+          quiz_id: quiz.id,
+        },
+      ],
     }
   end
 
   describe "POST /create" do
-    it "quiz_first_or_lastデータの作成が成功すること" do
-      expect do
-        post api_v1_quiz_first_or_lasts_path, params: param
-      end.to change(QuizFirstOrLast, :count).by(+1)
-      res = JSON.parse(response.body)
-      expect(res["status"]).to eq("SUCCESS")
-      expect(res["data"]["quiz_first_or_last_status"]).to eq("作成確認用")
-      expect(response).to have_http_status(:success)
+    context "送られてきた配列内の情報が一つの場合" do
+      it "quiz_first_or_lastデータの作成が成功すること" do
+        expect do
+          post api_v1_quiz_first_or_lasts_path, params: param
+        end.to change(QuizFirstOrLast, :count).by(+1)
+        res = JSON.parse(response.body)
+        expect(res["status"]).to eq("SUCCESS")
+        expect(res["data"][0]["quiz_first_or_last_status"]).to eq("作成確認用")
+        expect(res["data"].length).to eq 1
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    context "送られてきた配列内の情報が2つの場合" do
+      it "quiz_first_or_lastデータの作成が成功すること" do
+        expect do
+          post api_v1_quiz_first_or_lasts_path, params: mulch_params
+        end.to change(QuizFirstOrLast, :count).by(+2)
+        res = JSON.parse(response.body)
+        expect(res["status"]).to eq("SUCCESS")
+        expect(res["data"][0]["quiz_first_or_last_status"]).to eq("作成確認用2")
+        expect(res["data"][1]["quiz_first_or_last_status"]).to eq("作成確認用3")
+        expect(res["data"].length).to eq 2
+        expect(response).to have_http_status(:success)
+      end
     end
   end
 
