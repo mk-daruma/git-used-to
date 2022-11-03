@@ -673,8 +673,6 @@ const CreateQuiz: React.FC = () => {
 
   const handleGetQuizData = async (quizFirstOrLastStatus :number) => {
     try {
-      setGitInit("Initialized empty Git repository")
-
       const ResQuiz = await getQuiz(Number(id))
 
       setQuizTitle(ResQuiz.data.quizData.quizTitle)
@@ -683,10 +681,13 @@ const CreateQuiz: React.FC = () => {
       const ResQuizOfLast = await getQuizFirstOrLast(ResQuiz.data.quizFirstOrLastsData[quizFirstOrLastStatus].id)
       setQuizFirstOrLastId(ResQuiz.data.quizFirstOrLastsData[quizFirstOrLastStatus].id)
 
-      setCurrentBranch({
-        currentBranchName: ResQuizOfLast.data.dataBranches[0].quizBranchName,
-        currentBranchId: ResQuizOfLast.data.dataBranches[0].id
-      })
+      if (ResQuizOfLast.data.dataBranches[0]) {
+        setGitInit("Initialized empty Git repository")
+        setCurrentBranch({
+          currentBranchName: ResQuizOfLast.data.dataBranches[0].quizBranchName,
+          currentBranchId: ResQuizOfLast.data.dataBranches[0].id
+        })
+      }
 
       await Promise.all(
         await ResQuizOfLast.data.dataBranches.map(async (branch :any) => {
