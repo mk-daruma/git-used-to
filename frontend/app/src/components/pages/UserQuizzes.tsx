@@ -68,18 +68,6 @@ const UserQuizzes: React.FC = () => {
           color="default"
           className={classes.submitBtn}
           component={Link}
-          to={`/quiz/init/${userQuiz.id}`}
-        >
-          初期値を設定
-        </Button>
-        <Button
-          type="submit"
-          variant="contained"
-          size="large"
-          fullWidth
-          color="default"
-          className={classes.submitBtn}
-          component={Link}
           to={`/quiz/init/edit/${userQuiz.id}`}
         >
           初期値を編集
