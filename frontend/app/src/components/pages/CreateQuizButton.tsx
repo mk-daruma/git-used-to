@@ -577,7 +577,14 @@ const CreateOrUpdateQuizButton: React.FC = () => {
 
   const blankCheck = (str :string) => /[^\s]+/g.test(str)
 
-  const removeButtonDisabled = !blankCheck(quizTitle) || !blankCheck(quizIntroduction) || !blankCheck(quizType) || gitInit === "not a git repository" ? true : false
+  const removeButtonDisabled =
+    !blankCheck(quizTitle)
+    || !blankCheck(quizIntroduction)
+    || !blankCheck(quizType)
+    || quizIntroduction.length < 30
+    || gitInit === "not a git repository"
+    ? true
+    : false
 
   return(
     <>
