@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { QuizContext } from "./CreateQuiz";
 import { Button, makeStyles, Theme } from "@material-ui/core"
-import { AboutQuizData, QuizFirtsOrLastData } from "interfaces";
+import { AboutQuizData } from "interfaces";
 import { createQuiz } from "lib/api/quizzes";
 import { createQuizFirstOrLast } from "lib/api/quiz_first_or_lasts";
 import { createQuizBranch, deleteQuizBranch, updateQuizBranch } from "lib/api/quiz_branches";
@@ -529,8 +529,7 @@ const CreateOrUpdateQuizButton: React.FC = () => {
     }
   }
 
-  const handleAnswerQuiz = async(e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault
+  const handleAnswerQuiz = async() => {
 
     const quizAnswerRecordData = {
       userId: Number(currentUser?.id),
@@ -555,7 +554,6 @@ const CreateOrUpdateQuizButton: React.FC = () => {
     const removeEmptyAnsRemoteBranch = removeEmptyArray(answerRemoteBranches, "remoteBranchName")
     const removeEmptyRemoteRepositoryFiles = removeEmptyArray(remoteRepositoryFiles, "fileName")
     const removeEmptyAnswerRemoteRepositoryFiles = removeEmptyArray(answerRemoteRepositoryFiles, "fileName")
-
 
     if (
       checkTheAnswer(removeEmptyBranches)("branchName", "", "")(removeEmptyAnsBranches)
