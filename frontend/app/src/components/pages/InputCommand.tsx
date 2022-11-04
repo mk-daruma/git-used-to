@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { QuizContext } from "./CreateQuiz";
 import { Input, makeStyles } from "@material-ui/core";
+import { AuthContext } from "App";
 
 const useStyles = makeStyles(() => ({
   input: {
@@ -32,8 +33,11 @@ const InputCommand: React.FC = () => {
     remoteCommitMessages, setRemoteCommitMessages,
     addText, setAddText,
     gitInit, setGitInit,
+    remoteAdd, setRemoteAdd,
     setCommands
   } = useContext(QuizContext)
+
+  const { currentUser } = useContext(AuthContext)
 
   const currentBranchParentWorktreeFiles = worktreeFiles.filter((worktreeFile) => worktreeFile.parentBranch === currentBranch.currentBranchName)
   const currentBranchParentIndexFiles = indexFiles.filter((indexFile) => indexFile.parentBranch === currentBranch.currentBranchName)
@@ -317,74 +321,77 @@ const InputCommand: React.FC = () => {
     const hasNoRemoteCommitMessages = currentBranchParentCommitMessages.filter(commitMessage => !currentBranchParentRemoteCommitMessages.some(remoteCommitMessage => remoteCommitMessage.remoteMessage === commitMessage.message))
     const hasNoRemoteRepositoryFiles = currentBranchParentRepositoryFiles.filter(repositoryFile => !currentBranchParentRemoteRepositoryFiles.some(remoteRepositoryFile => repositoryFile.fileName === remoteRepositoryFile.fileName))
     const rmRemoteRepositoryFiles = currentBranchParentRemoteRepositoryFiles.filter(remoteRepositoryFile => !currentBranchParentRepositoryFiles.some(repositoryFile => repositoryFile.fileName === remoteRepositoryFile.fileName))
-
-    if (!remoteBranches.some(remoteBranch => remoteBranch.remoteBranchName === currentBranch.currentBranchName)) {
-      setRemoteBranches((remoteBranch) => [...remoteBranch,{
-        remoteBranchName: currentBranch.currentBranchName,
-        remoteBranchId: ""
-      }])
-    }
-    rmRemoteRepositoryFiles.forEach(rmRemoteRepositoryFile => {
-      setRemoteRepositoryFiles((repositoryFile) =>
-        repositoryFile.map(repositoryFile =>
-          repositoryFile.parentRemoteBranch === currentBranch.currentBranchName
-          && repositoryFile.fileName === rmRemoteRepositoryFile.fileName
-          ? {
-            fileName: "",
-            textStatus: "",
-            parentRemoteBranch: "",
-            parentRemoteCommitMessage: "",
-            parentRemoteBranchId: "",
-            parentRemoteCommitMessageId: "",
-            remoteRepositoryFileId: ""
-            }
-          : repositoryFile
-        )
-      )
-    })
-    checkExistsRemoteBranches.forEach(remoteBranch => {
-      hasNoRemoteCommitMessages.forEach(hasNoRemoteCommitMessage => {
-        if (remoteBranch.remoteBranchName === hasNoRemoteCommitMessage.parentBranch){
-          setRemoteCommitMessages((commitMessage) => [...commitMessage,{
-            remoteMessage: hasNoRemoteCommitMessage.message,
-            parentRemoteBranch: hasNoRemoteCommitMessage.parentBranch,
-            parentRemoteBranchId: remoteBranch.remoteBranchId,
-            remoteCommitMessageId: ""
-          }])
-        }
-      })
-      differTextStatusRemoteRepositoryFiles.forEach(differTextStatusRemoteRepositoryFile => {
+    if (remoteAdd === "added remote") {
+      if (!remoteBranches.some(remoteBranch => remoteBranch.remoteBranchName === currentBranch.currentBranchName)) {
+        setRemoteBranches((remoteBranch) => [...remoteBranch,{
+          remoteBranchName: currentBranch.currentBranchName,
+          remoteBranchId: ""
+        }])
+      }
+      rmRemoteRepositoryFiles.forEach(rmRemoteRepositoryFile => {
         setRemoteRepositoryFiles((repositoryFile) =>
           repositoryFile.map(repositoryFile =>
-            differTextStatusRemoteRepositoryFile.fileName === repositoryFile.fileName
-            && differTextStatusRemoteRepositoryFile.parentBranch === repositoryFile.parentRemoteBranch
+            repositoryFile.parentRemoteBranch === currentBranch.currentBranchName
+            && repositoryFile.fileName === rmRemoteRepositoryFile.fileName
             ? {
-                fileName: differTextStatusRemoteRepositoryFile.fileName,
-                textStatus: differTextStatusRemoteRepositoryFile.textStatus,
-                parentRemoteBranch: differTextStatusRemoteRepositoryFile.parentBranch,
-                parentRemoteCommitMessage: differTextStatusRemoteRepositoryFile.parentCommitMessage,
-                parentRemoteBranchId: remoteBranch.remoteBranchName === differTextStatusRemoteRepositoryFile.parentBranch ? remoteBranch.remoteBranchId : "",
-                parentRemoteCommitMessageId: "",
-                remoteRepositoryFileId: ""
+              fileName: "",
+              textStatus: "",
+              parentRemoteBranch: "",
+              parentRemoteCommitMessage: "",
+              parentRemoteBranchId: "",
+              parentRemoteCommitMessageId: "",
+              remoteRepositoryFileId: ""
               }
             : repositoryFile
           )
         )
       })
-      hasNoRemoteRepositoryFiles.forEach(hasNoRemoteRepositoryFile => {
-        if (remoteBranch.remoteBranchName === hasNoRemoteRepositoryFile.parentBranch) {
-          setRemoteRepositoryFiles((repositoryFile) => [...repositoryFile,{
-            fileName: hasNoRemoteRepositoryFile.fileName,
-            textStatus: hasNoRemoteRepositoryFile.textStatus,
-            parentRemoteBranch: hasNoRemoteRepositoryFile.parentBranch,
-            parentRemoteCommitMessage: hasNoRemoteRepositoryFile.parentCommitMessage,
-            parentRemoteBranchId: remoteBranch.remoteBranchId,
-            parentRemoteCommitMessageId: "",
-            remoteRepositoryFileId: ""
-          }])
-        }
+      checkExistsRemoteBranches.forEach(remoteBranch => {
+        hasNoRemoteCommitMessages.forEach(hasNoRemoteCommitMessage => {
+          if (remoteBranch.remoteBranchName === hasNoRemoteCommitMessage.parentBranch){
+            setRemoteCommitMessages((commitMessage) => [...commitMessage,{
+              remoteMessage: hasNoRemoteCommitMessage.message,
+              parentRemoteBranch: hasNoRemoteCommitMessage.parentBranch,
+              parentRemoteBranchId: remoteBranch.remoteBranchId,
+              remoteCommitMessageId: ""
+            }])
+          }
+        })
+        differTextStatusRemoteRepositoryFiles.forEach(differTextStatusRemoteRepositoryFile => {
+          setRemoteRepositoryFiles((repositoryFile) =>
+            repositoryFile.map(repositoryFile =>
+              differTextStatusRemoteRepositoryFile.fileName === repositoryFile.fileName
+              && differTextStatusRemoteRepositoryFile.parentBranch === repositoryFile.parentRemoteBranch
+              ? {
+                  fileName: differTextStatusRemoteRepositoryFile.fileName,
+                  textStatus: differTextStatusRemoteRepositoryFile.textStatus,
+                  parentRemoteBranch: differTextStatusRemoteRepositoryFile.parentBranch,
+                  parentRemoteCommitMessage: differTextStatusRemoteRepositoryFile.parentCommitMessage,
+                  parentRemoteBranchId: remoteBranch.remoteBranchName === differTextStatusRemoteRepositoryFile.parentBranch ? remoteBranch.remoteBranchId : "",
+                  parentRemoteCommitMessageId: "",
+                  remoteRepositoryFileId: ""
+                }
+              : repositoryFile
+            )
+          )
+        })
+        hasNoRemoteRepositoryFiles.forEach(hasNoRemoteRepositoryFile => {
+          if (remoteBranch.remoteBranchName === hasNoRemoteRepositoryFile.parentBranch) {
+            setRemoteRepositoryFiles((repositoryFile) => [...repositoryFile,{
+              fileName: hasNoRemoteRepositoryFile.fileName,
+              textStatus: hasNoRemoteRepositoryFile.textStatus,
+              parentRemoteBranch: hasNoRemoteRepositoryFile.parentBranch,
+              parentRemoteCommitMessage: hasNoRemoteRepositoryFile.parentCommitMessage,
+              parentRemoteBranchId: remoteBranch.remoteBranchId,
+              parentRemoteCommitMessageId: "",
+              remoteRepositoryFileId: ""
+            }])
+          }
+        })
       })
-    })
+    } else {
+      setAddText('remote: Repository not found.')
+    }
   }
 
   const gitBranch = (text :string, str :number) => {
@@ -888,6 +895,10 @@ const InputCommand: React.FC = () => {
     }
   }
 
+  const gitRemoteAdd = () => {
+    setRemoteAdd("added remote")
+  }
+
   const gitSetUp = () => {
     setGitInit("Initialized empty Git repository")
     setCurrentBranch({
@@ -952,6 +963,8 @@ const InputCommand: React.FC = () => {
               if (gitInit === "Initialized empty Git repository") {
                 if (text.startsWith("git add .") || text.startsWith("git add -A")){
                   gitAddA()
+                } else if (text === `git remote add https://git-used-to.com/${currentUser?.userName}`){
+                  gitRemoteAdd()
                 } else if (text.startsWith("git add ")){
                   gitAdd(text, 8)
                 } else if (text.startsWith("kakunin")){
