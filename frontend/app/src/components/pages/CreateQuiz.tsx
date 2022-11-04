@@ -812,6 +812,7 @@ const CreateQuiz: React.FC = () => {
           )
         })
       })
+      if (ResQuizOfLast.data.dataRemoteBranches[0]) setRemoteAdd("added remote")
     } catch (err) {
       console.log(err)
     }
@@ -954,6 +955,10 @@ const CreateQuiz: React.FC = () => {
   useEffect(() => {
     console.log("answerRemoteRepositoryFiles", answerRemoteRepositoryFiles)
   },[answerRemoteRepositoryFiles])
+
+  useEffect(() => {
+    console.log("remoteadd", remoteAdd)
+  },[remoteAdd])
 
   return(
     <QuizContext.Provider
