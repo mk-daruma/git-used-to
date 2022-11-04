@@ -27,6 +27,8 @@ export const QuizContext = createContext({} as {
   setAddText :React.Dispatch<React.SetStateAction<string>>
   gitInit: string
   setGitInit :React.Dispatch<React.SetStateAction<string>>
+  remoteAdd: string
+  setRemoteAdd :React.Dispatch<React.SetStateAction<string>>
 
   currentBranch: {
     currentBranchName: string
@@ -415,6 +417,7 @@ const CreateQuiz: React.FC = () => {
   const [text, setText] = useState("");
   const [addText, setAddText] = useState("");
   const [gitInit, setGitInit] = useState<string>("not a git repository")
+  const [remoteAdd, setRemoteAdd] = useState<string>("not added remote")
   const [currentBranch, setCurrentBranch] = useState({
     currentBranchName: "",
     currentBranchId : ""
@@ -961,6 +964,7 @@ const CreateQuiz: React.FC = () => {
         text, setText,
         addText, setAddText,
         gitInit,setGitInit,
+        remoteAdd, setRemoteAdd,
         currentBranch, setCurrentBranch,
         branches, setBranches,
         remoteBranches, setRemoteBranches,
