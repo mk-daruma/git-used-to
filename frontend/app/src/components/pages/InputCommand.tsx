@@ -394,6 +394,22 @@ const InputCommand: React.FC = () => {
     }
   }
 
+  const gitPushDelete = (text :string, str :number) => {
+    if (remoteBranches.some(remoteBranch => remoteBranch.remoteBranchName === text.substring(str))) {
+      setRemoteBranches(
+        remoteBranches.filter((branch) => branch.remoteBranchName !== text.substring(str))
+      )
+      setRemoteCommitMessages(
+        remoteCommitMessages.filter((commitMessage) => commitMessage.parentRemoteBranch !== text.substring(str))
+      )
+      setRemoteRepositoryFiles(
+        remoteRepositoryFiles.filter((repositoryFile) => repositoryFile.parentRemoteBranch !== text.substring(str))
+      )
+    } else {
+      setAddText(`error: unable to delete '${text.substring(str)}': remote ref does not exist`)
+    }
+  }
+
   const gitBranch = (text :string, str :number) => {
     if (text.substring(str) === "") {
       setAddText('Enter a name after "git branch"')
@@ -977,6 +993,10 @@ const InputCommand: React.FC = () => {
                   gitCommitM(text, 14)
                 } else if (text === `git push origin ${currentBranch.currentBranchName}`) {
                   gitPush()
+                } else if (text.startsWith("git push --delete origin")) {
+                  gitPushDelete(text, 25)
+                } else if (text.startsWith("git push origin :")) {
+                  gitPushDelete(text, 17)
                 } else if (text.startsWith("git branch -m")) {
                   gitBranchM(text, 14)
                 } else if (text.startsWith("git branch -D")) {
