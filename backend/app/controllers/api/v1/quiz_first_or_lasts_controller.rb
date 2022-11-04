@@ -1,6 +1,5 @@
 class Api::V1::QuizFirstOrLastsController < ApplicationController
   before_action :set_quiz_first_or_last, only: [:show, :destroy]
-  # before_action :quiz_first_or_last_params, only: [:create]
 
   def create
     quiz_first_or_last_hash = []
@@ -22,15 +21,6 @@ class Api::V1::QuizFirstOrLastsController < ApplicationController
       status: 'SUCCESS',
       data: quiz_first_or_last_hash,
     }
-    # quiz_first_or_last = QuizFirstOrLast.new(quiz_first_or_last_params)
-    # if quiz_first_or_last.save
-    #   render json: {
-    #     status: 'SUCCESS',
-    #     data: quiz_first_or_last,
-    #   }
-    # else
-    #   render json: quiz_first_or_last.errors
-    # end
   end
 
   def show
@@ -58,8 +48,4 @@ class Api::V1::QuizFirstOrLastsController < ApplicationController
   def set_quiz_first_or_last
     @quiz_first_or_last = QuizFirstOrLast.find(params[:id])
   end
-
-  # def quiz_first_or_last_params
-  #   params.require(:quiz_first_or_last).permit(:quiz_first_or_last_status, :quiz_id)
-  # end
 end
