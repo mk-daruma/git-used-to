@@ -1,8 +1,22 @@
 import { Button, makeStyles, Theme } from "@material-ui/core";
 import { AuthContext } from "App";
 import { getUserQuizzes } from "lib/api/users"
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, createContext } from "react";
 import { Link } from "react-router-dom";
+import QuizBookmarkButton from "./QuizBookmarkButton";
+
+export const QuizBookmarkContext = createContext({} as {
+  quizBookmarks: {
+    id: string,
+    userId: string,
+    quizId: string,
+  }[]
+  setQuizBookmarks :React.Dispatch<React.SetStateAction<{
+    id: string,
+    userId: string,
+    quizId: string,
+  }[]>>
+})
 
 const useStyles = makeStyles((theme: Theme) => ({
   submitBtn: {
@@ -14,12 +28,18 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 const UserQuizzes: React.FC = () => {
-  const { currentUser } = useContext(AuthContext)
   const classes = useStyles()
+
+  const { currentUser } = useContext(AuthContext)
   const [userQuizzes, setUserQuizzes] = useState([{
     id: "",
     quizTitle: "",
     quizIntroduction: ""
+  }])
+  const [quizBookmarks, setQuizBookmarks] = useState([{
+    id: "",
+    userId: "",
+    quizId: "",
   }])
 
   const handleGetUserQuizzes = async () => {
@@ -27,7 +47,8 @@ const UserQuizzes: React.FC = () => {
       const res = await getUserQuizzes(currentUser?.id)
       console.log(res)
       if (res?.status === 200) {
-          setUserQuizzes(res?.data.data)
+        setUserQuizzes(res?.data.data)
+        setQuizBookmarks(res?.data.dataBookmarks)
       } else {
         console.log("No likes")
       }
@@ -40,6 +61,14 @@ const UserQuizzes: React.FC = () => {
     handleGetUserQuizzes()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    console.log("userQuizzes", userQuizzes)
+  }, [userQuizzes])
+
+  useEffect(() => {
+    console.log("userQuizBookmarks", quizBookmarks)
+  }, [quizBookmarks])
 
   return (
     <>
@@ -84,6 +113,19 @@ const UserQuizzes: React.FC = () => {
         >
           解答する
         </Button>
+        <QuizBookmarkContext.Provider
+          value={{
+            quizBookmarks, setQuizBookmarks,
+          }}>
+          <QuizBookmarkButton
+            quizId={Number(userQuiz.id)}
+            bookmarkId={
+              quizBookmarks.some(bookmark => bookmark.quizId === userQuiz.id)
+              ? quizBookmarks.filter(bookmark =>bookmark.quizId === userQuiz.id)[0].id
+              : undefined
+            }
+          />
+        </QuizBookmarkContext.Provider>
       </>
       ))}
     </>
