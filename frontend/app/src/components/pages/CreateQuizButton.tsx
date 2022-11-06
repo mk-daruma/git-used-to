@@ -530,7 +530,6 @@ const CreateOrUpdateQuizButton: React.FC = () => {
   }
 
   const handleAnswerQuiz = async() => {
-
     const quizAnswerRecordData = {
       userId: Number(currentUser?.id),
       quizId: Number(id)
