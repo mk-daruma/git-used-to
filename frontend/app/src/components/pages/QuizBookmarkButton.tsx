@@ -53,8 +53,8 @@ const QuizBookmarkButton: React.FC<{ quizId: number, bookmarkId: any | undefined
           className={classes.submitBtn}
           onClick={handleCreateQuizBookmarkData}
         >
-          未ブックマーク
           <BookmarkBorderIcon/>
+          {quizBookmarks.filter(bookmark => Number(bookmark.quizId) === quizId).length}
         </Button>
       }
       {quizBookmarks.some(bookmark => bookmark.id === bookmarkId) &&
@@ -65,8 +65,8 @@ const QuizBookmarkButton: React.FC<{ quizId: number, bookmarkId: any | undefined
           className={classes.submitBtn}
           onClick={e => handleDeleteQuizBookmarkData(e, bookmarkId)}
         >
-          ブックマーク済み
           <BookmarkIcon />
+          {quizBookmarks.filter(bookmark => Number(bookmark.quizId) === quizId).length}
         </Button>
       }
     </>
