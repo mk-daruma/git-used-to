@@ -1,5 +1,6 @@
 import { Button, makeStyles, Theme } from "@material-ui/core";
 import { AuthContext } from "App";
+import { getAllQuizBookmarks } from "lib/api/quiz_boolmarks";
 import { getUserQuizzes } from "lib/api/users"
 import React, { useContext, useState, useEffect, createContext } from "react";
 import { Link } from "react-router-dom";
@@ -44,11 +45,12 @@ const UserQuizzes: React.FC = () => {
 
   const handleGetUserQuizzes = async () => {
     try {
-      const res = await getUserQuizzes(currentUser?.id)
-      console.log(res)
-      if (res?.status === 200) {
-        setUserQuizzes(res?.data.data)
-        setQuizBookmarks(res?.data.dataBookmarks)
+      const resUserQuizzes = await getUserQuizzes(currentUser?.id)
+      const resAllBookmarks = await getAllQuizBookmarks()
+      console.log(resUserQuizzes)
+      if (resUserQuizzes?.status === 200) {
+        setUserQuizzes(resUserQuizzes?.data.data)
+        setQuizBookmarks(resAllBookmarks?.data.data)
       } else {
         console.log("No likes")
       }
@@ -120,8 +122,8 @@ const UserQuizzes: React.FC = () => {
           <QuizBookmarkButton
             quizId={Number(userQuiz.id)}
             bookmarkId={
-              quizBookmarks.some(bookmark => bookmark.quizId === userQuiz.id)
-              ? quizBookmarks.filter(bookmark =>bookmark.quizId === userQuiz.id)[0].id
+              quizBookmarks.some(bookmark => bookmark.quizId === userQuiz.id && Number(bookmark.userId) === currentUser?.id)
+              ? quizBookmarks.filter(bookmark => bookmark.quizId === userQuiz.id && Number(bookmark.userId) === currentUser?.id)[0].id
               : undefined
             }
           />
