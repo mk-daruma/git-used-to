@@ -13,6 +13,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
     textTransform: "none",
     backgroundColor: "#f5f5f5"
+  },
+  bookmarkedBtn: {
+    marginTop: theme.spacing(2),
+    flexGrow: 1,
+    textTransform: "none",
+    backgroundColor: "#f5f5f5",
+    opacity: 0.5
   }
 }))
 
@@ -62,7 +69,7 @@ const QuizBookmarkButton: React.FC<{ quizId: number, bookmarkId: any | undefined
           type="submit"
           variant="contained"
           color="default"
-          className={classes.submitBtn}
+          className={classes.bookmarkedBtn}
           onClick={e => handleDeleteQuizBookmarkData(e, bookmarkId)}
         >
           <BookmarkIcon />
