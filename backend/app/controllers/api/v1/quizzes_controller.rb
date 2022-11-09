@@ -2,7 +2,7 @@ class Api::V1::QuizzesController < ApplicationController
   before_action :set_quiz, only: [:show, :update, :destroy]
 
   def index
-    quizzes = Quiz.all
+    quizzes = Quiz.preload(:user)
     render json: {
       status: 'SUCCESS',
       message: 'Loaded quizzes',
