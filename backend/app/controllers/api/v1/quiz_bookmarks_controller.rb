@@ -2,6 +2,15 @@ class Api::V1::QuizBookmarksController < ApplicationController
   before_action :quiz_bookmark_params, only: [:create]
   before_action :set_quiz_bookmark, only: [:destroy]
 
+  def index
+    quiz_bookmarks = QuizBookmark.preload(:quiz)
+    render json: {
+      status: 'SUCCESS',
+      message: 'Loaded quiz bookmarks',
+      data: quiz_bookmarks,
+    }
+  end
+
   def create
     quiz_bookmarks = QuizBookmark.new(quiz_bookmark_params)
     if QuizBookmark.exists?(
