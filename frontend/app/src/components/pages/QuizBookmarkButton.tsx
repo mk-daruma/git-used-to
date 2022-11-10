@@ -5,7 +5,7 @@ import { Button, makeStyles, Theme } from "@material-ui/core";
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import { createQuizBookmark, deleteQuizBookmark } from "lib/api/quiz_boolmarks";
-import { QuizBookmarkContext } from "./UserQuizzes";
+import { QuizBookmarkContext } from "./QuizList";
 
 const useStyles = makeStyles((theme: Theme) => ({
   submitBtn: {

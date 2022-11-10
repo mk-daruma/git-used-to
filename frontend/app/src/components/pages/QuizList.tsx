@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }))
 
-const UserQuizzes: React.FC = () => {
+const QuizList: React.FC = () => {
   const classes = useStyles()
 
   const { currentUser } = useContext(AuthContext)
@@ -99,7 +99,7 @@ const UserQuizzes: React.FC = () => {
   }
 
   useEffect(() => {
-    {(location.pathname === (`/user/quizzes`) && handleGetUserQuizzes())}
+    {(location.pathname === (`/user/quiz/list`) && handleGetUserQuizzes())}
     {(location.pathname === (`/user/bookmark/list`) && handleGetBookmarkedQuizzes())}
     {(location.pathname === (`/quiz/list`) && handleGetQuizzes())}
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -175,4 +175,4 @@ const UserQuizzes: React.FC = () => {
   )
 }
 
-export default UserQuizzes
+export default QuizList
