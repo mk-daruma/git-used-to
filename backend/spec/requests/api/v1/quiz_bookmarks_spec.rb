@@ -5,6 +5,7 @@ RSpec.describe "Api::V1::QuizBookmarks", type: :request do
   let!(:quiz) { create(:quiz) }
   let!(:quiz2) { create(:quiz) }
   let!(:quiz_bookmark) { create(:quiz_bookmark, user: user, quiz: quiz2) }
+  let!(:quiz_bookmark2) { create(:quiz_bookmark) }
   let(:param) do
     {
       quiz_bookmark: {
@@ -20,6 +21,20 @@ RSpec.describe "Api::V1::QuizBookmarks", type: :request do
         quiz_id: quiz2.id,
       },
     }
+  end
+
+  describe "GET /index" do
+    it "全てのquiz_bookmarkデータを取得できていること" do
+      get api_v1_quiz_bookmarks_path
+      res = JSON.parse(response.body)
+      expect(res["status"]).to eq("SUCCESS")
+      expect(res["message"]).to eq("Loaded quiz bookmarks")
+      expect(res["data"][0]["id"]).to eq(quiz_bookmark.id)
+      expect(res["data"][1]["id"]).to eq(quiz_bookmark2.id)
+      expect(QuizBookmark.count).to eq 2
+      expect(res["data"].count).to eq 2
+      expect(response).to have_http_status(:success)
+    end
   end
 
   describe "POST /create" do
