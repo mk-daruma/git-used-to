@@ -140,3 +140,8 @@ export interface createQuizAnswerRecordData {
   userId: number
   quizId: number
 }
+
+export interface createQuizBookmarkData {
+  userId: number
+  quizId: number
+}

@@ -11,6 +11,10 @@ export const createQuiz = (data: AboutQuizData | undefined) => {
 //   return client.post(`quizzes/${id}`, data)
 // }
 
+export const getAllQuizzes = () => {
+  return client.get("quizzes")
+}
+
 export const getQuiz = (id: number | undefined | null) => {
   return client.get(`quizzes/${id}`)
 }

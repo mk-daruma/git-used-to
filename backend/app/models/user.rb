@@ -10,4 +10,5 @@ class User < ActiveRecord::Base
   mount_uploader :image, ImageUploader
   has_many :quizzes, dependent: :destroy
   has_many :quiz_answer_records, dependent: :destroy
+  has_many :quiz_bookmarks, dependent: :destroy
 end
