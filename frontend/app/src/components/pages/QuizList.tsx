@@ -4,7 +4,7 @@ import { getAllQuizzes } from "lib/api/quizzes";
 import { getAllQuizBookmarks } from "lib/api/quiz_boolmarks";
 import { getUserQuizzes } from "lib/api/users"
 import React, { useContext, useState, useEffect, createContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import QuizBookmarkButton from "./QuizBookmarkButton";
 
 export const QuizBookmarkContext = createContext({} as {
@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const QuizList: React.FC = () => {
   const classes = useStyles()
+  const location = useLocation()
 
   const { currentUser } = useContext(AuthContext)
   const [quizzes, setQuizzes] = useState([{
@@ -99,9 +100,11 @@ const QuizList: React.FC = () => {
   }
 
   useEffect(() => {
-    {(location.pathname === (`/user/quiz/list`) && handleGetUserQuizzes())}
-    {(location.pathname === (`/user/bookmark/list`) && handleGetBookmarkedQuizzes())}
-    {(location.pathname === (`/quiz/list`) && handleGetQuizzes())}
+    const currentPath = (path :string) => location.pathname === (path)
+
+    currentPath(`/user/quiz/list`) && handleGetUserQuizzes()
+    currentPath(`/user/bookmark/list`) && handleGetBookmarkedQuizzes()
+    currentPath(`/quiz/list`) && handleGetQuizzes()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
