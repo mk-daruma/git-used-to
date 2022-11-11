@@ -1,4 +1,4 @@
-class Api::V1::QuizCommentController < ApplicationController
+class Api::V1::QuizCommentsController < ApplicationController
   before_action :quiz_comment_params, only: [:create]
   before_action :set_quiz_comment, only: [:destroy]
 
