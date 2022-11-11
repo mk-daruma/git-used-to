@@ -145,3 +145,9 @@ export interface createQuizBookmarkData {
   userId: number
   quizId: number
 }
+
+export interface createQuizCommentData {
+  userId: number
+  quizId: number
+  comment: string
+}
