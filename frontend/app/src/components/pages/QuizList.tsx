@@ -2,10 +2,12 @@ import { Button, makeStyles, Theme } from "@material-ui/core";
 import { AuthContext } from "App";
 import { getAllQuizzes } from "lib/api/quizzes";
 import { getAllQuizBookmarks } from "lib/api/quiz_boolmarks";
+import { getAllQuizComments } from "lib/api/quiz_comments";
 import { getUserQuizzes } from "lib/api/users"
 import React, { useContext, useState, useEffect, createContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import QuizBookmarkButton from "./QuizBookmarkButton";
+import QuizComment from "./QuizComment";
 
 export const QuizBookmarkContext = createContext({} as {
   quizBookmarks: {
@@ -18,6 +20,20 @@ export const QuizBookmarkContext = createContext({} as {
     userId: string,
     quizId: string,
   }[]>>
+  quizCommentHistory: {
+    id: string,
+    userId: string,
+    quizId: string,
+    comment: string
+  }[]
+  setQuizCommentHistory :React.Dispatch<React.SetStateAction<{
+    id: string,
+    userId: string,
+    quizId: string,
+    comment: string
+  }[]>>
+  quizComment: string
+  setQuizComment :React.Dispatch<React.SetStateAction<string>>
 })
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -44,6 +60,13 @@ const QuizList: React.FC = () => {
     userId: "",
     quizId: "",
   }])
+  const [quizCommentHistory, setQuizCommentHistory] = useState([{
+    id: "",
+    userId: "",
+    quizId: "",
+    comment: ""
+  }])
+  const [quizComment, setQuizComment] = useState("")
 
   const handleGetUserQuizzes = async () => {
     try {
@@ -53,6 +76,7 @@ const QuizList: React.FC = () => {
       if (resUserQuizzes?.status === 200) {
         setQuizzes(resUserQuizzes?.data.data)
         setQuizBookmarks(resAllBookmarks?.data.data)
+        setQuizCommentHistory(resUserQuizzes?.data.dataComments)
       } else {
         console.log("No likes")
       }
@@ -65,10 +89,12 @@ const QuizList: React.FC = () => {
     try {
       const resQuizzes = await getAllQuizzes()
       const resAllBookmarks = await getAllQuizBookmarks()
+      const resQuizComments = await getAllQuizComments()
       console.log(resQuizzes)
       if (resQuizzes?.status === 200) {
         setQuizzes(resQuizzes?.data.data)
         setQuizBookmarks(resAllBookmarks?.data.data)
+        setQuizCommentHistory(resQuizComments?.data.data)
       } else {
         console.log("No likes")
       }
@@ -89,8 +115,14 @@ const QuizList: React.FC = () => {
             allBookmarks.some((allBookmark :any) =>
               allBookmark.quizId === res.id)
             )
+        const QuizComments =
+          resUserQuizzes?.data.dataComments.filter((res :any) =>
+            bookmarkedQuizzes.some((allBookmark :any) =>
+              allBookmark.id === res.quizId)
+            )
         setQuizzes(bookmarkedQuizzes)
         setQuizBookmarks(resAllBookmarks?.data.data)
+        setQuizCommentHistory(QuizComments)
       } else {
         console.log("No likes")
       }
@@ -115,6 +147,10 @@ const QuizList: React.FC = () => {
   useEffect(() => {
     console.log("quizBookmarks", quizBookmarks)
   }, [quizBookmarks])
+
+  useEffect(() => {
+    console.log("quizCommentHistory", quizCommentHistory)
+  }, [quizCommentHistory])
 
   return (
     <>
@@ -162,6 +198,8 @@ const QuizList: React.FC = () => {
         <QuizBookmarkContext.Provider
           value={{
             quizBookmarks, setQuizBookmarks,
+            quizCommentHistory, setQuizCommentHistory,
+            quizComment, setQuizComment
           }}>
           <QuizBookmarkButton
             quizId={Number(quiz.id)}
@@ -170,6 +208,9 @@ const QuizList: React.FC = () => {
               ? quizBookmarks.filter(bookmark => bookmark.quizId === quiz.id && Number(bookmark.userId) === currentUser?.id)[0].id
               : undefined
             }
+          />
+          <QuizComment
+            quizId={Number(quiz.id)}
           />
         </QuizBookmarkContext.Provider>
       </>
