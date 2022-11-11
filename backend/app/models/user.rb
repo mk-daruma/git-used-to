@@ -11,4 +11,5 @@ class User < ActiveRecord::Base
   has_many :quizzes, dependent: :destroy
   has_many :quiz_answer_records, dependent: :destroy
   has_many :quiz_bookmarks, dependent: :destroy
+  has_many :quiz_comments, dependent: :destroy
 end
