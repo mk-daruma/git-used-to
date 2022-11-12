@@ -1,4 +1,4 @@
-import { Button, makeStyles, Theme } from "@material-ui/core";
+import { Button, makeStyles, Modal, Theme } from "@material-ui/core";
 import { AuthContext } from "App";
 import { getAllQuizzes } from "lib/api/quizzes";
 import { getAllQuizBookmarks } from "lib/api/quiz_boolmarks";
@@ -21,15 +21,15 @@ export const QuizBookmarkContext = createContext({} as {
     quizId: string,
   }[]>>
   quizCommentHistory: {
-    id: string,
-    userId: string,
-    quizId: string,
+    id: number,
+    userId: number,
+    quizId: number,
     comment: string
   }[]
   setQuizCommentHistory :React.Dispatch<React.SetStateAction<{
-    id: string,
-    userId: string,
-    quizId: string,
+    id: number,
+    userId: number,
+    quizId: number,
     comment: string
   }[]>>
   quizComment: string
@@ -42,6 +42,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
     textTransform: "none",
     backgroundColor: "#f5f5f5"
+  },
+  modal: {
+    backgroundColor: "#f5f5f5",
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    width: 400,
+    border: '2px solid #000',
+    padding: theme.spacing(2, 4, 3),
   }
 }))
 
@@ -61,12 +71,13 @@ const QuizList: React.FC = () => {
     quizId: "",
   }])
   const [quizCommentHistory, setQuizCommentHistory] = useState([{
-    id: "",
-    userId: "",
-    quizId: "",
+    id: 0,
+    userId: 0,
+    quizId: 0,
     comment: ""
   }])
   const [quizComment, setQuizComment] = useState("")
+  const [modal, setModal] = useState(false)
 
   const handleGetUserQuizzes = async () => {
     try {
@@ -130,6 +141,14 @@ const QuizList: React.FC = () => {
       console.log(err)
     }
   }
+
+  const handleModalOpen = () => setModal(true)
+  const handleModalclose = () => setModal(false)
+
+  const getBookmarkId = (quizId :string) =>
+    quizBookmarks.some(bookmark => bookmark.quizId === quizId && Number(bookmark.userId) === currentUser?.id)
+    ? quizBookmarks.filter(bookmark => bookmark.quizId === quizId && Number(bookmark.userId) === currentUser?.id)[0].id
+    : undefined
 
   useEffect(() => {
     const currentPath = (path :string) => location.pathname === (path)
@@ -203,15 +222,22 @@ const QuizList: React.FC = () => {
           }}>
           <QuizBookmarkButton
             quizId={Number(quiz.id)}
-            bookmarkId={
-              quizBookmarks.some(bookmark => bookmark.quizId === quiz.id && Number(bookmark.userId) === currentUser?.id)
-              ? quizBookmarks.filter(bookmark => bookmark.quizId === quiz.id && Number(bookmark.userId) === currentUser?.id)[0].id
-              : undefined
-            }
+            bookmarkId={getBookmarkId(quiz.id)}
           />
-          <QuizComment
-            quizId={Number(quiz.id)}
-          />
+          <Button onClick={handleModalOpen}>
+            Open Modal
+          </Button>
+          <Modal
+            open={modal}
+            onClose={handleModalclose}
+            className={classes.modal}
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+          >
+            <QuizComment
+              quizId={Number(quiz.id)}
+            />
+          </Modal>
         </QuizBookmarkContext.Provider>
       </>
       ))}
