@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :quiz_comment do
-    quiz { nil }
-    user { nil }
-    comment { "MyText" }
+    quiz { FactoryBot.create(:quiz) }
+    user { FactoryBot.create(:user) }
+    comment { Faker::Alphanumeric.alpha(number: 30) }
   end
 end
