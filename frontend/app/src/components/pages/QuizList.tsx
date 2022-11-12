@@ -1,4 +1,4 @@
-import { Button, makeStyles, Modal, Theme } from "@material-ui/core";
+import { Button, makeStyles, Theme } from "@material-ui/core";
 import { AuthContext } from "App";
 import { getAllQuizzes } from "lib/api/quizzes";
 import { getAllQuizBookmarks } from "lib/api/quiz_boolmarks";
@@ -42,16 +42,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
     textTransform: "none",
     backgroundColor: "#f5f5f5"
-  },
-  modal: {
-    backgroundColor: "#f5f5f5",
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    width: 400,
-    border: '2px solid #000',
-    padding: theme.spacing(2, 4, 3),
   }
 }))
 
@@ -77,7 +67,6 @@ const QuizList: React.FC = () => {
     comment: ""
   }])
   const [quizComment, setQuizComment] = useState("")
-  const [modal, setModal] = useState(false)
 
   const handleGetUserQuizzes = async () => {
     try {
@@ -142,9 +131,6 @@ const QuizList: React.FC = () => {
     }
   }
 
-  const handleModalOpen = () => setModal(true)
-  const handleModalclose = () => setModal(false)
-
   const getBookmarkId = (quizId :string) =>
     quizBookmarks.some(bookmark => bookmark.quizId === quizId && Number(bookmark.userId) === currentUser?.id)
     ? quizBookmarks.filter(bookmark => bookmark.quizId === quizId && Number(bookmark.userId) === currentUser?.id)[0].id
@@ -173,74 +159,63 @@ const QuizList: React.FC = () => {
 
   return (
     <>
-    { quizzes.map((quiz) => (
-      <>
-        <p>{ quiz.id }</p>
-        <p>{ quiz.quizTitle }</p>
-        <p>{ quiz.quizIntroduction }</p>
-        <Button
-          type="submit"
-          variant="contained"
-          size="large"
-          fullWidth
-          color="default"
-          className={classes.submitBtn}
-          component={Link}
-          to={`/quiz/edit/${quiz.id}`}
-        >
-          編集
-        </Button>
-        <Button
-          type="submit"
-          variant="contained"
-          size="large"
-          fullWidth
-          color="default"
-          className={classes.submitBtn}
-          component={Link}
-          to={`/quiz/init/edit/${quiz.id}`}
-        >
-          初期値を編集
-        </Button>
-        <Button
-          type="submit"
-          variant="contained"
-          size="large"
-          fullWidth
-          color="default"
-          className={classes.submitBtn}
-          component={Link}
-          to={`/quiz/answer/${quiz.id}`}
-        >
-          解答する
-        </Button>
-        <QuizBookmarkContext.Provider
-          value={{
-            quizBookmarks, setQuizBookmarks,
-            quizCommentHistory, setQuizCommentHistory,
-            quizComment, setQuizComment
-          }}>
+    <QuizBookmarkContext.Provider
+      value={{
+        quizBookmarks, setQuizBookmarks,
+        quizCommentHistory, setQuizCommentHistory,
+        quizComment, setQuizComment
+      }}>
+      {quizzes.map((quiz) => (
+        <>
+          <p>{ quiz.id }</p>
+          <p>{ quiz.quizTitle }</p>
+          <p>{ quiz.quizIntroduction }</p>
+          <Button
+            type="submit"
+            variant="contained"
+            size="large"
+            fullWidth
+            color="default"
+            className={classes.submitBtn}
+            component={Link}
+            to={`/quiz/edit/${quiz.id}`}
+          >
+            編集
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            size="large"
+            fullWidth
+            color="default"
+            className={classes.submitBtn}
+            component={Link}
+            to={`/quiz/init/edit/${quiz.id}`}
+          >
+            初期値を編集
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            size="large"
+            fullWidth
+            color="default"
+            className={classes.submitBtn}
+            component={Link}
+            to={`/quiz/answer/${quiz.id}`}
+          >
+            解答する
+          </Button>
           <QuizBookmarkButton
             quizId={Number(quiz.id)}
             bookmarkId={getBookmarkId(quiz.id)}
           />
-          <Button onClick={handleModalOpen}>
-            Open Modal
-          </Button>
-          <Modal
-            open={modal}
-            onClose={handleModalclose}
-            className={classes.modal}
-            aria-labelledby="simple-modal-title"
-            aria-describedby="simple-modal-description"
-          >
-            <QuizComment
-              quizId={Number(quiz.id)}
-            />
-          </Modal>
-        </QuizBookmarkContext.Provider>
-      </>
-      ))}
+          <QuizComment
+            quizId={Number(quiz.id)}
+          />
+        </>
+        ))}
+      </QuizBookmarkContext.Provider>
     </>
   )
 }
