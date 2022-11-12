@@ -69,6 +69,12 @@ const QuizComment: React.FC<{ quizId: number }> = ({quizId}) => {
           label="コメント"
           variant="outlined"
           value={quizComment}
+          onKeyDown={e => {
+            if (e.key === 'Enter') {
+              e.preventDefault()
+              if (quizComment) handleCreateQuizCommentSubmit()
+            }
+          }}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>{
             setQuizComment(e.target.value)
           }}
