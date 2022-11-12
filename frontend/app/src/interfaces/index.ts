@@ -147,7 +147,7 @@ export interface createQuizBookmarkData {
 }
 
 export interface createQuizCommentData {
-  userId: number
+  userId: number | undefined
   quizId: number
   comment: string
 }
