@@ -85,7 +85,7 @@ const QuizComment: React.FC<{ quizId: number }> = ({quizId}) => {
         variant="contained"
         size="large"
         color="default"
-        disabled={!quizComment}
+        disabled={!quizComment || quizComment.length > 100}
         className={classes.submitBtn}
         onClick={handleCreateQuizCommentSubmit}
         >
