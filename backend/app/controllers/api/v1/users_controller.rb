@@ -5,14 +5,12 @@ class Api::V1::UsersController < ApplicationController
   def show
     quizzes = @user.quizzes
     quiz_answer_records = @user.quiz_answer_records
-    quiz_bookmarks = @user.quiz_bookmarks
     quiz_comments = QuizComment.where(quiz_id: @user.quizzes.ids)
     render json: {
       status: 'SUCCESS',
       message: 'Loaded quizzes',
       data: quizzes,
       data_answer_records: quiz_answer_records,
-      data_bookmarks: quiz_bookmarks,
       data_comments: quiz_comments,
     }
   end
