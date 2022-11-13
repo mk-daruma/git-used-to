@@ -13,6 +13,9 @@ RSpec.describe "Api::V1::Users", type: :request do
   let!(:not_related_quiz_answer_record) { create(:quiz_answer_record) }
 
   describe "GET /api/v1/users#show" do
+    let!(:quiz_comment) { create(:quiz_comment, quiz: user_quiz1) }
+    let!(:quiz_comment2) { create(:quiz_comment, quiz: user_quiz1, user: user2) }
+
     context "引数がquizのidの場合" do
       before do
         get api_v1_user_path(user.id)
@@ -36,6 +39,16 @@ RSpec.describe "Api::V1::Users", type: :request do
         expect(res["message"]).to eq("Loaded quizzes")
         expect(res["data_answer_records"][0]["id"]).to eq(related_quiz_answer_record.id)
         expect(res["data_answer_records"].length).to eq 1
+        expect(response).to have_http_status(:success)
+      end
+
+      it "userが作成したquizデータに関連しているcommentのみを取得できること" do
+        res = JSON.parse(response.body)
+        expect(res["status"]).to eq("SUCCESS")
+        expect(res["message"]).to eq("Loaded quizzes")
+        expect(res["data_comments"][0]["id"]).to eq(quiz_comment.id)
+        expect(res["data_comments"][1]["id"]).to eq(quiz_comment2.id)
+        expect(res["data_comments"].length).to eq 2
         expect(response).to have_http_status(:success)
       end
     end

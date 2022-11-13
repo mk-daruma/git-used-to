@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_04_102821) do
+ActiveRecord::Schema.define(version: 2022_11_10_105036) do
 
   create_table "quiz_answer_records", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -36,6 +36,16 @@ ActiveRecord::Schema.define(version: 2022_11_04_102821) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "quiz_first_or_last_id", null: false
     t.index ["quiz_first_or_last_id"], name: "index_quiz_branches_on_quiz_first_or_last_id"
+  end
+
+  create_table "quiz_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "quiz_id", null: false
+    t.bigint "user_id", null: false
+    t.text "comment", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["quiz_id"], name: "index_quiz_comments_on_quiz_id"
+    t.index ["user_id"], name: "index_quiz_comments_on_user_id"
   end
 
   create_table "quiz_commit_messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -172,6 +182,8 @@ ActiveRecord::Schema.define(version: 2022_11_04_102821) do
   add_foreign_key "quiz_bookmarks", "quizzes"
   add_foreign_key "quiz_bookmarks", "users"
   add_foreign_key "quiz_branches", "quiz_first_or_lasts"
+  add_foreign_key "quiz_comments", "quizzes"
+  add_foreign_key "quiz_comments", "users"
   add_foreign_key "quiz_commit_messages", "quiz_branches"
   add_foreign_key "quiz_first_or_lasts", "quizzes"
   add_foreign_key "quiz_history_of_committed_files", "quiz_branches"
