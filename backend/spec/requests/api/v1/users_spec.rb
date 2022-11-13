@@ -13,8 +13,9 @@ RSpec.describe "Api::V1::Users", type: :request do
   let!(:not_related_quiz_answer_record) { create(:quiz_answer_record) }
 
   describe "GET /api/v1/users#show" do
-    let!(:quiz_comment) { create(:quiz_comment, quiz:user_quiz1) }
-    let!(:quiz_comment2) { create(:quiz_comment, quiz:user_quiz1, user:user2) }
+    let!(:quiz_comment) { create(:quiz_comment, quiz: user_quiz1) }
+    let!(:quiz_comment2) { create(:quiz_comment, quiz: user_quiz1, user: user2) }
+
     context "引数がquizのidの場合" do
       before do
         get api_v1_user_path(user.id)
