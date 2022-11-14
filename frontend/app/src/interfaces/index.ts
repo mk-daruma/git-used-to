@@ -151,3 +151,8 @@ export interface createQuizCommentData {
   quizId: number
   comment: string
 }
+
+export interface createQuizTagData {
+  quizId: number
+  tag: string
+}
