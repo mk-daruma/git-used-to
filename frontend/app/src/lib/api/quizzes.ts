@@ -22,3 +22,7 @@ export const getQuiz = (id: number | undefined | null) => {
 export const deleteQuiz = (id: number | undefined | null) => {
   return client.delete(`quizzes/${id}`)
 }
+
+export const getQuizTags = (id: number | undefined | null) => {
+  return client.get(`quizzes/${id}/tag`)
+}
