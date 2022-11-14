@@ -15,6 +15,7 @@ import CreateQuiz from "components/pages/CreateQuiz"
 import { getCurrentUser } from "lib/api/auth"
 import { User } from "interfaces/index"
 import QuizList from "components/pages/QuizList"
+import QuizSetUp from "components/pages/QuizSetUp"
 
 export const AuthContext = createContext({} as {
   loading: boolean
@@ -84,6 +85,7 @@ const App: React.FC = () => {
                 <Route exact path="/user/bookmark/list" component={QuizList} />
                 <Route exact path="/quiz/list" component={QuizList} />
                 <Route exact path="/quiz" component={CreateQuiz} />
+                <Route path="/quiz/setup/:id" component={QuizSetUp} />
                 <Route path="/quiz/edit/:id" component={CreateQuiz} />
                 <Route path="/quiz/init/edit/:id" component={CreateQuiz} />
                 <Route path="/quiz/answer/:id" component={CreateQuiz} />

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_10_105036) do
+ActiveRecord::Schema.define(version: 2022_11_13_123950) do
 
   create_table "quiz_answer_records", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -126,6 +126,14 @@ ActiveRecord::Schema.define(version: 2022_11_10_105036) do
     t.index ["quiz_commit_message_id"], name: "index_quiz_repository_files_on_quiz_commit_message_id"
   end
 
+  create_table "quiz_tags", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "tag"
+    t.bigint "quiz_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["quiz_id"], name: "index_quiz_tags_on_quiz_id"
+  end
+
   create_table "quiz_worktree_files", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "quiz_branch_id", null: false
     t.string "quiz_worktree_file_name"
@@ -193,6 +201,7 @@ ActiveRecord::Schema.define(version: 2022_11_10_105036) do
   add_foreign_key "quiz_remote_commit_messages", "quiz_remote_branches"
   add_foreign_key "quiz_remote_repository_files", "quiz_remote_commit_messages"
   add_foreign_key "quiz_repository_files", "quiz_commit_messages"
+  add_foreign_key "quiz_tags", "quizzes"
   add_foreign_key "quiz_worktree_files", "quiz_branches"
   add_foreign_key "quizzes", "users"
 end

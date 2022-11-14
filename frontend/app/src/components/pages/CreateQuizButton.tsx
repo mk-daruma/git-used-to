@@ -271,7 +271,7 @@ const CreateOrUpdateQuizButton: React.FC = () => {
       console.log(quizRemoteRepositoryFileRes)
       console.log("create quiz success!!")
 
-      history.push("/")
+      {location.pathname === "/quiz" && history.push(`/quiz/setup/${aboutQuizRes?.data.data.id}`)}
 
     } catch (err) {
       console.log(err)
@@ -524,6 +524,9 @@ const CreateOrUpdateQuizButton: React.FC = () => {
       console.log("既存ブランチからRepositoryFile新規作成",quizRepositoryFileRes)
       console.log("既存ブランチからRemoteCommitMessage新規作成",QuizRemoteCommitMessageRes)
       console.log("既存ブランチからRemoteRepositoryFile新規作成",quizRemoteRepositoryFileRes)
+
+      history.push(`/quiz/setup/${id}`)
+
     } catch (err) {
       console.log(err)
     }

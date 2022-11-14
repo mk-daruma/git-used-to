@@ -4,6 +4,7 @@ class Quiz < ApplicationRecord
   has_many :quiz_answer_records, dependent: :destroy
   has_many :quiz_bookmarks, dependent: :destroy
   has_many :quiz_comments, dependent: :destroy
+  has_many :quiz_tags, dependent: :destroy
 
   validates :quiz_title, presence: true
   validates :quiz_introduction, presence: true, length: { in: 30..200 }

@@ -42,6 +42,12 @@ RSpec.describe "Api::V1::QuizBranches", type: :request do
         expect(res["data"].length).to eq 1
         expect(response).to have_http_status(:success)
       end
+
+      it "取得するdataの要素が2つであること" do
+        post api_v1_quiz_branches_path, params: params
+        res = JSON.parse(response.body)
+        expect(res.length).to eq 2
+      end
     end
 
     context "送られてきた配列内のファイル情報が複数の場合" do
@@ -56,6 +62,12 @@ RSpec.describe "Api::V1::QuizBranches", type: :request do
         expect(res["data"].length).to eq 2
         expect(response).to have_http_status(:success)
       end
+
+      it "取得するdataの要素が2つであること" do
+        post api_v1_quiz_branches_path, params: mulch_params
+        res = JSON.parse(response.body)
+        expect(res.length).to eq 2
+      end
     end
   end
 
@@ -68,8 +80,11 @@ RSpec.describe "Api::V1::QuizBranches", type: :request do
     let!(:not_related_commit_message) { create(:quiz_commit_message, quiz_branch: branch2) }
 
     context "引数がquiz_branchのidの場合" do
-      it "quiz_branchに紐づいたデータのみを取得すること" do
+      before do
         get api_v1_quiz_branch_path(branch.id)
+      end
+
+      it "quiz_branchに紐づいたデータのみを取得すること" do
         res = JSON.parse(response.body)
         expect(res["status"]).to eq("SUCCESS")
         expect(res["message"]).to eq("Loaded quizzes")
@@ -90,6 +105,11 @@ RSpec.describe "Api::V1::QuizBranches", type: :request do
         expect(res["data_messages"].length).to eq 5
         expect(response).to have_http_status(:success)
       end
+
+      it "取得するdataの要素が2つであること" do
+        res = JSON.parse(response.body)
+        expect(res.length).to eq 5
+      end
     end
   end
 
@@ -103,12 +123,20 @@ RSpec.describe "Api::V1::QuizBranches", type: :request do
       }
     end
 
-    it "quiz_branchデータの更新が成功すること" do
+    before do
       patch api_v1_quiz_branch_path(branch.id), params: update
+    end
+
+    it "quiz_branchデータの更新が成功すること" do
       res = JSON.parse(response.body)
       expect(res["status"]).to eq("SUCCESS")
       expect(res["data"]["quiz_branch_name"]).to eq(branch2.quiz_branch_name)
       expect(response).to have_http_status(:success)
+    end
+
+    it "取得するdataの要素が2つであること" do
+      res = JSON.parse(response.body)
+      expect(res.length).to eq 2
     end
   end
 
@@ -120,6 +148,12 @@ RSpec.describe "Api::V1::QuizBranches", type: :request do
       expect(res["message"]).to eq("Deleted the post")
       expect(res["data"]["id"]).to eq(branch.id)
       expect(response).to have_http_status(:success)
+    end
+
+    it "取得するdataの要素が3つであること" do
+      delete api_v1_quiz_branch_path(branch.id)
+      res = JSON.parse(response.body)
+      expect(res.length).to eq 3
     end
   end
 end
