@@ -10,7 +10,11 @@ Rails.application.routes.draw do
       end
 
       resources :users, only: %i[show update]
-      resources :quizzes, only: %i[index create update show destroy]
+      resources :quizzes, only: %i[index create update show destroy] do
+        member do
+          get 'tag'
+        end
+      end
       resources :quiz_answer_records, only: %i[create]
       resources :quiz_bookmarks, only: %i[index create destroy]
       resources :quiz_comments, only: %i[index create destroy]

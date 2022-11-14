@@ -1,5 +1,5 @@
 class Api::V1::QuizzesController < ApplicationController
-  before_action :set_quiz, only: [:show, :update, :destroy]
+  before_action :set_quiz, only: [:show, :update, :destroy, :tag]
 
   def index
     quizzes = Quiz.preload(:user)
@@ -53,6 +53,15 @@ class Api::V1::QuizzesController < ApplicationController
       status: 'SUCCESS',
       message: 'Deleted the post',
       data: quiz,
+    }
+  end
+
+  def tag
+    quiz_tags = @quiz.quiz_tags
+    render json: {
+      status: 'SUCCESS',
+      message: 'Loaded quiz tags',
+      quiz_tags_data: quiz_tags,
     }
   end
 
