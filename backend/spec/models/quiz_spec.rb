@@ -60,8 +60,11 @@ RSpec.describe Quiz, type: :model do
       let(:quiz) { create(:quiz) }
       let!(:quiz_first_or_last) { create(:quiz_first_or_last, quiz: quiz) }
       let!(:quiz_answer_record) { create(:quiz_answer_record, quiz: quiz) }
+      let!(:quiz_bookmark) { create(:quiz_bookmark, quiz: quiz) }
+      let!(:quiz_comment) { create(:quiz_comment, quiz: quiz) }
+      let!(:quiz_tag) { create(:quiz_tag, quiz: quiz) }
 
-      it "quizに紐づいているquiz_first_or_last/quiz_answer_recordのデータも削除されること" do
+      it "quizに紐づいているquiz_first_or_lastのデータも削除されること" do
         expect do
           quiz.destroy
         end.to change(QuizFirstOrLast, :count).by(-1)
@@ -71,6 +74,24 @@ RSpec.describe Quiz, type: :model do
         expect do
           quiz.destroy
         end.to change(QuizAnswerRecord, :count).by(-1)
+      end
+
+      it "quizに紐づいているquiz_bookmarkのデータも削除されること" do
+        expect do
+          quiz.destroy
+        end.to change(QuizBookmark, :count).by(-1)
+      end
+
+      it "quizに紐づいているquiz_commentのデータも削除されること" do
+        expect do
+          quiz.destroy
+        end.to change(QuizComment, :count).by(-1)
+      end
+
+      it "quizに紐づいているquiz_tagのデータも削除されること" do
+        expect do
+          quiz.destroy
+        end.to change(QuizTag, :count).by(-1)
       end
     end
   end
