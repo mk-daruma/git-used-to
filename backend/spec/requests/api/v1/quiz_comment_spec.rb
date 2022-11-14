@@ -16,8 +16,11 @@ RSpec.describe "Api::V1::QuizComments", type: :request do
   end
 
   describe "GET /index" do
-    it "全てのquizデータを取得できていること" do
+    before do
       get api_v1_quiz_comments_path
+    end
+
+    it "全てのquizデータを取得できていること" do
       res = JSON.parse(response.body)
       expect(res["status"]).to eq("SUCCESS")
       expect(res["message"]).to eq("Loaded quiz comments")
@@ -26,6 +29,11 @@ RSpec.describe "Api::V1::QuizComments", type: :request do
       expect(QuizComment.count).to eq 2
       expect(res["data"].count).to eq 2
       expect(response).to have_http_status(:success)
+    end
+
+    it "取得するdataの要素が3つであること" do
+      res = JSON.parse(response.body)
+      expect(res.length).to eq 3
     end
   end
 
@@ -39,6 +47,12 @@ RSpec.describe "Api::V1::QuizComments", type: :request do
       expect(res["data"]["comment"]).to eq("作成確認用")
       expect(response).to have_http_status(:success)
     end
+
+    it "取得するdataの要素が2つであること" do
+      post api_v1_quiz_comments_path, params: param
+      res = JSON.parse(response.body)
+      expect(res.length).to eq 2
+    end
   end
 
   describe "delete /destroy" do
@@ -49,6 +63,12 @@ RSpec.describe "Api::V1::QuizComments", type: :request do
       expect(res["message"]).to eq("Deleted the quiz comment")
       expect(res["data"]["id"]).to eq(quiz_comment.id)
       expect(response).to have_http_status(:success)
+    end
+
+    it "取得するdataの要素が3つであること" do
+      delete api_v1_quiz_comment_path(quiz_comment.id)
+      res = JSON.parse(response.body)
+      expect(res.length).to eq 3
     end
   end
 end

@@ -24,44 +24,44 @@ RSpec.describe "Api::V1::Users", type: :request do
         get api_v1_user_path(user.id)
       end
 
-      it "userの関連しているquizデータのみを取得できること" do
+      it "通信が成功すること" do
         res = JSON.parse(response.body)
         expect(res["status"]).to eq("SUCCESS")
         expect(res["message"]).to eq("Loaded quizzes")
+        expect(response).to have_http_status(:success)
+      end
+
+      it "userの関連しているquizデータのみを取得できること" do
+        res = JSON.parse(response.body)
         expect(res["data"][0]["id"]).to eq(user_quiz1.id)
         expect(res["data"][1]["id"]).to eq(user_quiz2.id)
         expect(res["data"][0]["id"]).not_to eq(user2_quiz1.id)
         expect(res["data"][1]["id"]).not_to eq(user2_quiz2.id)
         expect(res["data"].length).to eq 2
-        expect(response).to have_http_status(:success)
       end
 
       it "userの関連しているquiz_answer_recordデータのみを取得できること" do
         res = JSON.parse(response.body)
-        expect(res["status"]).to eq("SUCCESS")
-        expect(res["message"]).to eq("Loaded quizzes")
         expect(res["data_answer_records"][0]["id"]).to eq(related_quiz_answer_record.id)
         expect(res["data_answer_records"].length).to eq 1
-        expect(response).to have_http_status(:success)
       end
 
       it "userが作成したquizデータに関連しているcommentのみを取得できること" do
         res = JSON.parse(response.body)
-        expect(res["status"]).to eq("SUCCESS")
-        expect(res["message"]).to eq("Loaded quizzes")
         expect(res["data_comments"][0]["id"]).to eq(related_quiz_comment.id)
         expect(res["data_comments"][1]["id"]).to eq(related_quiz_comment2.id)
         expect(res["data_comments"].length).to eq 2
-        expect(response).to have_http_status(:success)
       end
 
-      it "userが作成したquizデータに関連しているcommentのみを取得できること" do
+      it "userが作成したquizデータに関連しているtagのみを取得できること" do
         res = JSON.parse(response.body)
-        expect(res["status"]).to eq("SUCCESS")
-        expect(res["message"]).to eq("Loaded quizzes")
         expect(res["data_tags"][0]["id"]).to eq(related_quiz_tag.id)
         expect(res["data_tags"].length).to eq 1
-        expect(response).to have_http_status(:success)
+      end
+
+      it "取得するdataの要素が6つであること" do
+        res = JSON.parse(response.body)
+        expect(res.length).to eq 6
       end
     end
   end
@@ -84,6 +84,12 @@ RSpec.describe "Api::V1::Users", type: :request do
       expect(res["data"]["user_self_introduction"]).to eq(user2.user_self_introduction)
       expect(res["data"]["image"]["url"].split("/").last).to eq(user2.image.url.split("/").last)
       expect(response).to have_http_status(200)
+    end
+
+    it "取得するdataの要素が2つであること" do
+      put api_v1_user_path(user.id), params: params
+      res = JSON.parse(response.body)
+      expect(res.length).to eq 2
     end
   end
 end

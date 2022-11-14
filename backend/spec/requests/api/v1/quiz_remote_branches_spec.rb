@@ -42,6 +42,12 @@ RSpec.describe "Api::V1::QuizRemoteBranches", type: :request do
         expect(res["data"].length).to eq 1
         expect(response).to have_http_status(:success)
       end
+
+      it "取得するdataの要素が2つであること" do
+        post api_v1_quiz_remote_branches_path, params: params
+        res = JSON.parse(response.body)
+        expect(res.length).to eq 2
+      end
     end
 
     context "送られてきた配列内のファイル情報が複数の場合" do
@@ -56,6 +62,12 @@ RSpec.describe "Api::V1::QuizRemoteBranches", type: :request do
         expect(res["data"].length).to eq 2
         expect(response).to have_http_status(:success)
       end
+
+      it "取得するdataの要素が2つであること" do
+        post api_v1_quiz_remote_branches_path, params: mulch_params
+        res = JSON.parse(response.body)
+        expect(res.length).to eq 2
+      end
     end
   end
 
@@ -68,8 +80,11 @@ RSpec.describe "Api::V1::QuizRemoteBranches", type: :request do
     end
 
     context "引数がquiz_remote_branchのidの場合" do
-      it "quiz_remote_branchに紐づいたデータのみを取得すること" do
+      before do
         get api_v1_quiz_remote_branch_path(remote_branch.id)
+      end
+
+      it "quiz_remote_branchに紐づいたデータのみを取得すること" do
         res = JSON.parse(response.body)
         expect(res["status"]).to eq("SUCCESS")
         expect(res["message"]).to eq("Loaded quizzes")
@@ -79,6 +94,11 @@ RSpec.describe "Api::V1::QuizRemoteBranches", type: :request do
         end
         expect(res["data_remote_messages"].length).to eq 5
         expect(response).to have_http_status(:success)
+      end
+
+      it "取得するdataの要素が3つであること" do
+        res = JSON.parse(response.body)
+        expect(res.length).to eq 3
       end
     end
   end
@@ -93,6 +113,12 @@ RSpec.describe "Api::V1::QuizRemoteBranches", type: :request do
       expect(res["message"]).to eq("Deleted the post")
       expect(res["data"]["id"]).to eq(remote_branch.id)
       expect(response).to have_http_status(:success)
+    end
+
+    it "取得するdataの要素が3つであること" do
+      delete api_v1_quiz_remote_branch_path(remote_branch.id)
+      res = JSON.parse(response.body)
+      expect(res.length).to eq 3
     end
   end
 end

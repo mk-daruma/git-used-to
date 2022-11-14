@@ -57,6 +57,12 @@ RSpec.describe "Api::V1::QuizHistoryOfCommittedFiles", type: :request do
         expect(res["data"].length).to eq 1
         expect(response).to have_http_status(:success)
       end
+
+      it "取得するdataの要素が2つであること" do
+        post api_v1_quiz_history_of_committed_files_path, params: params
+        res = JSON.parse(response.body)
+        expect(res.length).to eq 2
+      end
     end
 
     context "送られてきた配列内のファイル情報が複数の場合" do
@@ -71,6 +77,12 @@ RSpec.describe "Api::V1::QuizHistoryOfCommittedFiles", type: :request do
         expect(res["data"].length).to eq 2
         expect(response).to have_http_status(:success)
       end
+
+      it "取得するdataの要素が2つであること" do
+        post api_v1_quiz_history_of_committed_files_path, params: mulch_params
+        res = JSON.parse(response.body)
+        expect(res.length).to eq 2
+      end
     end
   end
 
@@ -82,7 +94,14 @@ RSpec.describe "Api::V1::QuizHistoryOfCommittedFiles", type: :request do
       res = JSON.parse(response.body)
       expect(res["status"]).to eq("SUCCESS")
       expect(res["message"]).to include("Deleted the post")
+      expect(res["data"]["id"]).to eq(history_file.id)
       expect(response).to have_http_status(200)
+    end
+
+    it "取得するdataの要素が3つであること" do
+      delete api_v1_quiz_history_of_committed_file_path(history_file.id)
+      res = JSON.parse(response.body)
+      expect(res.length).to eq 3
     end
   end
 end
