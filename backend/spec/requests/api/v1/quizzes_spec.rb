@@ -95,4 +95,20 @@ RSpec.describe "Api::V1::Quizzes", type: :request do
       expect(response).to have_http_status(:success)
     end
   end
+
+  describe "GET /tag" do
+    let!(:quiz_tag) { create(:quiz_tag, quiz: quiz) }
+
+    context "引数がquizのidの場合" do
+      it "quizに紐づいたquiz_tagのデータのみを取得すること" do
+        get tag_api_v1_quiz_path(quiz.id)
+        res = JSON.parse(response.body)
+        expect(res["status"]).to eq("SUCCESS")
+        expect(res["message"]).to eq("Loaded quiz tags")
+        expect(res["quiz_tags_data"][0]["id"]).to eq(quiz_tag.id)
+        expect(res["quiz_tags_data"].length).to eq 1
+        expect(response).to have_http_status(:success)
+      end
+    end
+  end
 end
