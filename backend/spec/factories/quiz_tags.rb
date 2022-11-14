@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :quiz_tag do
-    tag { "MyString" }
-    quiz { nil }
+    tag { "add" }
+    quiz { FactoryBot.create(:quiz) }
   end
 end
