@@ -2,6 +2,7 @@ import { IconButton, InputBase, makeStyles, Paper, Theme } from "@material-ui/co
 import SearchIcon from '@material-ui/icons/Search';
 import { AboutQuizzesData } from "interfaces";
 import { useContext } from "react";
+import QuizBookmarkOrderButton from "./QuizBookmarkOrderButton";
 import { QuizBookmarkContext } from "./QuizList";
 import QuizNewArrivalsOrderButton from "./QuizNewArrivalsOrderButton";
 import QuizTagSearch from "./QuizTagSearchButton";
@@ -122,6 +123,7 @@ const QuizSearchForm :React.FC = () => {
         </IconButton>
       </Paper>
       <QuizNewArrivalsOrderButton />
+      <QuizBookmarkOrderButton />
       {tagLists.map((tagList) =>
         <QuizTagSearch
           key={tagList}
