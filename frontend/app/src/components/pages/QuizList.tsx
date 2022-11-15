@@ -1,4 +1,5 @@
-import { Button, makeStyles, Theme } from "@material-ui/core";
+import { Button, IconButton, InputBase, makeStyles, Paper, Theme } from "@material-ui/core";
+import SearchIcon from '@material-ui/icons/Search';
 import { AuthContext } from "App";
 import { getAllQuizzes } from "lib/api/quizzes";
 import { getAllQuizBookmarks } from "lib/api/quiz_boolmarks";
@@ -8,8 +9,29 @@ import React, { useContext, useState, useEffect, createContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import QuizBookmarkButton from "./QuizBookmarkButton";
 import QuizComment from "./QuizComment";
+import QuizSearchForm from "./QuizSearchForm";
 
 export const QuizBookmarkContext = createContext({} as {
+  quizzes:{
+    id: string,
+    quizTitle: string,
+    quizIntroduction: string
+  }[]
+  setQuizzes: React.Dispatch<React.SetStateAction<{
+    id: string,
+    quizTitle: string,
+    quizIntroduction: string
+  }[]>>
+  quizzesForSearch:{
+    id: string,
+    quizTitle: string,
+    quizIntroduction: string
+  }[]
+  setQuizzesForSearch: React.Dispatch<React.SetStateAction<{
+    id: string,
+    quizTitle: string,
+    quizIntroduction: string
+  }[]>>
   quizBookmarks: {
     id: string,
     userId: string,
@@ -34,9 +56,24 @@ export const QuizBookmarkContext = createContext({} as {
   }[]>>
   quizComment: string
   setQuizComment :React.Dispatch<React.SetStateAction<string>>
+  text: string
+  setText :React.Dispatch<React.SetStateAction<string>>
 })
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    padding: '2px 4px',
+    display: 'flex',
+    alignItems: 'center',
+    width: 400,
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
+  },
+  iconButton: {
+    padding: 10,
+  },
   submitBtn: {
     marginTop: theme.spacing(2),
     flexGrow: 1,
@@ -50,7 +87,13 @@ const QuizList: React.FC = () => {
   const location = useLocation()
 
   const { currentUser } = useContext(AuthContext)
+  const [text, setText] = useState("")
   const [quizzes, setQuizzes] = useState([{
+    id: "",
+    quizTitle: "",
+    quizIntroduction: ""
+  }])
+  const [quizzesForSearch, setQuizzesForSearch] = useState([{
     id: "",
     quizTitle: "",
     quizIntroduction: ""
@@ -75,6 +118,7 @@ const QuizList: React.FC = () => {
       console.log(resUserQuizzes)
       if (resUserQuizzes?.status === 200) {
         setQuizzes(resUserQuizzes?.data.data)
+        setQuizzesForSearch(resUserQuizzes?.data.data)
         setQuizBookmarks(resAllBookmarks?.data.data)
         setQuizCommentHistory(resUserQuizzes?.data.dataComments)
       } else {
@@ -93,6 +137,7 @@ const QuizList: React.FC = () => {
       console.log(resQuizzes)
       if (resQuizzes?.status === 200) {
         setQuizzes(resQuizzes?.data.data)
+        setQuizzesForSearch(resQuizzes?.data.data)
         setQuizBookmarks(resAllBookmarks?.data.data)
         setQuizCommentHistory(resQuizComments?.data.data)
       } else {
@@ -121,6 +166,7 @@ const QuizList: React.FC = () => {
               allBookmark.id === res.quizId)
             )
         setQuizzes(bookmarkedQuizzes)
+        setQuizzesForSearch(bookmarkedQuizzes)
         setQuizBookmarks(resAllBookmarks?.data.data)
         setQuizCommentHistory(QuizComments)
       } else {
@@ -150,6 +196,10 @@ const QuizList: React.FC = () => {
   }, [quizzes])
 
   useEffect(() => {
+    console.log("quizzesForSearch", quizzesForSearch)
+  }, [quizzesForSearch])
+
+  useEffect(() => {
     console.log("quizBookmarks", quizBookmarks)
   }, [quizBookmarks])
 
@@ -161,10 +211,14 @@ const QuizList: React.FC = () => {
     <>
     <QuizBookmarkContext.Provider
       value={{
+        text, setText,
+        quizzes, setQuizzes,
+        quizzesForSearch, setQuizzesForSearch,
         quizBookmarks, setQuizBookmarks,
         quizCommentHistory, setQuizCommentHistory,
         quizComment, setQuizComment
       }}>
+      <QuizSearchForm />
       {quizzes.map((quiz) => (
         <>
           <p>{ quiz.id }</p>
