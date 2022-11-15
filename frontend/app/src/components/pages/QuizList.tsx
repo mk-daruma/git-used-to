@@ -1,9 +1,9 @@
-import { Button, IconButton, InputBase, makeStyles, Paper, Theme } from "@material-ui/core";
-import SearchIcon from '@material-ui/icons/Search';
+import { Button, makeStyles, Theme } from "@material-ui/core";
 import { AuthContext } from "App";
 import { getAllQuizzes } from "lib/api/quizzes";
 import { getAllQuizBookmarks } from "lib/api/quiz_boolmarks";
 import { getAllQuizComments } from "lib/api/quiz_comments";
+import { getAllQuizTags } from "lib/api/quiz_tags";
 import { getUserQuizzes } from "lib/api/users"
 import React, { useContext, useState, useEffect, createContext } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -53,6 +53,16 @@ export const QuizBookmarkContext = createContext({} as {
     userId: number,
     quizId: number,
     comment: string
+  }[]>>
+  quizTags: {
+    id: number,
+    quizId: number,
+    tag: string
+  }[]
+  setQuizTags :React.Dispatch<React.SetStateAction<{
+    id: number,
+    quizId: number,
+    tag: string
   }[]>>
   quizComment: string
   setQuizComment :React.Dispatch<React.SetStateAction<string>>
@@ -109,6 +119,11 @@ const QuizList: React.FC = () => {
     quizId: 0,
     comment: ""
   }])
+  const [quizTags, setQuizTags] = useState([{
+    id: 0,
+    quizId: 0,
+    tag: ""
+  }])
   const [quizComment, setQuizComment] = useState("")
 
   const handleGetUserQuizzes = async () => {
@@ -121,6 +136,7 @@ const QuizList: React.FC = () => {
         setQuizzesForSearch(resUserQuizzes?.data.data)
         setQuizBookmarks(resAllBookmarks?.data.data)
         setQuizCommentHistory(resUserQuizzes?.data.dataComments)
+        setQuizTags(resUserQuizzes?.data.dataTags)
       } else {
         console.log("No likes")
       }
@@ -134,12 +150,14 @@ const QuizList: React.FC = () => {
       const resQuizzes = await getAllQuizzes()
       const resAllBookmarks = await getAllQuizBookmarks()
       const resQuizComments = await getAllQuizComments()
+      const resAllTags = await getAllQuizTags()
       console.log(resQuizzes)
       if (resQuizzes?.status === 200) {
         setQuizzes(resQuizzes?.data.data)
         setQuizzesForSearch(resQuizzes?.data.data)
         setQuizBookmarks(resAllBookmarks?.data.data)
         setQuizCommentHistory(resQuizComments?.data.data)
+        setQuizTags(resAllTags?.data.data)
       } else {
         console.log("No likes")
       }
@@ -165,10 +183,16 @@ const QuizList: React.FC = () => {
             bookmarkedQuizzes.some((allBookmark :any) =>
               allBookmark.id === res.quizId)
             )
+        const QuizTags =
+          resUserQuizzes?.data.dataTags.filter((res :any) =>
+            bookmarkedQuizzes.some((allBookmark :any) =>
+              allBookmark.id === res.quizId)
+            )
         setQuizzes(bookmarkedQuizzes)
         setQuizzesForSearch(bookmarkedQuizzes)
         setQuizBookmarks(resAllBookmarks?.data.data)
         setQuizCommentHistory(QuizComments)
+        setQuizTags(QuizTags)
       } else {
         console.log("No likes")
       }
@@ -207,6 +231,10 @@ const QuizList: React.FC = () => {
     console.log("quizCommentHistory", quizCommentHistory)
   }, [quizCommentHistory])
 
+  useEffect(() => {
+    console.log("quizTags", quizTags)
+  }, [quizTags])
+
   return (
     <>
     <QuizBookmarkContext.Provider
@@ -216,7 +244,8 @@ const QuizList: React.FC = () => {
         quizzesForSearch, setQuizzesForSearch,
         quizBookmarks, setQuizBookmarks,
         quizCommentHistory, setQuizCommentHistory,
-        quizComment, setQuizComment
+        quizComment, setQuizComment,
+        quizTags, setQuizTags
       }}>
       <QuizSearchForm />
       {quizzes.map((quiz) => (
