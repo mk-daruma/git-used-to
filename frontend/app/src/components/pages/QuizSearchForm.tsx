@@ -3,6 +3,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import { AboutQuizzesData } from "interfaces";
 import { useContext } from "react";
 import { QuizBookmarkContext } from "./QuizList";
+import QuizNewArrivalsOrderButton from "./QuizNewArrivalsOrderButton";
 import QuizTagSearch from "./QuizTagSearchButton";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -120,9 +121,12 @@ const QuizSearchForm :React.FC = () => {
           <SearchIcon />
         </IconButton>
       </Paper>
-
-      {tagLists.map(tagList =>
-        <QuizTagSearch tagName={tagList} />
+      <QuizNewArrivalsOrderButton />
+      {tagLists.map((tagList) =>
+        <QuizTagSearch
+          key={tagList}
+          tagName={tagList}
+          />
         )}
     </>
   )
