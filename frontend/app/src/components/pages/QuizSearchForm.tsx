@@ -5,6 +5,7 @@ import { useContext } from "react";
 import QuizBookmarkOrderButton from "./QuizBookmarkOrderButton";
 import { QuizBookmarkContext } from "./QuizList";
 import QuizNewArrivalsOrderButton from "./QuizNewArrivalsOrderButton";
+import QuizResetSearchStatusButton from "./QuizSearchResetButton";
 import QuizTagSearch from "./QuizTagSearchButton";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -124,6 +125,7 @@ const QuizSearchForm :React.FC = () => {
       </Paper>
       <QuizNewArrivalsOrderButton />
       <QuizBookmarkOrderButton />
+      <QuizResetSearchStatusButton />
       {tagLists.map((tagList) =>
         <QuizTagSearch
           key={tagList}
