@@ -1,7 +1,9 @@
 import { IconButton, InputBase, makeStyles, Paper, Theme } from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
+import { AboutQuizzesData } from "interfaces";
 import { useContext } from "react";
 import { QuizBookmarkContext } from "./QuizList";
+import QuizTagSearch from "./QuizTagSearchButton";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -27,44 +29,77 @@ const QuizSearchForm :React.FC = () => {
     quizzesForSearch
   } = useContext(QuizBookmarkContext)
 
-  const searchQuizzes = (text :string) => {
+  const searchQuizzes = (prop :string , text :string) => {
     setQuizzes(
-      quizzesForSearch.filter(quiz => quiz.quizTitle.indexOf(text) != -1 )
+      quizzesForSearch.filter((quiz :AboutQuizzesData) => quiz?.[prop].indexOf(text) != -1 )
     )
   }
 
   return(
-    <Paper
-      component="form"
-      className={classes.root}
-      >
-          <InputBase
-              className={classes.input}
-              placeholder="クイズ名検索"
-              value={text}
-              onChange={(event) => setText(event.target.value)}
-              onKeyPress={e =>{
-                if (e.key === "Enter") {
-                  e.preventDefault()
-                  if(text === "") return
-                  setText("")
-                  searchQuizzes(text)
-                }
-              }}
-            />
-          <IconButton
-            type="submit"
-            className={classes.iconButton}
-            aria-label="search"
-            onClick={e =>{
+    <>
+      <Paper
+        component="form"
+        className={classes.root}
+        >
+        <InputBase
+          className={classes.input}
+          placeholder="クイズ名検索"
+          value={text}
+          onChange={(event) => setText(event.target.value)}
+          onKeyPress={e =>{
+            if (e.key === "Enter") {
               e.preventDefault()
               if(text === "") return
-              searchQuizzes(text)
-            } }
-            >
-            <SearchIcon />
-          </IconButton>
-        </Paper>
+              setText("")
+              searchQuizzes("quizTitle", text)
+            }
+          }}
+          />
+        <IconButton
+          type="submit"
+          className={classes.iconButton}
+          aria-label="search"
+          onClick={e =>{
+            e.preventDefault()
+            if(text === "") return
+            searchQuizzes("quizTitle", text)
+          } }
+          >
+          <SearchIcon />
+        </IconButton>
+      </Paper>
+      <Paper
+        component="form"
+        className={classes.root}
+        >
+        <InputBase
+          className={classes.input}
+          placeholder="クイズ説明文検索"
+          value={text}
+          onChange={(event) => setText(event.target.value)}
+          onKeyPress={e =>{
+            if (e.key === "Enter") {
+              e.preventDefault()
+              if(text === "") return
+              setText("")
+              searchQuizzes("quizIntroduction", text)
+            }
+          }}
+          />
+        <IconButton
+          type="submit"
+          className={classes.iconButton}
+          aria-label="search"
+          onClick={e =>{
+            e.preventDefault()
+            if(text === "") return
+            searchQuizzes("quizIntroduction", text)
+          } }
+          >
+          <SearchIcon />
+        </IconButton>
+      </Paper>
+    </>
   )
 }
 
