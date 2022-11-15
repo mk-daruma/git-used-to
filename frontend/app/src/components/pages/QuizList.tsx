@@ -15,22 +15,26 @@ export const QuizBookmarkContext = createContext({} as {
   quizzes:{
     id: string,
     quizTitle: string,
-    quizIntroduction: string
+    quizIntroduction: string,
+    createdAt: string
   }[]
   setQuizzes: React.Dispatch<React.SetStateAction<{
     id: string,
     quizTitle: string,
-    quizIntroduction: string
+    quizIntroduction: string,
+    createdAt: string
   }[]>>
   quizzesForSearch:{
     id: string,
     quizTitle: string,
-    quizIntroduction: string
+    quizIntroduction: string,
+    createdAt: string
   }[]
   setQuizzesForSearch: React.Dispatch<React.SetStateAction<{
     id: string,
     quizTitle: string,
-    quizIntroduction: string
+    quizIntroduction: string,
+    createdAt: string
   }[]>>
   quizBookmarks: {
     id: string,
@@ -101,12 +105,14 @@ const QuizList: React.FC = () => {
   const [quizzes, setQuizzes] = useState([{
     id: "",
     quizTitle: "",
-    quizIntroduction: ""
+    quizIntroduction: "",
+    createdAt: ""
   }])
   const [quizzesForSearch, setQuizzesForSearch] = useState([{
     id: "",
     quizTitle: "",
-    quizIntroduction: ""
+    quizIntroduction: "",
+    createdAt: ""
   }])
   const [quizBookmarks, setQuizBookmarks] = useState([{
     id: "",
