@@ -70,8 +70,10 @@ export const QuizBookmarkContext = createContext({} as {
   }[]>>
   quizComment: string
   setQuizComment :React.Dispatch<React.SetStateAction<string>>
-  text: string
-  setText :React.Dispatch<React.SetStateAction<string>>
+  searchQuiztitle: string
+  setSearchQuiztitle :React.Dispatch<React.SetStateAction<string>>
+  searchQuizIntroduction: string
+  setSearchQuizIntroduction :React.Dispatch<React.SetStateAction<string>>
 })
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -101,7 +103,8 @@ const QuizList: React.FC = () => {
   const location = useLocation()
 
   const { currentUser } = useContext(AuthContext)
-  const [text, setText] = useState("")
+  const [searchQuiztitle, setSearchQuiztitle] = useState("")
+  const [searchQuizIntroduction, setSearchQuizIntroduction] = useState("")
   const [quizzes, setQuizzes] = useState([{
     id: "",
     quizTitle: "",
@@ -245,7 +248,8 @@ const QuizList: React.FC = () => {
     <>
     <QuizBookmarkContext.Provider
       value={{
-        text, setText,
+        searchQuiztitle, setSearchQuiztitle,
+        searchQuizIntroduction, setSearchQuizIntroduction,
         quizzes, setQuizzes,
         quizzesForSearch, setQuizzesForSearch,
         quizBookmarks, setQuizBookmarks,

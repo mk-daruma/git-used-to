@@ -27,7 +27,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 const QuizSearchForm :React.FC = () => {
   const classes = useStyles()
   const {
-    text, setText,
+    searchQuiztitle, setSearchQuiztitle,
+    searchQuizIntroduction, setSearchQuizIntroduction,
     setQuizzes,
     quizzesForSearch
   } = useContext(QuizBookmarkContext)
@@ -57,12 +58,16 @@ const QuizSearchForm :React.FC = () => {
     {
       key: 1,
       placeholder: "クイズ名検索",
-      quizProps: "quizTitle"
+      quizProps: "quizTitle",
+      searchState: searchQuiztitle,
+      searchSetState: setSearchQuiztitle
     },
     {
       key: 2,
       placeholder: "クイズ説明文検索",
-      quizProps: "quizIntroduction"
+      quizProps: "quizIntroduction",
+      searchState: searchQuizIntroduction,
+      searchSetState: setSearchQuizIntroduction
     },
   ]
 
@@ -83,14 +88,14 @@ const QuizSearchForm :React.FC = () => {
           <InputBase
             className={classes.input}
             placeholder={quizInfo.placeholder}
-            value={text}
-            onChange={(event) => setText(event.target.value)}
+            value={quizInfo.searchState}
+            onChange={(event) => quizInfo.searchSetState(event.target.value)}
             onKeyPress={e =>{
               if (e.key === "Enter") {
                 e.preventDefault()
-                if(text === "") return
-                setText("")
-                searchQuizzes(quizInfo.quizProps, text)
+                if(quizInfo.searchState === "") return
+                quizInfo.searchSetState("")
+                searchQuizzes(quizInfo.quizProps, quizInfo.searchState)
               }
             }}
             />
@@ -100,8 +105,8 @@ const QuizSearchForm :React.FC = () => {
             aria-label="search"
             onClick={e =>{
               e.preventDefault()
-              if(text === "") return
-              searchQuizzes("quizTitle", text)
+              if(quizInfo.searchState === "") return
+              searchQuizzes(quizInfo.quizProps, quizInfo.searchState)
             } }
             >
             <SearchIcon />
