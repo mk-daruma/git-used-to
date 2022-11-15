@@ -254,8 +254,8 @@ const QuizList: React.FC = () => {
         quizTags, setQuizTags
       }}>
       <QuizSearchForm />
-      {quizzes.map((quiz) => (
-        <>
+      {quizzes.map((quiz, index) => (
+        <div key={index}>
           <p>{ quiz.id }</p>
           <p>{ quiz.quizTitle }</p>
           <p>{ quiz.quizIntroduction }</p>
@@ -302,7 +302,7 @@ const QuizList: React.FC = () => {
           <QuizComment
             quizId={Number(quiz.id)}
           />
-        </>
+        </div>
         ))}
       </QuizBookmarkContext.Provider>
     </>
