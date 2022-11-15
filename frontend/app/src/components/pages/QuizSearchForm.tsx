@@ -53,6 +53,19 @@ const QuizSearchForm :React.FC = () => {
     "reset --hard"
   ];
 
+  const quizInfoList = [
+    {
+      key: 1,
+      placeholder: "クイズ名検索",
+      quizProps: "quizTitle"
+    },
+    {
+      key: 2,
+      placeholder: "クイズ説明文検索",
+      quizProps: "quizIntroduction"
+    },
+  ]
+
   const searchQuizzes = (prop :string , text :string) => {
     setQuizzes(
       quizzesForSearch.filter((quiz :AboutQuizzesData) => quiz?.[prop].indexOf(text) != -1 )
@@ -61,68 +74,41 @@ const QuizSearchForm :React.FC = () => {
 
   return(
     <>
-      <Paper
-        component="form"
-        className={classes.root}
-        >
-        <InputBase
-          className={classes.input}
-          placeholder="クイズ名検索"
-          value={text}
-          onChange={(event) => setText(event.target.value)}
-          onKeyPress={e =>{
-            if (e.key === "Enter") {
+      {quizInfoList.map((quizInfo) =>
+      <div key={quizInfo.key}>
+        <Paper
+          component="form"
+          className={classes.root}
+          >
+          <InputBase
+            className={classes.input}
+            placeholder={quizInfo.placeholder}
+            value={text}
+            onChange={(event) => setText(event.target.value)}
+            onKeyPress={e =>{
+              if (e.key === "Enter") {
+                e.preventDefault()
+                if(text === "") return
+                setText("")
+                searchQuizzes(quizInfo.quizProps, text)
+              }
+            }}
+            />
+          <IconButton
+            type="submit"
+            className={classes.iconButton}
+            aria-label="search"
+            onClick={e =>{
               e.preventDefault()
               if(text === "") return
-              setText("")
               searchQuizzes("quizTitle", text)
-            }
-          }}
-          />
-        <IconButton
-          type="submit"
-          className={classes.iconButton}
-          aria-label="search"
-          onClick={e =>{
-            e.preventDefault()
-            if(text === "") return
-            searchQuizzes("quizTitle", text)
-          } }
-          >
-          <SearchIcon />
-        </IconButton>
-      </Paper>
-      <Paper
-        component="form"
-        className={classes.root}
-        >
-        <InputBase
-          className={classes.input}
-          placeholder="クイズ説明文検索"
-          value={text}
-          onChange={(event) => setText(event.target.value)}
-          onKeyPress={e =>{
-            if (e.key === "Enter") {
-              e.preventDefault()
-              if(text === "") return
-              setText("")
-              searchQuizzes("quizIntroduction", text)
-            }
-          }}
-          />
-        <IconButton
-          type="submit"
-          className={classes.iconButton}
-          aria-label="search"
-          onClick={e =>{
-            e.preventDefault()
-            if(text === "") return
-            searchQuizzes("quizIntroduction", text)
-          } }
-          >
-          <SearchIcon />
-        </IconButton>
-      </Paper>
+            } }
+            >
+            <SearchIcon />
+          </IconButton>
+        </Paper>
+      </div>
+      )}
       <QuizNewArrivalsOrderButton />
       <QuizBookmarkOrderButton />
       <QuizResetSearchStatusButton />
