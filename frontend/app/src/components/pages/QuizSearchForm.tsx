@@ -29,6 +29,27 @@ const QuizSearchForm :React.FC = () => {
     quizzesForSearch
   } = useContext(QuizBookmarkContext)
 
+  const tagLists = [
+    "add" ,
+    "commit",
+    "commit --amend",
+    "push",
+    "push -d",
+    "branch",
+    "branch -d",
+    "branch -D",
+    "branch -m",
+    "checkout",
+    "checkout -b",
+    "touch",
+    "rm",
+    "rm --cashed",
+    "reset",
+    "reset --soft",
+    "reset --mixed",
+    "reset --hard"
+  ];
+
   const searchQuizzes = (prop :string , text :string) => {
     setQuizzes(
       quizzesForSearch.filter((quiz :AboutQuizzesData) => quiz?.[prop].indexOf(text) != -1 )
@@ -99,6 +120,10 @@ const QuizSearchForm :React.FC = () => {
           <SearchIcon />
         </IconButton>
       </Paper>
+
+      {tagLists.map(tagList =>
+        <QuizTagSearch tagName={tagList} />
+        )}
     </>
   )
 }
