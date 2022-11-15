@@ -81,6 +81,13 @@ export interface AboutQuizData {
   userId: number | undefined
 }
 
+export interface AboutQuizzesData  {
+  id: string
+  quizTitle: string
+  quizIntroduction: string
+  [key: string]: string;
+}
+
 export interface QuizFirtsOrLastData {
   quizFirstOrLastStatus: string
   quizId : number

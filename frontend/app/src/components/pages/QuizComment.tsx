@@ -92,7 +92,7 @@ const QuizComment: React.FC<{ quizId: number }> = ({quizId}) => {
         Submit
       </Button>
       {deleteComment.map(comment =>
-        <p>
+        <p key={comment.id}>
           {comment.comment}
           <Button
             type="submit"

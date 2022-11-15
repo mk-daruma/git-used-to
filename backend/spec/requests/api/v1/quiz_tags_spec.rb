@@ -12,6 +12,30 @@ RSpec.describe "Api::V1::QuizTags", type: :request do
     }
   end
 
+  describe "GET /index" do
+    let!(:quiz_tag2) { create(:quiz_tag) }
+
+    before do
+      get api_v1_quiz_tags_path
+    end
+
+    it "全てのquizデータを取得できていること" do
+      res = JSON.parse(response.body)
+      expect(res["status"]).to eq("SUCCESS")
+      expect(res["message"]).to eq("Loaded quiz tags")
+      expect(res["data"][0]["id"]).to eq(quiz_tag.id)
+      expect(res["data"][1]["id"]).to eq(quiz_tag2.id)
+      expect(QuizTag.count).to eq 2
+      expect(res["data"].count).to eq 2
+      expect(response).to have_http_status(:success)
+    end
+
+    it "取得するdataの要素が2つであること" do
+      res = JSON.parse(response.body)
+      expect(res.length).to eq 3
+    end
+  end
+
   describe "GET /create" do
     it "データ登録が成功すること" do
       expect { post api_v1_quiz_tags_path, params: param }.to change(QuizTag, :count).by(+1)

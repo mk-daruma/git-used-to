@@ -2,6 +2,15 @@ class Api::V1::QuizTagsController < ApplicationController
   before_action :quiz_tag_params, only: [:create]
   before_action :set_quiz_tag, only: [:destroy]
 
+  def index
+    quiz_tags = QuizTag.preload(:quiz)
+    render json: {
+      status: 'SUCCESS',
+      message: 'Loaded quiz tags',
+      data: quiz_tags,
+    }
+  end
+
   def create
     quiz_tags = QuizTag.new(quiz_tag_params)
     if quiz_tags.save
