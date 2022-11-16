@@ -2,6 +2,23 @@ class Api::V1::UsersController < ApplicationController
   before_action :set_user, only: [:show, :update]
   before_action :user_params, only: [:update]
 
+  def index
+    users = User.preload(:quizzes)
+    users_hash = []
+    users.map do |user|
+      users_hash.push({
+        id: user.id,
+        user_name: user.user_name,
+        image: user.image,
+      })
+    end
+    render json: {
+      status: 'SUCCESS',
+      message: 'Loaded users',
+      data: users_hash,
+    }
+  end
+
   def show
     quizzes = @user.quizzes
     quiz_answer_records = @user.quiz_answer_records

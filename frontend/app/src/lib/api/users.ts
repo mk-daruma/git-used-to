@@ -3,6 +3,10 @@ import Cookies from "js-cookie"
 
 import { UpdateUserFormData, ChangeUserPasswordFormData, ForgetUserPasswordFormData } from "interfaces/index"
 
+export const getAllUsers = () => {
+  return client.get("users")
+}
+
 export const updateUser = (id: number | undefined | null, data: UpdateUserFormData) => {
   return client.put(`/users/${id}`, data)
 }

@@ -9,7 +9,7 @@ Rails.application.routes.draw do
         resources :sessions, only: %i[index]
       end
 
-      resources :users, only: %i[show update]
+      resources :users, only: %i[index show update]
       resources :quizzes, only: %i[index create update show destroy] do
         member do
           get 'tag'

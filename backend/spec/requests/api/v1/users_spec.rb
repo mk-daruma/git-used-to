@@ -3,21 +3,48 @@ require 'rails_helper'
 RSpec.describe "Api::V1::Users", type: :request do
   let!(:image_path) { File.join(Rails.root, 'spec/fixtures/images/sample2.jpeg') }
   let!(:image) { Rack::Test::UploadedFile.new(image_path) }
-  let(:user) { create(:user, user_self_introduction: "こんにちは") }
-  let!(:user2) { create(:user, user_self_introduction: "こんばんわ", image: image) }
-  let!(:user_quiz1) { create(:quiz, user: user) }
-  let!(:user_quiz2) { create(:quiz, user: user) }
-  let!(:user2_quiz1) { create(:quiz, user: user2) }
-  let!(:user2_quiz2) { create(:quiz, user: user2) }
-  let!(:related_quiz_answer_record) { create(:quiz_answer_record, user: user, quiz: user2_quiz1) }
-  let!(:not_related_quiz_answer_record) { create(:quiz_answer_record) }
+
+  describe "GET /index" do
+    let!(:users) { create_list(:user, 5) }
+
+    before do
+      get api_v1_users_path
+    end
+
+    it "全てのuser_id/user_name/image_urlのデータを取得できていること" do
+      res = JSON.parse(response.body)
+      expect(res["status"]).to eq("SUCCESS")
+      expect(res["message"]).to eq("Loaded users")
+      users.each_with_index do |user, i|
+        expect(res["data"][i]["id"]).to eq(user.id)
+        expect(res["data"][i]["user_name"]).to eq(user.user_name)
+        expect(res["data"][i]["image"]["url"]).to eq(user.image.url)
+      end
+      expect(User.count).to eq 5
+      expect(res["data"].count).to eq 5
+      expect(response).to have_http_status(:success)
+    end
+
+    it "取得するdataの要素が3つであること" do
+      res = JSON.parse(response.body)
+      expect(res.length).to eq 3
+    end
+  end
 
   describe "GET /api/v1/users#show" do
+    let!(:user) { create(:user) }
+    let!(:user2) { create(:user) }
+    let!(:user_quiz1) { create(:quiz, user: user) }
+    let!(:user_quiz2) { create(:quiz, user: user) }
+    let!(:user2_quiz1) { create(:quiz, user: user2) }
+    let!(:user2_quiz2) { create(:quiz, user: user2) }
     let!(:related_quiz_comment) { create(:quiz_comment, quiz: user_quiz1) }
     let!(:related_quiz_comment2) { create(:quiz_comment, quiz: user_quiz1, user: user2) }
     let!(:not_related_quiz_comment) { create(:quiz_comment, quiz: user2_quiz1, user: user2) }
     let!(:related_quiz_tag) { create(:quiz_tag, quiz: user_quiz1) }
     let!(:not_related_quiz_tag) { create(:quiz_comment, quiz: user2_quiz1) }
+    let!(:related_quiz_answer_record) { create(:quiz_answer_record, user: user, quiz: user2_quiz1) }
+    let!(:not_related_quiz_answer_record) { create(:quiz_answer_record) }
 
     context "引数がquizのidの場合" do
       before do
@@ -67,6 +94,8 @@ RSpec.describe "Api::V1::Users", type: :request do
   end
 
   describe "PUT /api/v1/users#update" do
+    let!(:user) { create(:user, user_self_introduction: "こんにちは") }
+    let!(:user2) { create(:user, user_self_introduction: "こんばんわ", image: image) }
     let(:params) do
       {
         user_name: user2.user_name,

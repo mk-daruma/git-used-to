@@ -15,6 +15,11 @@ const QuizResetSearchStatusButton :React.FC = () => {
     resetSearchStatusQuizzes.map(resetSearchStatusQuiz =>
       setQuizzes(quizzes => [...quizzes,{
         id: resetSearchStatusQuiz.id,
+        userId: resetSearchStatusQuiz.userId,
+        parentUserName: resetSearchStatusQuiz.parentUserName,
+        parentUserImage: {
+          url: resetSearchStatusQuiz.parentUserImage.url
+        },
         quizTitle: resetSearchStatusQuiz.quizTitle,
         quizIntroduction: resetSearchStatusQuiz.quizIntroduction,
         createdAt: resetSearchStatusQuiz.createdAt
