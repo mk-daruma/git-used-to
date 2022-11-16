@@ -16,6 +16,11 @@ const QuizBookmarkOrderButton :React.FC = () => {
     newArrivalsOrderQuizzes.map(newArrivalsOrderQuiz =>
       setQuizzes(quizzes => [...quizzes,{
         id: newArrivalsOrderQuiz.id,
+        userId: newArrivalsOrderQuiz.userId,
+        parentUserName: newArrivalsOrderQuiz.parentUserName,
+        parentUserImage: {
+          url: newArrivalsOrderQuiz.parentUserImage.url
+        },
         quizTitle: newArrivalsOrderQuiz.quizTitle,
         quizIntroduction: newArrivalsOrderQuiz.quizIntroduction,
         createdAt: newArrivalsOrderQuiz.createdAt
