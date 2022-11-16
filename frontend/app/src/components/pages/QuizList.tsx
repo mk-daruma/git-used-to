@@ -1,10 +1,10 @@
-import { Button, makeStyles, Theme } from "@material-ui/core";
+import { Avatar, Button, makeStyles, Theme } from "@material-ui/core";
 import { AuthContext } from "App";
 import { getAllQuizzes } from "lib/api/quizzes";
 import { getAllQuizBookmarks } from "lib/api/quiz_boolmarks";
 import { getAllQuizComments } from "lib/api/quiz_comments";
 import { getAllQuizTags } from "lib/api/quiz_tags";
-import { getUserQuizzes } from "lib/api/users"
+import { getAllUsers, getUserQuizzes } from "lib/api/users"
 import React, { useContext, useState, useEffect, createContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import QuizBookmarkButton from "./QuizBookmarkButton";
@@ -14,24 +14,44 @@ import QuizSearchForm from "./QuizSearchForm";
 export const QuizBookmarkContext = createContext({} as {
   quizzes:{
     id: string,
+    userId: string,
+    parentUserName: string,
+    parentUserImage: {
+      url: string
+    },
     quizTitle: string,
     quizIntroduction: string,
     createdAt: string
   }[]
   setQuizzes: React.Dispatch<React.SetStateAction<{
     id: string,
+    userId: string,
+    parentUserName: string,
+    parentUserImage: {
+      url: string
+    },
     quizTitle: string,
     quizIntroduction: string,
     createdAt: string
   }[]>>
   quizzesForSearch:{
     id: string,
+    userId: string,
+    parentUserName: string,
+    parentUserImage: {
+      url: string
+    },
     quizTitle: string,
     quizIntroduction: string,
     createdAt: string
   }[]
   setQuizzesForSearch: React.Dispatch<React.SetStateAction<{
     id: string,
+    userId: string,
+    parentUserName: string,
+    parentUserImage: {
+      url: string
+    },
     quizTitle: string,
     quizIntroduction: string,
     createdAt: string
@@ -107,12 +127,22 @@ const QuizList: React.FC = () => {
   const [searchQuizIntroduction, setSearchQuizIntroduction] = useState("")
   const [quizzes, setQuizzes] = useState([{
     id: "",
+    userId: "",
+    parentUserName: "",
+    parentUserImage: {
+      url: ""
+    },
     quizTitle: "",
     quizIntroduction: "",
     createdAt: ""
   }])
   const [quizzesForSearch, setQuizzesForSearch] = useState([{
     id: "",
+    userId: "",
+    parentUserName: "",
+    parentUserImage: {
+      url: ""
+    },
     quizTitle: "",
     quizIntroduction: "",
     createdAt: ""
@@ -156,14 +186,31 @@ const QuizList: React.FC = () => {
 
   const handleGetQuizzes = async () => {
     try {
+      const quizStates = [setQuizzes, setQuizzesForSearch]
+      const resUsers = await getAllUsers()
       const resQuizzes = await getAllQuizzes()
       const resAllBookmarks = await getAllQuizBookmarks()
       const resQuizComments = await getAllQuizComments()
       const resAllTags = await getAllQuizTags()
       console.log(resQuizzes)
       if (resQuizzes?.status === 200) {
-        setQuizzes(resQuizzes?.data.data)
-        setQuizzesForSearch(resQuizzes?.data.data)
+        resUsers?.data.data.forEach((resUser :any) =>
+          resQuizzes.data.data
+          .filter((resQuiz :any) => resQuiz.userId === resUser.id)
+          .map((resQuiz :any) =>
+          quizStates.map(quizState =>
+            quizState(quizzes => [...quizzes,{
+              id: resQuiz.id,
+              userId: resUser.id,
+              parentUserName: resUser.userName,
+              parentUserImage: {
+                  url: resUser.image.url
+              },
+              quizTitle: resQuiz.quizTitle,
+              quizIntroduction: resQuiz.quizIntroduction,
+              createdAt: resQuiz.createdAt,
+            }])))
+          )
         setQuizBookmarks(resAllBookmarks?.data.data)
         setQuizCommentHistory(resQuizComments?.data.data)
         setQuizTags(resAllTags?.data.data)
@@ -215,9 +262,9 @@ const QuizList: React.FC = () => {
     ? quizBookmarks.filter(bookmark => bookmark.quizId === quizId && Number(bookmark.userId) === currentUser?.id)[0].id
     : undefined
 
-  useEffect(() => {
-    const currentPath = (path :string) => location.pathname === (path)
+  const currentPath = (path :string) => location.pathname === (path)
 
+  useEffect(() => {
     currentPath(`/user/quiz/list`) && handleGetUserQuizzes()
     currentPath(`/user/bookmark/list`) && handleGetBookmarkedQuizzes()
     currentPath(`/quiz/list`) && handleGetQuizzes()
@@ -258,8 +305,18 @@ const QuizList: React.FC = () => {
         quizTags, setQuizTags
       }}>
       <QuizSearchForm />
-      {quizzes.map((quiz, index) => (
+      {quizzes
+      .filter(quiz => quiz.id)
+      .map((quiz, index) => (
         <div key={index}>
+          {currentPath(`/quiz/list`) &&
+            <p>
+              <Avatar src={quiz.parentUserImage.url} />
+              <a href={`/quiz/edit/${quiz.id}`}>
+                {quiz.parentUserName}
+              </a>
+            </p>
+          }
           <p>{ quiz.id }</p>
           <p>{ quiz.quizTitle }</p>
           <p>{ quiz.quizIntroduction }</p>
