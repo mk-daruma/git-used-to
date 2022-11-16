@@ -83,9 +83,14 @@ export interface AboutQuizData {
 
 export interface AboutQuizzesData  {
   id: string
+  userId: string
+  parentUserName: string
+  parentUserImage: {
+    url: string
+  }
   quizTitle: string
   quizIntroduction: string
-  [key: string]: string;
+  // [key: string]: string;
 }
 
 export interface QuizFirtsOrLastData {
