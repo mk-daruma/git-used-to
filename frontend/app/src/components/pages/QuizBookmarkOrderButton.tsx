@@ -8,22 +8,25 @@ const QuizBookmarkOrderButton :React.FC = () => {
     quizBookmarks
   } = useContext(QuizBookmarkContext)
 
-  const handleSortByNumberOfBookmarkssubmit = () => {
+  const handleSortByNumberOfBookmarksSubmit = () => {
     const bookmarksCount = (quizId :string) => quizBookmarks.filter(bookmark => bookmark.quizId === quizId).length
-    const newArrivalsOrderQuizzes = quizzes.sort((a, b) => ((bookmarksCount(a.id) > (bookmarksCount(b.id)) ? -1 : 1)))
+    const sortByNumberOfBookmarks = quizzes.sort((a, b) => ((bookmarksCount(a.id) > (bookmarksCount(b.id)) ? -1 : 1)))
 
     setQuizzes(quizzes.filter(quiz => !quiz.id))
-    newArrivalsOrderQuizzes.map(newArrivalsOrderQuiz =>
+
+    sortByNumberOfBookmarks
+      .filter(sortByNumberOfBookmark => sortByNumberOfBookmark.id)
+      .map(sortByNumberOfBookmark =>
       setQuizzes(quizzes => [...quizzes,{
-        id: newArrivalsOrderQuiz.id,
-        userId: newArrivalsOrderQuiz.userId,
-        parentUserName: newArrivalsOrderQuiz.parentUserName,
+        id: sortByNumberOfBookmark.id,
+        userId: sortByNumberOfBookmark.userId,
+        parentUserName: sortByNumberOfBookmark.parentUserName,
         parentUserImage: {
-          url: newArrivalsOrderQuiz.parentUserImage.url
+          url: sortByNumberOfBookmark.parentUserImage.url
         },
-        quizTitle: newArrivalsOrderQuiz.quizTitle,
-        quizIntroduction: newArrivalsOrderQuiz.quizIntroduction,
-        createdAt: newArrivalsOrderQuiz.createdAt
+        quizTitle: sortByNumberOfBookmark.quizTitle,
+        quizIntroduction: sortByNumberOfBookmark.quizIntroduction,
+        createdAt: sortByNumberOfBookmark.createdAt
       }])
     )
   }
@@ -34,7 +37,7 @@ const QuizBookmarkOrderButton :React.FC = () => {
       variant="contained"
       size="large"
       color="default"
-      onClick={e => handleSortByNumberOfBookmarkssubmit()}
+      onClick={e => handleSortByNumberOfBookmarksSubmit()}
       >
       ブックマーク数順
     </Button>
