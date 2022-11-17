@@ -312,9 +312,18 @@ const QuizList: React.FC = () => {
           {currentPath(`/quiz/list`) &&
             <p>
               <Avatar src={quiz.parentUserImage.url} />
-              <a href={`/quiz/edit/${quiz.id}`}>
+              <Button
+                type="submit"
+                variant="contained"
+                size="large"
+                fullWidth
+                color="default"
+                className={classes.submitBtn}
+                component={Link}
+                to={`/user/${quiz.userId}/edit`}
+              >
                 {quiz.parentUserName}
-              </a>
+              </Button>
             </p>
           }
           <p>{ quiz.id }</p>
