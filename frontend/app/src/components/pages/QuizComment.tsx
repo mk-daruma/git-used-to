@@ -58,8 +58,6 @@ const QuizComment: React.FC<{ quizId: number }> = ({quizId}) => {
     }
   }
 
-  const deleteComment = quizCommentHistory.filter(commentHistory =>commentHistory.quizId === quizId)
-
   return(
     <>
       <form className={classes.root} noValidate autoComplete="off">
@@ -91,20 +89,23 @@ const QuizComment: React.FC<{ quizId: number }> = ({quizId}) => {
         >
         Submit
       </Button>
-      {deleteComment.map(comment =>
-        <p key={comment.id}>
-          {comment.comment}
-          <Button
-            type="submit"
-            variant="contained"
-            size="large"
-            color="default"
-            className={classes.submitBtn}
-            onClick={e => handleDeleteQuizCommentSubmit(e, comment.id)}
-            >
-            <DeleteIcon />
-          </Button>
-        </p>
+      {quizCommentHistory &&
+        quizCommentHistory
+          .filter(commentHistory =>commentHistory.quizId === quizId)
+          .map(comment =>
+          <p key={comment.id}>
+            {comment.comment}
+            <Button
+              type="submit"
+              variant="contained"
+              size="large"
+              color="default"
+              className={classes.submitBtn}
+              onClick={e => handleDeleteQuizCommentSubmit(e, comment.id)}
+              >
+              <DeleteIcon />
+            </Button>
+          </p>
         )}
     </>
   )
