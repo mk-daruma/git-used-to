@@ -19,6 +19,10 @@ export const getUserProfile = (id: number | undefined | null) => {
   return client.get(`/users/${id}/profile`)
 }
 
+export const getUserSelfBookmarked = (id: number | undefined | null) => {
+  return client.get(`/users/${id}/self_bookmarked`)
+}
+
 export const changeCurrentUserPassword = (data: ChangeUserPasswordFormData) => {
   return client.put("auth", data, { headers: {
     "access-token": Cookies.get("_access_token") || "",
