@@ -9,10 +9,14 @@ Rails.application.routes.draw do
         resources :sessions, only: %i[index]
       end
 
-      resources :users, only: %i[index show update]
+      resources :users, only: %i[index show update] do
+        member do
+          get :profile
+        end
+      end
       resources :quizzes, only: %i[index create update show destroy] do
         member do
-          get 'tag'
+          get :tag
         end
       end
       resources :quiz_answer_records, only: %i[create]

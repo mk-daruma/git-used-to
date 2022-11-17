@@ -1,5 +1,5 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update]
+  before_action :set_user, only: [:show, :update, :profile]
   before_action :user_params, only: [:update]
 
   def index
@@ -50,6 +50,20 @@ class Api::V1::UsersController < ApplicationController
         message: '更新に失敗しました',
       }
     end
+  end
+
+  def profile
+    quizzes = @user.quizzes.length
+    quiz_answer_records = @user.quiz_answer_records.length
+    quiz_comments = QuizComment.where(quiz_id: @user.quizzes.ids).length
+    render json: {
+      status: 'SUCCESS',
+      message: 'Loaded user info',
+      user_data: @user,
+      quizzes_length: quizzes,
+      quiz_answer_records_length: quiz_answer_records,
+      quiz_comments_length: quiz_comments,
+    }
   end
 
   private
