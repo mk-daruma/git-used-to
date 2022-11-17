@@ -15,6 +15,10 @@ export const getUserQuizzes = (id: number | undefined | null) => {
   return client.get(`/users/${id}`)
 }
 
+export const getUserProfile = (id: number | undefined | null) => {
+  return client.get(`/users/${id}/profile`)
+}
+
 export const changeCurrentUserPassword = (data: ChangeUserPasswordFormData) => {
   return client.put("auth", data, { headers: {
     "access-token": Cookies.get("_access_token") || "",
