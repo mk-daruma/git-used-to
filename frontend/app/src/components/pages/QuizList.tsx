@@ -4,9 +4,9 @@ import { getAllQuizzes } from "lib/api/quizzes";
 import { getAllQuizBookmarks } from "lib/api/quiz_boolmarks";
 import { getAllQuizComments } from "lib/api/quiz_comments";
 import { getAllQuizTags } from "lib/api/quiz_tags";
-import { getAllUsers, getUserQuizzes } from "lib/api/users"
+import { getAllUsers, getUserQuizzes, getUserSelfBookmarked } from "lib/api/users"
 import React, { useContext, useState, useEffect, createContext } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import QuizBookmarkButton from "./QuizBookmarkButton";
 import QuizComment from "./QuizComment";
 import QuizSearchForm from "./QuizSearchForm";
@@ -121,6 +121,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const QuizList: React.FC = () => {
   const classes = useStyles()
   const location = useLocation()
+  const { id } = useParams<{ id: string }>()
 
   const { currentUser } = useContext(AuthContext)
   const [searchQuiztitle, setSearchQuiztitle] = useState("")
@@ -165,9 +166,9 @@ const QuizList: React.FC = () => {
   }])
   const [quizComment, setQuizComment] = useState("")
 
-  const handleGetUserQuizzes = async () => {
+  const handleGetUserQuizzes = async (userId :number) => {
     try {
-      const resUserQuizzes = await getUserQuizzes(currentUser?.id)
+      const resUserQuizzes = await getUserQuizzes(userId)
       const resAllBookmarks = await getAllQuizBookmarks()
       console.log(resUserQuizzes)
       if (resUserQuizzes?.status === 200) {
@@ -222,38 +223,19 @@ const QuizList: React.FC = () => {
     }
   }
 
-  const handleGetBookmarkedQuizzes = async () => {
-    try {
-      const resUserQuizzes = await getUserQuizzes(currentUser?.id)
-      const resAllBookmarks = await getAllQuizBookmarks()
-      console.log(resUserQuizzes)
-      if (resUserQuizzes?.status === 200) {
-        const allBookmarks = resAllBookmarks?.data.data
-        const bookmarkedQuizzes =
-          resUserQuizzes?.data.data.filter((res :any) =>
-            allBookmarks.some((allBookmark :any) =>
-              allBookmark.quizId === res.id)
-            )
-        const QuizComments =
-          resUserQuizzes?.data.dataComments.filter((res :any) =>
-            bookmarkedQuizzes.some((allBookmark :any) =>
-              allBookmark.id === res.quizId)
-            )
-        const QuizTags =
-          resUserQuizzes?.data.dataTags.filter((res :any) =>
-            bookmarkedQuizzes.some((allBookmark :any) =>
-              allBookmark.id === res.quizId)
-            )
-        setQuizzes(bookmarkedQuizzes)
-        setQuizzesForSearch(bookmarkedQuizzes)
-        setQuizBookmarks(resAllBookmarks?.data.data)
-        setQuizCommentHistory(QuizComments)
-        setQuizTags(QuizTags)
-      } else {
-        console.log("No likes")
-      }
-    } catch (err) {
-      console.log(err)
+  const handleGetSelfBookmarkedQuizzes = async (userId :number) => {
+    const resUserSelf = await getUserSelfBookmarked(userId)
+    const resAllBookmarks = await getAllQuizBookmarks()
+
+    if (resUserSelf?.status === 200 && resAllBookmarks?.status === 200) {
+      setQuizzes(resUserSelf?.data.selfBookmarkedQuizzes)
+      setQuizzesForSearch(resUserSelf?.data.selfBookmarkedQuizzes)
+      setQuizBookmarks(resAllBookmarks?.data.data)
+      setQuizCommentHistory(resUserSelf?.data.selfBookmarkedQuizCommnets)
+      setQuizTags(resUserSelf?.data.selfBookmarkedQuizTags)
+      console.log(resUserSelf)
+    } else {
+      console.log("No likes")
     }
   }
 
@@ -265,9 +247,11 @@ const QuizList: React.FC = () => {
   const currentPath = (path :string) => location.pathname === (path)
 
   useEffect(() => {
-    currentPath(`/user/quiz/list`) && handleGetUserQuizzes()
-    currentPath(`/user/bookmark/list`) && handleGetBookmarkedQuizzes()
+    currentPath(`/user/quiz/list`) && handleGetUserQuizzes(Number(currentUser?.id))
+    currentPath(`/user/bookmark/list`) && handleGetSelfBookmarkedQuizzes(Number(currentUser?.id))
     currentPath(`/quiz/list`) && handleGetQuizzes()
+    currentPath(`/user/${id}/quiz/list`) && handleGetUserQuizzes(Number(id))
+    currentPath(`/user/${id}/quiz/bookmark/list`) && handleGetSelfBookmarkedQuizzes(Number(id))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
