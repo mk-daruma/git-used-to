@@ -85,6 +85,8 @@ const App: React.FC = () => {
                 <Route exact path="/user/bookmark/list" component={QuizList} />
                 <Route exact path="/quiz/list" component={QuizList} />
                 <Route exact path="/quiz" component={CreateQuiz} />
+                <Route path="/user/:id/quiz/list" component={QuizList} />
+                <Route path="/user/:id/quiz/bookmark/list" component={QuizList} />
                 <Route path="/quiz/setup/:id" component={QuizSetUp} />
                 <Route path="/quiz/edit/:id" component={CreateQuiz} />
                 <Route path="/quiz/init/edit/:id" component={CreateQuiz} />
