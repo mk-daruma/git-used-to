@@ -1,5 +1,5 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :profile]
+  before_action :set_user, only: [:show, :update, :profile, :self_bookmarked]
   before_action :user_params, only: [:update]
 
   def index
@@ -63,6 +63,24 @@ class Api::V1::UsersController < ApplicationController
       quizzes_length: quizzes,
       quiz_answer_records_length: quiz_answer_records,
       quiz_comments_length: quiz_comments,
+    }
+  end
+
+  def self_bookmarked
+    self_bookmark_ids = @user.quiz_bookmarks
+    self_bookmarked_quiz_hash = []
+    self_bookmarked_quiz_comments_hash = []
+    self_bookmarked_quiz_tags_hash = []
+    self_bookmark_ids.each do |bookmark|
+      self_bookmarked_quiz_hash.push(Quiz.where(id: bookmark.quiz_id))
+      self_bookmarked_quiz_comments_hash.push(QuizComment.where(quiz_id: bookmark.quiz_id))
+      self_bookmarked_quiz_tags_hash.push(QuizTag.where(quiz_id: bookmark.quiz_id))
+    end
+    render json: {
+      status: 'SUCCESS',
+      self_bookmarked_quizzes: self_bookmarked_quiz_hash.flatten,
+      self_bookmarked_quiz_comments: self_bookmarked_quiz_comments_hash.flatten,
+      self_bookmarked_quiz_tags: self_bookmarked_quiz_tags_hash.flatten,
     }
   end
 

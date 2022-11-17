@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       resources :users, only: %i[index show update] do
         member do
           get :profile
+          get :self_bookmarked
         end
       end
       resources :quizzes, only: %i[index create update show destroy] do
