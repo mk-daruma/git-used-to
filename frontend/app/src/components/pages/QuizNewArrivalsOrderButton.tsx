@@ -10,7 +10,9 @@ const QuizNewArrivalsOrderButton :React.FC = () => {
   const handleSortByDateQuizzessubmit = () => {
     const newArrivalsOrderQuizzes = quizzes.sort((a, b) => ((a.createdAt > b.createdAt) ? -1 : 1))
     setQuizzes(quizzes.filter(quiz => !quiz.id))
-    newArrivalsOrderQuizzes.map(newArrivalsOrderQuiz =>
+    newArrivalsOrderQuizzes
+    .filter(newArrivalsOrderQuiz => newArrivalsOrderQuiz.id)
+    .map(newArrivalsOrderQuiz =>
       setQuizzes(quizzes => [...quizzes,{
         id: newArrivalsOrderQuiz.id,
         userId: newArrivalsOrderQuiz.userId,

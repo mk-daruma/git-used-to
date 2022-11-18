@@ -5,7 +5,6 @@ import CommonLayout from "components/layouts/CommonLayout"
 import Home from "components/pages/Home"
 import SignUp from "components/pages/SignUp"
 import SignIn from "components/pages/SignIn"
-import UserEdit from "components/pages/UserEdit"
 import ChangePassword from "components/pages/ChangePassword"
 import ForgetPassword from "components/pages/ForgetPassword"
 import RedirectForgetPassword from "components/pages/RedirectForgetPassword"
@@ -16,6 +15,7 @@ import { getCurrentUser } from "lib/api/auth"
 import { User } from "interfaces/index"
 import QuizList from "components/pages/QuizList"
 import QuizSetUp from "components/pages/QuizSetUp"
+import UserProfile from "components/pages/UserProfile"
 
 export const AuthContext = createContext({} as {
   loading: boolean
@@ -79,12 +79,14 @@ const App: React.FC = () => {
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route exact path="/password" component={ChangePassword} />
-                <Route exact path={`/user/${currentUser?.id}/edit`} component={UserEdit} />
+                <Route exact path="/user/:id/edit" component={UserProfile} />
                 <Route exact path="/user/delete" component={UserDelete} />
                 <Route exact path="/user/quiz/list" component={QuizList} />
                 <Route exact path="/user/bookmark/list" component={QuizList} />
                 <Route exact path="/quiz/list" component={QuizList} />
                 <Route exact path="/quiz" component={CreateQuiz} />
+                <Route path="/user/:id/quiz/list" component={QuizList} />
+                <Route path="/user/:id/quiz/bookmark/list" component={QuizList} />
                 <Route path="/quiz/setup/:id" component={QuizSetUp} />
                 <Route path="/quiz/edit/:id" component={CreateQuiz} />
                 <Route path="/quiz/init/edit/:id" component={CreateQuiz} />
