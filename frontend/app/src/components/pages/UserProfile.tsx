@@ -1,4 +1,4 @@
-import { Button } from "@material-ui/core"
+import { Avatar, Button } from "@material-ui/core"
 import { AuthContext } from "App"
 import { getUserProfile } from "lib/api/users"
 import { useContext, useEffect, useState } from "react"
@@ -10,6 +10,9 @@ const UserProfile: React.FC = () => {
     userId: 0,
     userName: "",
     userSelfIntroduction: "",
+    userImage: {
+      url: "",
+    },
     quizzesLength: 0,
     commentsLength: 0,
     answerRecordsLength: 0
@@ -23,6 +26,9 @@ const UserProfile: React.FC = () => {
       userId: userProfileRes.data.userData.id,
       userName: userProfileRes.data.userData.userName,
       userSelfIntroduction: userProfileRes.data.userData.userSelfIntroduction,
+      userImage: {
+        url: userProfileRes.data.userData.image.url,
+      },
       quizzesLength: userProfileRes.data.quizzesLength,
       commentsLength: userProfileRes.data.quizCommentsLength,
       answerRecordsLength: userProfileRes.data.quizAnswerRecordsLength,
@@ -40,8 +46,11 @@ const UserProfile: React.FC = () => {
 
   return(
     <>
-      {/* {id === String(currentUser?.id) && <UserEdit />}
-      {id !== String(currentUser?.id) && */}
+      {id === String(currentUser?.id) &&
+        <UserEdit />
+        }
+
+      {id !== String(currentUser?.id) &&
         <>
           <Button
             type="submit"
@@ -61,13 +70,16 @@ const UserProfile: React.FC = () => {
           >
             userがブックマークしたクイズ一覧
           </Button>
+          <Avatar src={userProfile.userImage.url} />
+          <p>{userProfile.userName}</p>
+          <p>{userProfile.userSelfIntroduction}</p>
           <p>{userProfile.answerRecordsLength}</p>
           <p>{userProfile.commentsLength}</p>
           <p>{userProfile.quizzesLength}</p>
           <p>{userProfile.userName}</p>
           <p>{userProfile.userSelfIntroduction}</p>
         </>
-        {/* } */}
+        }
     </>
   )
 }
