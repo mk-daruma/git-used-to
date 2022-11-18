@@ -55,7 +55,7 @@ class Api::V1::UsersController < ApplicationController
   def profile
     quizzes = @user.quizzes.length
     quiz_answer_records = @user.quiz_answer_records.length
-    quiz_comments = QuizComment.where(quiz_id: @user.quizzes.ids).length
+    quiz_comments = @user.quiz_comments.length
     render json: {
       status: 'SUCCESS',
       message: 'Loaded user info',
