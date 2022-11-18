@@ -225,12 +225,11 @@ const QuizList: React.FC = () => {
 
   const handleGetSelfBookmarkedQuizzes = async (userId :number) => {
     const resUserSelf = await getUserSelfBookmarked(userId)
-    const resAllBookmarks = await getAllQuizBookmarks()
 
-    if (resUserSelf?.status === 200 && resAllBookmarks?.status === 200) {
+    if (resUserSelf?.status === 200) {
       setQuizzes(resUserSelf?.data.selfBookmarkedQuizzes)
       setQuizzesForSearch(resUserSelf?.data.selfBookmarkedQuizzes)
-      setQuizBookmarks(resAllBookmarks?.data.data)
+      setQuizBookmarks(resUserSelf?.data.selfBookmarkedQuizBookmarks)
       setQuizCommentHistory(resUserSelf?.data.selfBookmarkedQuizCommnets)
       setQuizTags(resUserSelf?.data.selfBookmarkedQuizTags)
       console.log(resUserSelf)
