@@ -121,4 +121,52 @@ RSpec.describe "Api::V1::Users", type: :request do
       expect(res.length).to eq 2
     end
   end
+
+  describe "GET /api/v1/users#profile" do
+    let!(:user) { create(:user) }
+    let!(:related_quizzes) { create_list(:quiz, 5, user: user) }
+    let!(:no_related_quiz) { create(:quiz) }
+    let!(:related_quiz_answer_records) { create_list(:quiz_answer_record, 5, user: user) }
+    let!(:no_related_quiz_answer_record) { create(:quiz_answer_record) }
+    let!(:related_quiz_comments) { create_list(:quiz_comment, 5, user: user) }
+    let!(:no_related_quiz_comment) { create(:quiz_comment) }
+
+    context "引数がuserのidの場合" do
+      before do
+        get profile_api_v1_user_path(user.id)
+      end
+
+      it "通信が成功すること" do
+        res = JSON.parse(response.body)
+        expect(res["status"]).to eq("SUCCESS")
+        expect(res["message"]).to eq("Loaded user info")
+        expect(response).to have_http_status(:success)
+      end
+
+      it "userデータを取得できること" do
+        res = JSON.parse(response.body)
+        expect(res["user_data"]["id"]).to eq(user.id)
+      end
+
+      it "userに関連するquizデータ数を取得できること" do
+        res = JSON.parse(response.body)
+        expect(res["quizzes_length"]).to eq(5)
+      end
+
+      it "userに関連するquiz_answer_recordデータ数を取得できること" do
+        res = JSON.parse(response.body)
+        expect(res["quiz_answer_records_length"]).to eq(5)
+      end
+
+      it "userに関連するquiz_commentデータ数を取得できること" do
+        res = JSON.parse(response.body)
+        expect(res["quiz_comments_length"]).to eq(5)
+      end
+
+      it "取得するdataの要素が6つであること" do
+        res = JSON.parse(response.body)
+        expect(res.length).to eq 6
+      end
+    end
+  end
 end
