@@ -65,6 +65,25 @@ class Api::V1::QuizzesController < ApplicationController
     }
   end
 
+  def weekly_ranking
+    rank_in_quizzes_hash = []
+    rank_in_quizzes = Quiz.find(QuizBookmark.group(:quiz_id).where(created_at: Time.current.all_week).order('count(quiz_id) desc').pluck(:quiz_id))
+    rank_in_quizzes.each do |rank_in_quiz|
+      bookmark_count = QuizBookmark.where(quiz_id: rank_in_quiz.id).length
+      if bookmark_count > 2
+        rank_in_quizzes_hash.push({
+          rank_in_quiz_data: rank_in_quiz,
+          bookmark_count: bookmark_count,
+        })
+      end
+    end
+    render json: {
+      status: 'SUCCESS',
+      message: 'Loaded quiz weekly ranking',
+      rank_in_quiz_data: rank_in_quizzes_hash,
+    }
+  end
+
   private
 
   def set_quiz
