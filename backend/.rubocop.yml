@@ -5,7 +5,7 @@ Rails:
   Enabled: true
 
 Layout/LineLength:
-  Max: 115
+  Max: 120
 
 AllCops:
   Exclude:

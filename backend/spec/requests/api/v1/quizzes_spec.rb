@@ -1,4 +1,5 @@
 require 'rails_helper'
+require "date"
 
 RSpec.describe "Api::V1::Quizzes", type: :request do
   let(:user) { create(:user) }
@@ -153,6 +154,79 @@ RSpec.describe "Api::V1::Quizzes", type: :request do
         res = JSON.parse(response.body)
         expect(res.length).to eq 3
       end
+    end
+  end
+
+  describe "GET /weekly_ranking" do
+    date = Time.current
+    let!(:not_rank_in_user) { create(:user) }
+    let!(:a_week_ago_quiz) { create(:quiz, quiz_type: "old", created_at: date.prev_week, user: not_rank_in_user) }
+    let!(:rank_in_quiz) { create(:quiz, created_at: date, user: user) }
+    let!(:rank_in_quiz2) { create(:quiz, created_at: date, user: user) }
+    let!(:rank_in_quiz3) { create(:quiz, created_at: date, user: user) }
+    let!(:shortage_bookmarks_quiz) { create(:quiz, quiz_type: "old", created_at: date, user: not_rank_in_user) }
+    let!(:not_rank_in_quiz_bookmarks) { create_list(:quiz_bookmark, 3, quiz: not_rank_in_quiz) }
+    let!(:quiz_bookmarks) { create_list(:quiz_bookmark, 3, quiz: rank_in_quiz) }
+    let!(:quiz2_bookmarks) { create_list(:quiz_bookmark, 3, quiz: rank_in_quiz2) }
+    let!(:quiz3_bookmarks) { create_list(:quiz_bookmark, 3, quiz: rank_in_quiz3) }
+    let!(:shortage_bookmarks_quiz_bookmarks) { create_list(:quiz_bookmark, 2, quiz: shortage_bookmarks_quiz) }
+    let!(:rank_in_quizzes) { [rank_in_quiz, rank_in_quiz2, rank_in_quiz3] }
+
+    before do
+      get weekly_ranking_api_v1_quizzes_path
+    end
+
+    it "通信が成功すること" do
+      res = JSON.parse(response.body)
+      expect(res["status"]).to eq("SUCCESS")
+      expect(res["message"]).to eq("Loaded quiz weekly ranking")
+      expect(response).to have_http_status(:success)
+    end
+
+    it "直近１週間で作成されたクイズ/関連するブックマーク数/作成したuserのデータのみが取得できること" do
+      res = JSON.parse(response.body)
+      rank_in_quizzes.each_with_index do |quiz, i|
+        expect(res["rank_in_quiz_data"][i]["rank_in_quiz_data"]["id"]).to eq(quiz.id)
+        expect(res["rank_in_quiz_data"][i]["rank_in_quiz_data"]["user_id"]).to eq(quiz.user_id)
+        expect(res["rank_in_quiz_data"][i]["rank_in_quiz_data"]["quiz_title"]).to eq(quiz.quiz_title)
+        expect(res["rank_in_quiz_data"][i]["rank_in_quiz_data"]["quiz_introduction"]).to eq(quiz.quiz_introduction)
+        expect(res["rank_in_quiz_data"][i]["rank_in_quiz_data"]["quiz_type"]).to eq(quiz.quiz_type)
+        expect(res["rank_in_quiz_data"][i]["create_user_name"]).to eq(user.user_name)
+        expect(res["rank_in_quiz_data"][i]["create_user_image"]).to eq(user.image.url)
+        expect(res["rank_in_quiz_data"][i]["bookmark_count"]).to eq(3)
+      end
+      expect(res["rank_in_quiz_data"].length).to eq(3)
+    end
+
+    it "直近１週間より前に作成されたクイズデータと関連するブックマーク数は取得されないこと" do
+      res = JSON.parse(response.body)
+      res["rank_in_quiz_data"].each do |quiz_data|
+        expect(quiz_data["rank_in_quiz_data"]["id"]).not_to eq(a_week_ago_quiz.id)
+        expect(quiz_data["rank_in_quiz_data"]["user_id"]).not_to eq(a_week_ago_quiz.user_id)
+        expect(quiz_data["rank_in_quiz_data"]["quiz_title"]).not_to eq(a_week_ago_quiz.quiz_title)
+        expect(quiz_data["rank_in_quiz_data"]["quiz_introduction"]).not_to eq(a_week_ago_quiz.quiz_introduction)
+        expect(quiz_data["rank_in_quiz_data"]["quiz_type"]).not_to eq(a_week_ago_quiz.quiz_type)
+        expect(quiz_data["create_user_name"]).not_to eq(not_rank_in_user.user_name)
+        expect(quiz_data["create_user_image"]).not_to eq(not_rank_in_user.image.url)
+      end
+    end
+
+    it "bookmark数が3つ未満のクイズ/関連するブックマーク数/作成したuserのデータが取得されないこと" do
+      res = JSON.parse(response.body)
+      res["rank_in_quiz_data"].each do |quiz_data|
+        expect(quiz_data["rank_in_quiz_data"]["id"]).not_to eq(shortage_bookmarks_quiz.id)
+        expect(quiz_data["rank_in_quiz_data"]["user_id"]).not_to eq(shortage_bookmarks_quiz.user_id)
+        expect(quiz_data["rank_in_quiz_data"]["quiz_title"]).not_to eq(shortage_bookmarks_quiz.quiz_title)
+        expect(quiz_data["rank_in_quiz_data"]["quiz_introduction"]).not_to eq(shortage_bookmarks_quiz.quiz_introduction)
+        expect(quiz_data["rank_in_quiz_data"]["quiz_type"]).not_to eq(shortage_bookmarks_quiz.quiz_type)
+        expect(quiz_data["create_user_name"]).not_to eq(not_rank_in_user.user_name)
+        expect(quiz_data["create_user_image"]).not_to eq(not_rank_in_user.image.url)
+      end
+    end
+
+    it "取得するdataの要素が3つであること" do
+      res = JSON.parse(response.body)
+      expect(res.length).to eq 3
     end
   end
 end
