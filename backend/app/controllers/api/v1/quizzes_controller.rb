@@ -67,11 +67,11 @@ class Api::V1::QuizzesController < ApplicationController
 
   def weekly_ranking
     rank_in_quizzes_hash = []
-    rank_in_quizzes = Quiz.find(QuizBookmark.group(:quiz_id).where(created_at: Time.current.all_week).order('count(quiz_id) desc').pluck(:quiz_id))
+    rank_in_quizzes = Quiz.where(created_at: Time.current.all_week)
     rank_in_quizzes.each do |rank_in_quiz|
       bookmark_count = QuizBookmark.where(quiz_id: rank_in_quiz.id).length
       create_user = User.where(id: rank_in_quiz.user_id)
-      if bookmark_count > 1
+      if bookmark_count > 2
         rank_in_quizzes_hash.push({
           rank_in_quiz_data: rank_in_quiz,
           create_user_name: create_user.first.user_name,
