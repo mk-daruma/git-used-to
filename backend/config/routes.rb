@@ -19,6 +19,9 @@ Rails.application.routes.draw do
         member do
           get :tag
         end
+        collection do
+          get :weekly_ranking
+        end
       end
       resources :quiz_answer_records, only: %i[create]
       resources :quiz_bookmarks, only: %i[index create destroy]

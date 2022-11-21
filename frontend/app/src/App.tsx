@@ -16,6 +16,7 @@ import { User } from "interfaces/index"
 import QuizList from "components/pages/QuizList"
 import QuizSetUp from "components/pages/QuizSetUp"
 import UserProfile from "components/pages/UserProfile"
+import QuizWeeklyRanking from "components/pages/QuizWeeklyRanking"
 
 export const AuthContext = createContext({} as {
   loading: boolean
@@ -85,6 +86,7 @@ const App: React.FC = () => {
                 <Route exact path="/user/bookmark/list" component={QuizList} />
                 <Route exact path="/quiz/list" component={QuizList} />
                 <Route exact path="/quiz" component={CreateQuiz} />
+                <Route exact path="/quiz/ranking/weekly" component={QuizWeeklyRanking} />
                 <Route path="/user/:id/quiz/list" component={QuizList} />
                 <Route path="/user/:id/quiz/bookmark/list" component={QuizList} />
                 <Route path="/quiz/setup/:id" component={QuizSetUp} />
