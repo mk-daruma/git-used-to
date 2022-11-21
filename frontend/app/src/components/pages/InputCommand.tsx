@@ -151,6 +151,7 @@ const InputCommand: React.FC = () => {
 
   const gitCommitM = (text :string, str :number) => {
     const commonConditions = indexFiles.some(indexFile => indexFile.fileName !== "" && /[\S+]/.test(text.substring(str-1))) && !currentBranchParentCommitMessages.some(commitMessages => commitMessages.message === text.substring(str))
+    const removeRepositoryFiles :any = []
 
     if ((commonConditions && !currentBranchParentIndexFiles.every(indexFile => currentBranchParentRepositoryFiles.some(repositoryFile => indexFile.fileName === repositoryFile.fileName && indexFile.textStatus === repositoryFile.textStatus)))
         || (commonConditions && !currentBranchParentRepositoryFiles.every(repositoryFile => currentBranchParentIndexFiles.some(indexFile => indexFile.fileName === repositoryFile.fileName && indexFile.textStatus === repositoryFile.textStatus)))
@@ -166,35 +167,37 @@ const InputCommand: React.FC = () => {
       .filter(repositoryFile => repositoryFile.fileName)
       .forEach(filtedrepositoryFile =>
         {if (!currentBranchParentIndexFiles.some(indexFile => indexFile.fileName === filtedrepositoryFile.fileName)) {
-          setRepositoryFiles(repositoryFiles.map(repositoryFile =>
-            repositoryFile.fileName === filtedrepositoryFile.fileName
-            && repositoryFile.parentBranch === currentBranch.currentBranchName
-            ? {
-              fileName: "",
-              textStatus: "",
-              parentBranch: "",
-              parentCommitMessage: "",
-              parentBranchId: "",
-              parentCommitMessageId: "",
-              repositoryFileId: ""
-              }
-            : repositoryFile
-            )
-          )
-          setFileHistoryForCansellCommits (fileHistoryForCansellCommit => [...fileHistoryForCansellCommit,{
-            fileName :filtedrepositoryFile.fileName,
-            textStatus: "",
-            fileStatus: "deleted",
-            pastTextStatus: filtedrepositoryFile.textStatus,
-            parentBranch: currentBranch.currentBranchName,
-            parentCommitMessage: text.substring(str),
-            parentPastCommitMessage: filtedrepositoryFile.parentCommitMessage,
-            parentBranchId: currentBranch.currentBranchId,
-            parentCommitMessageId: "",
-            historyFileId: ""
-          }])
-        }}
+          removeRepositoryFiles.push(filtedrepositoryFile)
+          }}
+        )
+      setRepositoryFiles(repositoryFiles.map(repositoryFile =>
+        removeRepositoryFiles.some((removeRepositoryFile :any) => removeRepositoryFile.fileName === repositoryFile.fileName)
+        && repositoryFile.parentBranch === currentBranch.currentBranchName
+        ? {
+          fileName: "",
+          textStatus: "",
+          parentBranch: "",
+          parentCommitMessage: "",
+          parentBranchId: "",
+          parentCommitMessageId: "",
+          repositoryFileId: ""
+          }
+        : repositoryFile
+        )
       )
+      removeRepositoryFiles.forEach((removeRepositoryFile :any) =>
+      setFileHistoryForCansellCommits (fileHistoryForCansellCommit => [...fileHistoryForCansellCommit,{
+        fileName :removeRepositoryFile.fileName,
+        textStatus: "",
+        fileStatus: "deleted",
+        pastTextStatus: removeRepositoryFile.textStatus,
+        parentBranch: currentBranch.currentBranchName,
+        parentCommitMessage: text.substring(str),
+        parentPastCommitMessage: removeRepositoryFile.parentCommitMessage,
+        parentBranchId: currentBranch.currentBranchId,
+        parentCommitMessageId: "",
+        historyFileId: ""
+      }]))
       currentBranchParentIndexFiles
       .filter((indexFile) => indexFile.fileName !== "")
       .forEach((indexFile) =>
