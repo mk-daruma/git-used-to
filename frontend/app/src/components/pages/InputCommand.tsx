@@ -990,11 +990,11 @@ const InputCommand: React.FC = () => {
               }])
               if (gitInit === "Initialized empty Git repository") {
                 if (text.startsWith("git add .") || text.startsWith("git add -A")){
-                  checkDatacount(indexFiles) + checkGitAddACount < 8 ? gitAddA() : limitDataErrorMessage("indexFiles", 8)
+                  checkDatacount(indexFiles) + checkGitAddACount <= 8 ? gitAddA() : limitDataErrorMessage("indexFiles", 8)
                 } else if (text === `git remote add https://git-used-to.com/${currentUser?.userName}`){
                   gitRemoteAdd()
                 } else if (text.startsWith("git add ")){
-                  checkMultiData(text, 8, indexFiles) < 8 ? gitAdd(text, 8) : limitDataErrorMessage("indexFiles", 8)
+                  checkMultiData(text, 8, indexFiles) <= 8 ? gitAdd(text, 8) : limitDataErrorMessage("indexFiles", 8)
                 } else if (text.startsWith("kakunin")){
                   forCheck(text, 8)
                 } else if (text.startsWith("kakunin2")){
@@ -1002,14 +1002,14 @@ const InputCommand: React.FC = () => {
                 } else if (text.startsWith("git commit --amend")){
                   gitCommitAmend(text, 19)
                 } else if (text.startsWith("git commit -m")){
-                  checkDatacount(repositoryFiles) < 8
-                    && checkDatacount(commitMessages) < 10
+                  checkDatacount(repositoryFiles) <= 8
+                    && checkDatacount(commitMessages) <= 10
                   ? gitCommitM(text, 14)
                   : limitDataErrorMessage("repositoryFiles", 8)
                 } else if (text === `git push origin ${currentBranch.currentBranchName}`) {
-                  checkDatacount(remoteBranches, "remoteBranchName") < 3
-                    && checkDatacount(remoteCommitMessages, "parentRemoteBranch") < 10
-                    && checkDatacount(remoteRepositoryFiles, "parentRemoteBranch") < 16
+                  checkDatacount(remoteBranches, "remoteBranchName") <= 3
+                    && checkDatacount(remoteCommitMessages, "parentRemoteBranch") <= 10
+                    && checkDatacount(remoteRepositoryFiles, "parentRemoteBranch") <= 16
                   ? gitPush()
                   : limitDataErrorMessage("repositoryFiles", 16)
                 } else if (text.startsWith("git push --delete origin")) {
@@ -1023,21 +1023,21 @@ const InputCommand: React.FC = () => {
                 } else if (text.startsWith("git branch -d")) {
                   gitBranchD(text, 14)
                 } else if (text.startsWith("git branch ") && afterCommandBranchName.test(text.substring(11))){
-                  checkBranchCount < 3 ? gitBranch(text, 11) : limitDataErrorMessage("branch", 3)
+                  checkBranchCount <= 3 ? gitBranch(text, 11) : limitDataErrorMessage("branch", 3)
                 } else if (text.startsWith("git checkout -b ")) {
-                  checkBranchCount < 3 ? gitCheckoutB(text, 16) : limitDataErrorMessage("branch", 3)
+                  checkBranchCount <= 3 ? gitCheckoutB(text, 16) : limitDataErrorMessage("branch", 3)
                 } else if (text.startsWith("git checkout ")) {
                   gitCheckout(text, 13)
                 } else if (text.startsWith("touch ")) {
-                  checkMultiData(text, 6, worktreeFiles) < 8 ? touch(text, 6) : limitDataErrorMessage("worktreeFiles", 8)
+                  checkMultiData(text, 6, worktreeFiles) <= 8 ? touch(text, 6) : limitDataErrorMessage("worktreeFiles", 8)
                 } else if (text.startsWith("git rm --cashed")) {
                   gitRmCashed(text, 16)
                 } else if (text.startsWith("git reset --mixed HEAD~")) {
-                  Number(text.substring(23)) < 4 ? gitResetOption(text, 23, "mixed") : resetFailedErrorMessage()
+                  Number(text.substring(23)) <= 4 ? gitResetOption(text, 23, "mixed") : resetFailedErrorMessage()
                 } else if (text.startsWith("git reset --hard HEAD~")) {
-                  Number(text.substring(22)) < 4 ? gitResetOption(text, 22, "hard") : resetFailedErrorMessage()
+                  Number(text.substring(22)) <= 4 ? gitResetOption(text, 22, "hard") : resetFailedErrorMessage()
                 } else if (text.startsWith("git reset --soft HEAD~")) {
-                  Number(text.substring(22)) < 4 ? gitResetOption(text, 22, "soft") : resetFailedErrorMessage()
+                  Number(text.substring(22)) <= 4 ? gitResetOption(text, 22, "soft") : resetFailedErrorMessage()
                 } else if (text.startsWith("git reset")) {
                   gitReset()
                 } else if (text.startsWith("git rm")) {
