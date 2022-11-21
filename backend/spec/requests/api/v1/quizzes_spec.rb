@@ -165,7 +165,7 @@ RSpec.describe "Api::V1::Quizzes", type: :request do
     let!(:rank_in_quiz2) { create(:quiz, created_at: date, user: user) }
     let!(:rank_in_quiz3) { create(:quiz, created_at: date, user: user) }
     let!(:shortage_bookmarks_quiz) { create(:quiz, quiz_type: "old", created_at: date, user: not_rank_in_user) }
-    let!(:not_rank_in_quiz_bookmarks) { create_list(:quiz_bookmark, 3, quiz: not_rank_in_quiz) }
+    let!(:a_week_ago_quiz_bookmarks) { create_list(:quiz_bookmark, 3, quiz: a_week_ago_quiz) }
     let!(:quiz_bookmarks) { create_list(:quiz_bookmark, 3, quiz: rank_in_quiz) }
     let!(:quiz2_bookmarks) { create_list(:quiz_bookmark, 3, quiz: rank_in_quiz2) }
     let!(:quiz3_bookmarks) { create_list(:quiz_bookmark, 3, quiz: rank_in_quiz3) }
