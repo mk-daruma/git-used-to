@@ -80,6 +80,7 @@ class Api::V1::QuizzesController < ApplicationController
         })
       end
     end
+    rank_in_quizzes_hash.sort! { |a, b| b[:bookmark_count] <=> a[:bookmark_count] }
     render json: {
       status: 'SUCCESS',
       message: 'Loaded quiz weekly ranking',
