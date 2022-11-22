@@ -152,11 +152,29 @@ const InputCommand: React.FC = () => {
   const gitCommitM = (text :string, str :number) => {
     const commonConditions = indexFiles.some(indexFile => indexFile.fileName !== "" && /[\S+]/.test(text.substring(str-1))) && !currentBranchParentCommitMessages.some(commitMessages => commitMessages.message === text.substring(str))
     const removeRepositoryFiles :any = []
+    const notRemoveCommitMessages = currentBranchParentCommitMessages.slice(-2)
 
     if ((commonConditions && !currentBranchParentIndexFiles.every(indexFile => currentBranchParentRepositoryFiles.some(repositoryFile => indexFile.fileName === repositoryFile.fileName && indexFile.textStatus === repositoryFile.textStatus)))
         || (commonConditions && !currentBranchParentRepositoryFiles.every(repositoryFile => currentBranchParentIndexFiles.some(indexFile => indexFile.fileName === repositoryFile.fileName && indexFile.textStatus === repositoryFile.textStatus)))
         || (commonConditions && !currentBranchParentRepositoryFiles.some(repositoryFile => repositoryFile.fileName))
       ) {
+      setFileHistoryForCansellCommits(fileHistoryForCansellCommits.map(historyFile =>
+        !notRemoveCommitMessages.some(commitMessage => commitMessage.message === historyFile.parentCommitMessage)
+          && historyFile.parentBranch === currentBranch.currentBranchName
+        ? {
+          fileName :"",
+          textStatus: "",
+          fileStatus: "",
+          pastTextStatus: "",
+          parentBranch: "",
+          parentCommitMessage: "",
+          parentPastCommitMessage: "",
+          parentBranchId: "",
+          parentCommitMessageId: "",
+          historyFileId: ""
+          }
+        : historyFile
+        ))
       setCommitMessages(commitMessage => [...commitMessage,{
         message: text.substring(str),
         parentBranch: currentBranch.currentBranchName,
