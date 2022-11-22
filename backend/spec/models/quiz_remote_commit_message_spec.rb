@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe QuizRemoteCommitMessage, type: :model do
+  def err_message(obj, karam)
+    obj.errors.messages[karam]
+  end
+
   describe "validates presence" do
     context "全てのカラムに値が入力されている場合" do
       let(:remote_commit_message) { create(:quiz_remote_commit_message) }
@@ -31,6 +35,33 @@ RSpec.describe QuizRemoteCommitMessage, type: :model do
         expect do
           remote_commit_message.destroy
         end.to change(QuizRemoteRepositoryFile, :count).by(-1)
+      end
+    end
+  end
+
+  describe "quiz_remote_commit_messages_count_must_be_within_limit" do
+    let!(:remote_branch) { create(:quiz_remote_branch) }
+
+    context "同じquiz_branchデータに紐づいたquiz_commit_messageのデータ数が10個未満の場合" do
+      let!(:remote_commit_messages) { create_list(:quiz_remote_commit_message, 9, quiz_remote_branch: remote_branch) }
+      let(:new_remote_commit_message) { build(:quiz_remote_commit_message, quiz_remote_branch: remote_branch) }
+
+      it "新しいquiz_commit_messageデータ作成が成功すること" do
+        expect do
+          new_remote_commit_message.save
+        end.to change(QuizRemoteCommitMessage, :count).by(+1)
+      end
+    end
+
+    context "同じquiz_branchデータに紐づいたquiz_commit_messageのデータが既に10個存在する場合" do
+      let!(:remote_commit_messages) { create_list(:quiz_remote_commit_message, 10, quiz_remote_branch: remote_branch) }
+      let(:new_remote_commit_message) { build(:quiz_remote_commit_message, quiz_remote_branch: remote_branch) }
+
+      it "新しいquiz_commit_messageデータ作成が失敗すること" do
+        expect do
+          new_remote_commit_message.save
+        end.to change(QuizRemoteCommitMessage, :count).by(0)
+        expect(err_message(new_remote_commit_message, :base)).to include "quiz_remote_commit_messages count limit: 10"
       end
     end
   end

@@ -359,8 +359,8 @@ const CreateOrUpdateQuizButton: React.FC = () => {
       && !deleteBranches.some(deleteBranch => initWorkfile.parentBranch === deleteBranch.branchName)
     )
   const deleteIndexFiles =
-    initialIndexFiles.filter(initIndexFile => !indexFiles.some(indexFile =>
-      initIndexFile.indexFileId === indexFile.indexFileId
+    initialIndexFiles.filter(initIndexFile =>
+      !indexFiles.some(indexFile => initIndexFile.indexFileId === indexFile.indexFileId
       && !deleteBranches.some(deleteBranch => initIndexFile.parentBranch === deleteBranch.branchName)
     ))
   const deleteRepositoryFiles =
@@ -394,6 +394,16 @@ const CreateOrUpdateQuizButton: React.FC = () => {
 
   const handleUpdateQuizData = async (e: React.MouseEvent<HTMLButtonElement>) => {
     try {
+      await Promise.all(deleteBranches.map(deleteBranch => deleteQuizBranch(Number(deleteBranch.branchId))))
+      await Promise.all(deleteCommitMessages.map(deleteCommitMessage => deleteQuizCommitMessage(Number(deleteCommitMessage.commitMessageId))))
+      await Promise.all(deleteWorktreeFiles.map(deleteWorktreeFile => deleteQuizWorktreeFile(Number(deleteWorktreeFile.worktreeFileId))))
+      await Promise.all(deleteIndexFiles.map(deleteIndexFile => deleteQuizIndexFile(Number(deleteIndexFile.indexFileId))))
+      await Promise.all(deleteRepositoryFiles.map(deleteRepositoryFile => deleteQuizRepositoryFile(Number(deleteRepositoryFile.repositoryFileId))))
+      await Promise.all(deleteFileHistoryForCansellCommits.map(deleteFileHistoryForCansellCommit => deleteQuizHistoryOfCommittedFile(Number(deleteFileHistoryForCansellCommit.historyFileId))))
+      await Promise.all(deleteRemoteRepositoryFiles.map(deleteRemoteRepositoryFile => deleteQuizRemoteRepositoryFile(Number(deleteRemoteRepositoryFile.remoteRepositoryFileId))))
+      await Promise.all(deleteRemoteCommitMessages.map(deleteRemoteCommitMessage => deleteQuizRemoteCommitMessage(Number(deleteRemoteCommitMessage.remoteCommitMessageId))))
+      await Promise.all(deleteRemoteBranches.map(deleteRemoteBranch => deleteQuizRemoteBranch(Number(deleteRemoteBranch.remoteBranchId))))
+
       //新規作成用の関数(branchも新規作成の場合)
       await handleCreateQuizSubmit(
         createBranches,
@@ -505,16 +515,6 @@ const CreateOrUpdateQuizButton: React.FC = () => {
           }
         )
       })
-
-      deleteBranches.forEach(deleteBranch => deleteQuizBranch(Number(deleteBranch.branchId)))
-      deleteCommitMessages.forEach(deleteCommitMessage => deleteQuizCommitMessage(Number(deleteCommitMessage.commitMessageId)))
-      deleteWorktreeFiles.forEach(deleteWorktreeFile => deleteQuizWorktreeFile(Number(deleteWorktreeFile.worktreeFileId)))
-      deleteIndexFiles.forEach(deleteIndexFile => deleteQuizIndexFile(Number(deleteIndexFile.indexFileId)))
-      deleteRepositoryFiles.forEach(deleteRepositoryFile => deleteQuizRepositoryFile(Number(deleteRepositoryFile.repositoryFileId)))
-      deleteFileHistoryForCansellCommits.forEach(deleteFileHistoryForCansellCommit => deleteQuizHistoryOfCommittedFile(Number(deleteFileHistoryForCansellCommit.historyFileId)))
-      deleteRemoteRepositoryFiles.forEach(deleteRemoteRepositoryFile => deleteQuizRemoteRepositoryFile(Number(deleteRemoteRepositoryFile.remoteRepositoryFileId)))
-      deleteRemoteCommitMessages.forEach(deleteRemoteCommitMessage => deleteQuizRemoteCommitMessage(Number(deleteRemoteCommitMessage.remoteCommitMessageId)))
-      deleteRemoteBranches.forEach(deleteRemoteBranch => deleteQuizRemoteBranch(Number(deleteRemoteBranch.remoteBranchId)))
 
       //確認
       console.log("既存ブランチからworkFile新規作成",quizWorktreeFileRes)

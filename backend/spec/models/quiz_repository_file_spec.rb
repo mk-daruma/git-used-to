@@ -28,4 +28,36 @@ RSpec.describe QuizRepositoryFile, type: :model do
       end
     end
   end
+
+  describe "quiz_repository_files_count_must_be_within_limit" do
+    let!(:branch) { create(:quiz_branch) }
+
+    def err_message(obj, karam)
+      obj.errors.messages[karam]
+    end
+
+    context "同じquiz_branchデータに紐づいたquiz_repository_fileのデータ数が8個未満の場合" do
+      let!(:repository_files) { create_list(:quiz_repository_file, 7, quiz_branch: branch) }
+      let(:new_repository_file) { build(:quiz_repository_file, quiz_branch: branch) }
+
+      it "新しいquiz_repository_fileデータ作成が成功すること" do
+        expect do
+          new_repository_file.save
+        end.to change(QuizRepositoryFile, :count).by(+1)
+      end
+    end
+
+    context "同じquiz_branchデータに紐づいたquiz_repository_fileのデータが既に8個存在する場合" do
+      let!(:branch) { create(:quiz_branch) }
+      let!(:repository_files) { create_list(:quiz_repository_file, 8, quiz_branch: branch) }
+      let(:new_repository_file) { build(:quiz_repository_file, quiz_branch: branch) }
+
+      it "新しいquiz_repository_fileデータ作成が失敗すること" do
+        expect do
+          new_repository_file.save
+        end.to change(QuizRepositoryFile, :count).by(0)
+        expect(err_message(new_repository_file, :base)).to include "quiz_repository_files count limit: 8"
+      end
+    end
+  end
 end

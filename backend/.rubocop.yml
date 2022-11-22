@@ -6,6 +6,8 @@ Rails:
 
 Layout/LineLength:
   Max: 120
+  Exclude:
+    - 'spec/models/quiz_history_of_committed_file_spec.rb'
 
 AllCops:
   Exclude:

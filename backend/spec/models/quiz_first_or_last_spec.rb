@@ -39,13 +39,24 @@ RSpec.describe QuizFirstOrLast, type: :model do
   end
 
   describe "quiz_first_or_lasts_count_must_be_within_limit" do
-    context "同じquizデータに紐づいたquiz_first_or_lastのデータが二つ存在する場合" do
-      let!(:quiz) { create(:quiz) }
-      let!(:quiz_first_or_last1) { create(:quiz_first_or_last, quiz: quiz) }
-      let!(:quiz_first_or_last2) { create(:quiz_first_or_last, quiz: quiz) }
+    let!(:quiz) { create(:quiz) }
+
+    context "同じquizデータに紐づいたquiz_first_or_lastのデータ数が2つ未満の場合" do
+      let!(:quiz_first_or_last) { create(:quiz_first_or_last, quiz: quiz) }
       let(:new_quiz_first_or_last) { build(:quiz_first_or_last, quiz: quiz) }
 
-      it "エラーが出ること" do
+      it "新しいquiz_first_or_lastデータ作成が成功すること" do
+        expect do
+          new_quiz_first_or_last.save
+        end.to change(QuizFirstOrLast, :count).by(+1)
+      end
+    end
+
+    context "同じquizデータに紐づいたquiz_first_or_lastのデータが既に2個存在する場合" do
+      let!(:quiz_first_or_lasts) { create_list(:quiz_first_or_last, 2, quiz: quiz) }
+      let(:new_quiz_first_or_last) { build(:quiz_first_or_last, quiz: quiz) }
+
+      it "新しいquiz_first_or_lastデータ作成が失敗すること" do
         expect do
           new_quiz_first_or_last.save
         end.to change(QuizFirstOrLast, :count).by(0)
