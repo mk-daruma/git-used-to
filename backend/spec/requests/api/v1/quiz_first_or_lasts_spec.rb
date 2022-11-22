@@ -72,13 +72,13 @@ RSpec.describe "Api::V1::QuizFirstOrLasts", type: :request do
 
   describe "GET /show" do
     let!(:related_branchs) do
-      create_list(:quiz_branch, 5, quiz_first_or_last: first_or_last)
+      create_list(:quiz_branch, 3, quiz_first_or_last: first_or_last)
     end
     let!(:not_related_branch) do
       create(:quiz_branch, quiz_first_or_last: first_or_last2)
     end
     let!(:related_remote_branches) do
-      create_list(:quiz_remote_branch, 5, quiz_first_or_last: first_or_last)
+      create_list(:quiz_remote_branch, 3, quiz_first_or_last: first_or_last)
     end
     let!(:not_related_remote_branch) do
       create(:quiz_remote_branch, quiz_first_or_last: first_or_last2)
@@ -101,8 +101,8 @@ RSpec.describe "Api::V1::QuizFirstOrLasts", type: :request do
           expect(res["data_remote_branches"][i]["id"]).to eq(quiz_remote_branch.id)
           expect(res["data_remote_branches"][i]["id"]).not_to eq(not_related_remote_branch.id)
         end
-        expect(res["data_branches"].length).to eq 5
-        expect(res["data_remote_branches"].length).to eq 5
+        expect(res["data_branches"].length).to eq 3
+        expect(res["data_remote_branches"].length).to eq 3
         expect(response).to have_http_status(:success)
       end
 
