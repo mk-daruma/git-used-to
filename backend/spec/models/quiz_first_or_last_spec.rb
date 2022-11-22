@@ -45,7 +45,7 @@ RSpec.describe QuizFirstOrLast, type: :model do
       let!(:quiz_first_or_last2) { create(:quiz_first_or_last, quiz: quiz) }
       let(:new_quiz_first_or_last) { build(:quiz_first_or_last, quiz: quiz) }
 
-      it "エラーが出ること" do
+      it "新しいquiz_first_or_lastデータ作成が失敗すること" do
         expect do
           new_quiz_first_or_last.save
         end.to change(QuizFirstOrLast, :count).by(0)
