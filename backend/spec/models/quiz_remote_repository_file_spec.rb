@@ -38,15 +38,15 @@ RSpec.describe QuizRemoteRepositoryFile, type: :model do
   end
 
   describe "quiz_remote_repository_files_count_must_be_within_limit" do
-    let!(:remote_branch) { create(:quiz_remote_branch) }
+    let!(:branch) { create(:quiz_remote_branch) }
 
     def err_message(obj, karam)
       obj.errors.messages[karam]
     end
 
     context "同じquiz_branchデータに紐づいたquiz_remote_repository_fileのデータ数が16個未満の場合" do
-      let!(:remote_repository_files) { create_list(:quiz_remote_repository_file, 15, quiz_remote_branch: remote_branch) }
-      let(:new_remote_repository_file) { build(:quiz_remote_repository_file, quiz_remote_branch: remote_branch) }
+      let!(:remote_repository_files) { create_list(:quiz_remote_repository_file, 15, quiz_remote_branch: branch) }
+      let(:new_remote_repository_file) { build(:quiz_remote_repository_file, quiz_remote_branch: branch) }
 
       it "新しいquiz_remote_repository_fileデータ作成が成功すること" do
         expect do
@@ -56,8 +56,8 @@ RSpec.describe QuizRemoteRepositoryFile, type: :model do
     end
 
     context "同じquiz_branchデータに紐づいたquiz_remote_repository_fileのデータが既に16個存在する場合" do
-      let!(:remote_repository_files) { create_list(:quiz_remote_repository_file, 16, quiz_remote_branch: remote_branch) }
-      let(:new_remote_repository_file) { build(:quiz_remote_repository_file, quiz_remote_branch: remote_branch) }
+      let!(:remote_repository_files) { create_list(:quiz_remote_repository_file, 16, quiz_remote_branch: branch) }
+      let(:new_remote_repository_file) { build(:quiz_remote_repository_file, quiz_remote_branch: branch) }
 
       it "新しいquiz_remote_repository_fileデータ作成が失敗すること" do
         expect do
