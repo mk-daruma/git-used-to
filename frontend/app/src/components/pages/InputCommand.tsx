@@ -1041,9 +1041,9 @@ const InputCommand: React.FC = () => {
                 } else if (text.startsWith("git branch -d")) {
                   gitBranchD(text, 14)
                 } else if (text.startsWith("git branch ") && afterCommandBranchName.test(text.substring(11))){
-                  checkBranchCount <= 3 ? gitBranch(text, 11) : limitDataErrorMessage("branch", 3)
+                  checkBranchCount < 3 ? gitBranch(text, 11) : limitDataErrorMessage("branch", 3)
                 } else if (text.startsWith("git checkout -b ")) {
-                  checkBranchCount <= 3 ? gitCheckoutB(text, 16) : limitDataErrorMessage("branch", 3)
+                  checkBranchCount < 3 ? gitCheckoutB(text, 16) : limitDataErrorMessage("branch", 3)
                 } else if (text.startsWith("git checkout ")) {
                   gitCheckout(text, 13)
                 } else if (text.startsWith("touch ")) {
