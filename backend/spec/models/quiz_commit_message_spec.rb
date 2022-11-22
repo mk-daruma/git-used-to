@@ -43,8 +43,20 @@ RSpec.describe QuizCommitMessage, type: :model do
   end
 
   describe "quiz_commit_messages_count_must_be_within_limit" do
+    let!(:branch) { create(:quiz_branch) }
+
+    context "同じquiz_branchデータに紐づいたquiz_commit_messageのデータ数が10個未満の場合" do
+      let!(:commit_messages) { create_list(:quiz_commit_message, 9, quiz_branch: branch) }
+      let(:new_commit_message) { build(:quiz_commit_message, quiz_branch: branch) }
+
+      it "新しいquiz_commit_messageデータ作成が成功すること" do
+        expect do
+          new_commit_message.save
+        end.to change(QuizCommitMessage, :count).by(+1)
+      end
+    end
+
     context "同じquiz_branchデータに紐づいたquiz_commit_messageのデータが既に10個存在する場合" do
-      let!(:branch) { create(:quiz_branch) }
       let!(:commit_messages) { create_list(:quiz_commit_message, 10, quiz_branch: branch) }
       let(:new_commit_message) { build(:quiz_commit_message, quiz_branch: branch) }
 

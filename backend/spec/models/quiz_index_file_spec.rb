@@ -34,8 +34,20 @@ RSpec.describe QuizIndexFile, type: :model do
   end
 
   describe "quiz_index_files_count_must_be_within_limit" do
+    let!(:branch) { create(:quiz_branch) }
+
+    context "同じquiz_branchデータに紐づいたquiz_index_fileのデータ数が8個未満の場合" do
+      let!(:index_files) { create_list(:quiz_index_file, 7, quiz_branch: branch) }
+      let(:new_index_file) { build(:quiz_index_file, quiz_branch: branch) }
+
+      it "新しいquiz_index_fileデータ作成が成功すること" do
+        expect do
+          new_index_file.save
+        end.to change(QuizIndexFile, :count).by(+1)
+      end
+    end
+
     context "同じquiz_branchデータに紐づいたquiz_index_fileのデータが既に8個存在する場合" do
-      let!(:branch) { create(:quiz_branch) }
       let!(:index_files) { create_list(:quiz_index_file, 8, quiz_branch: branch) }
       let(:new_index_file) { build(:quiz_index_file, quiz_branch: branch) }
 

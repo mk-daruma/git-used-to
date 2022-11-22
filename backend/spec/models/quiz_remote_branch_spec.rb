@@ -43,8 +43,20 @@ RSpec.describe QuizRemoteBranch, type: :model do
   end
 
   describe "quiz_remote_branches_count_must_be_within_limit" do
+    let!(:quiz_first_or_last) { create(:quiz_first_or_last) }
+
+    context "同じquiz_first_or_lastデータに紐づいたquiz_remote_branchのデータ数が3個未満の場合" do
+      let!(:remote_branch) { create_list(:quiz_remote_branch, 2, quiz_first_or_last: quiz_first_or_last) }
+      let(:new_remote_branch) { build(:quiz_remote_branch, quiz_first_or_last: quiz_first_or_last) }
+
+      it "新しいquiz_remote_branchデータ作成が成功すること" do
+        expect do
+          new_remote_branch.save
+        end.to change(QuizRemoteBranch, :count).by(+1)
+      end
+    end
+
     context "同じquiz_first_or_lastデータに紐づいたquiz_remote_branchのデータが既に3個存在する場合" do
-      let!(:quiz_first_or_last) { create(:quiz_first_or_last) }
       let!(:remote_branch) { create_list(:quiz_remote_branch, 3, quiz_first_or_last: quiz_first_or_last) }
       let(:new_remote_branch) { build(:quiz_remote_branch, quiz_first_or_last: quiz_first_or_last) }
 

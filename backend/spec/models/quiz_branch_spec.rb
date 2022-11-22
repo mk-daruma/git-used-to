@@ -42,8 +42,20 @@ RSpec.describe QuizBranch, type: :model do
   end
 
   describe "quiz_branches_count_must_be_within_limit" do
-    context "同じquiz_first_or_lastデータに紐づいたquiz_branchのデータが既に二つ存在する場合" do
-      let!(:quiz_first_or_last) { create(:quiz_first_or_last) }
+    let!(:quiz_first_or_last) { create(:quiz_first_or_last) }
+
+    context "同じquiz_first_or_lastデータに紐づいたquiz_branchのデータ数が3つ未満の場合" do
+      let!(:branch) { create_list(:quiz_branch, 2, quiz_first_or_last: quiz_first_or_last) }
+      let(:new_branch) { build(:quiz_branch, quiz_first_or_last: quiz_first_or_last) }
+
+      it "新しいquiz_branchデータ作成が成功すること" do
+        expect do
+          new_branch.save
+        end.to change(QuizBranch, :count).by(+1)
+      end
+    end
+
+    context "同じquiz_first_or_lastデータに紐づいたquiz_branchのデータが既に3つ存在する場合" do
       let!(:branch) { create_list(:quiz_branch, 3, quiz_first_or_last: quiz_first_or_last) }
       let(:new_branch) { build(:quiz_branch, quiz_first_or_last: quiz_first_or_last) }
 
