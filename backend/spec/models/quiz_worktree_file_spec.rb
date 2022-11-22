@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe QuizWorktreeFile, type: :model do
+  def err_message(obj, karam)
+    obj.errors.messages[karam]
+  end
+
   describe "validates presence" do
     context "全てのカラムに値が入力されている場合" do
       let(:worktree_file) { create(:quiz_worktree_file) }
@@ -25,6 +29,21 @@ RSpec.describe QuizWorktreeFile, type: :model do
       it "エラーになること" do
         worktree_file.valid?
         expect(worktree_file.errors.messages[:quiz_worktree_file_text_status]).to include "can't be blank"
+      end
+    end
+  end
+
+  describe "quiz_worktree_files_count_must_be_within_limit" do
+    context "同じquiz_branchデータに紐づいたquiz_worktree_fileのデータが既に8個存在する場合" do
+      let!(:branch) { create(:quiz_branch) }
+      let!(:worktree_files) { create_list(:quiz_worktree_file, 8, quiz_branch: branch) }
+      let(:new_worktree_file) { build(:quiz_worktree_file, quiz_branch: branch) }
+
+      it "新しいquiz_worktree_fileデータ作成が失敗すること" do
+        expect do
+          new_worktree_file.save
+        end.to change(QuizWorktreeFile, :count).by(0)
+        expect(err_message(new_worktree_file, :base)).to include "quiz_worktree_files count limit: 8"
       end
     end
   end

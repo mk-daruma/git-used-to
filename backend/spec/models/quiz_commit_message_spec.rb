@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe QuizCommitMessage, type: :model do
+  def err_message(obj, karam)
+    obj.errors.messages[karam]
+  end
+
   describe "validates presence" do
     context "全てのカラムに値が入力されている場合" do
       let(:commit_message) { create(:quiz_commit_message) }
@@ -34,6 +38,21 @@ RSpec.describe QuizCommitMessage, type: :model do
         expect do
           commit_message.destroy
         end.to change(QuizHistoryOfCommittedFile, :count).by(-1).and change(QuizRepositoryFile, :count).by(-1)
+      end
+    end
+  end
+
+  describe "quiz_commit_messages_count_must_be_within_limit" do
+    context "同じquiz_branchデータに紐づいたquiz_commit_messageのデータが既に10個存在する場合" do
+      let!(:branch) { create(:quiz_branch) }
+      let!(:commit_messages) { create_list(:quiz_commit_message, 10, quiz_branch: branch) }
+      let(:new_commit_message) { build(:quiz_commit_message, quiz_branch: branch) }
+
+      it "新しいquiz_commit_messageデータ作成が失敗すること" do
+        expect do
+          new_commit_message.save
+        end.to change(QuizCommitMessage, :count).by(0)
+        expect(err_message(new_commit_message, :base)).to include "quiz_commit_messages count limit: 10"
       end
     end
   end
