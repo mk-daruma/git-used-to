@@ -14,6 +14,9 @@ Rails.application.routes.draw do
           get :profile
           get :self_bookmarked
         end
+        collection do
+          get :user_ranking
+        end
       end
       resources :quizzes, only: %i[index create update show destroy] do
         member do
