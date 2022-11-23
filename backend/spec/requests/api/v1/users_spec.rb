@@ -259,4 +259,64 @@ RSpec.describe "Api::V1::Users", type: :request do
       expect(res.length).to eq 5
     end
   end
+
+  describe "GET /api/v1/users#user_ranking" do
+    let!(:rank_in_user1) { create(:user) }
+    let!(:rank_in_user2) { create(:user) }
+    let!(:not_rank_in_user) { create(:user) }
+    let!(:rank_in_user1_quiz2) { create(:quiz, user: rank_in_user1) }
+    let!(:rank_in_user1_quiz1) { create(:quiz, user: rank_in_user1) }
+    let!(:rank_in_user2_quiz1) { create(:quiz, user: rank_in_user2) }
+    let!(:rank_in_user2_quiz2) { create(:quiz, user: rank_in_user2) }
+    let!(:not_rank_in_user_quiz1) { create(:quiz, user: not_rank_in_user) }
+    let!(:not_rank_in_user_quiz2) { create(:quiz, user: not_rank_in_user) }
+    let!(:rank_in_user1_quiz1_bookmarks) { create_list(:quiz_bookmark, 5, quiz: rank_in_user1_quiz1) }
+    let!(:rank_in_user1_quiz2_bookmarks) { create_list(:quiz_bookmark, 5, quiz: rank_in_user1_quiz2) }
+    let!(:rank_in_user2_quiz1_bookmarks) { create_list(:quiz_bookmark, 8, quiz: rank_in_user2_quiz1) }
+    let!(:rank_in_user2_quiz2_bookmarks) { create_list(:quiz_bookmark, 5, quiz: rank_in_user2_quiz2) }
+    let!(:not_rank_in_user_quiz1_bookmarks) { create_list(:quiz_bookmark, 5, quiz: not_rank_in_user_quiz1) }
+    let!(:not_rank_in_user_quiz1_bookmarks) { create_list(:quiz_bookmark, 4, quiz: not_rank_in_user_quiz2) }
+
+    before do
+      get user_ranking_api_v1_users_path
+    end
+
+    it "通信が成功すること" do
+      res = JSON.parse(response.body)
+      expect(res["status"]).to eq("SUCCESS")
+      expect(response).to have_http_status(:success)
+    end
+
+    context "作成したクイズに関連するブックマーク数の合計が10を超えているuserの場合" do
+      it "ブックマーク総数が多い順にuserのid/名前/プロフィール画像とブックマーク総数のデータが取得できること" do
+        res = JSON.parse(response.body)
+        expect(res["user_ranking"][0]["create_user_id"]).to eq(rank_in_user2.id)
+        expect(res["user_ranking"][0]["create_user_name"]).to eq(rank_in_user2.user_name)
+        expect(res["user_ranking"][0]["create_user_image"]).to eq(rank_in_user2.image.url)
+        expect(res["user_ranking"][0]["bookmark_count"]).to eq(13)
+        expect(res["user_ranking"][1]["create_user_id"]).to eq(rank_in_user1.id)
+        expect(res["user_ranking"][1]["create_user_name"]).to eq(rank_in_user1.user_name)
+        expect(res["user_ranking"][1]["create_user_image"]).to eq(rank_in_user1.image.url)
+        expect(res["user_ranking"][1]["bookmark_count"]).to eq(10)
+        expect(res["user_ranking"].length).to eq(2)
+      end
+    end
+
+    context "作成したクイズに関連するブックマーク数の合計が9未満を超えているuserの場合" do
+      it "データが取得されないこと" do
+        res = JSON.parse(response.body)
+        res["user_ranking"].each do |user_ranking|
+          expect(user_ranking["create_user_id"]).not_to eq(not_rank_in_user.id)
+          expect(user_ranking["create_user_name"]).not_to eq(not_rank_in_user.user_name)
+          expect(user_ranking["create_user_image"]).not_to eq(not_rank_in_user.image.url)
+          expect(user_ranking["bookmark_count"]).not_to eq(9)
+        end
+      end
+    end
+
+    it "取得するdataの要素が2つであること" do
+      res = JSON.parse(response.body)
+      expect(res.length).to eq 2
+    end
+  end
 end

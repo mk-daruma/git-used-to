@@ -87,6 +87,27 @@ class Api::V1::UsersController < ApplicationController
     }
   end
 
+  def user_ranking
+    rank_in_users_hash = []
+    rank_in_users = User.preload(:quizzes)
+    rank_in_users.each do |user|
+      bookmark_count = QuizBookmark.where(quiz_id: Quiz.where(user_id: user.id)).length
+      if bookmark_count >= 10
+        rank_in_users_hash.push({
+          create_user_id: user.id,
+          create_user_name: user.user_name,
+          create_user_image: user.image.url,
+          bookmark_count: bookmark_count,
+        })
+      end
+    end
+    rank_in_users_hash.sort! { |a, b| b[:bookmark_count] <=> a[:bookmark_count] }
+    render json: {
+      status: 'SUCCESS',
+      user_ranking: rank_in_users_hash,
+    }
+  end
+
   private
 
   def set_user
