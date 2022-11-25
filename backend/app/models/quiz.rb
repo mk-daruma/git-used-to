@@ -1,6 +1,4 @@
 class Quiz < ApplicationRecord
-  GUEST_USER_ADRESS = "guest_user@git-used-to.com"
-
   belongs_to :user
   has_many :quiz_first_or_lasts, dependent: :destroy
   has_many :quiz_answer_records, dependent: :destroy
@@ -16,8 +14,8 @@ class Quiz < ApplicationRecord
   private
 
   def guest_user_create_quiuz_limit
-    if User.find(user_id).email === GUEST_USER_ADRESS
-      errors.add(:base, "#{GUEST_USER_ADRESS} can't create quiz")
+    if User.find(user_id).email === "guest_user@git-used-to.com"
+      errors.add(:base, "guest_user@git-used-to.com can't create quiz")
     end
   end
 end
