@@ -3,7 +3,8 @@ import { AuthContext } from "App";
 import Cookies from "js-cookie";
 import { signOut } from "lib/api/auth";
 import { useContext, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
+import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 
 const rand = () => {
   return Math.round(Math.random() * 20) - 10;
@@ -38,8 +39,9 @@ const useStyles = makeStyles((theme) => ({
 
 const ReccomendSignUpModal :React.FC = () => {
   const classes = useStyles()
+  const location = useLocation()
   const history = useHistory()
-  const { setIsSignedIn } = useContext(AuthContext)
+  const { setIsSignedIn, currentUser } = useContext(AuthContext)
   const [modalStyle] = useState(getModalStyle);
   const [open, setOpen] = useState(false);
 
@@ -74,17 +76,54 @@ const ReccomendSignUpModal :React.FC = () => {
 
   return(
     <>
-      <Button
-        onClick={handleOpen}
-        className={classes.submitBtn}
-        type="submit"
-        variant="contained"
-        size="large"
-        fullWidth
-        color="default"
-        >
-        ゲストログイン中はここまで
-      </Button>
+      {location.pathname === "/quiz/list" &&
+        <Button
+          type="submit"
+          variant="contained"
+          color="default"
+          className={classes.submitBtn}
+          onClick={handleOpen}
+          >
+          <BookmarkBorderIcon />
+        </Button>
+      }
+      {location.pathname === "/quiz" &&
+        <Button
+          onClick={handleOpen}
+          className={classes.submitBtn}
+          type="submit"
+          variant="contained"
+          size="large"
+          fullWidth
+          color="default"
+          >
+          ゲストログイン中はここまで
+        </Button>
+      }
+      {location.pathname === "/quiz" &&
+        <Button
+          onClick={handleOpen}
+          className={classes.submitBtn}
+          type="submit"
+          variant="contained"
+          size="large"
+          fullWidth
+          color="default"
+          >
+          ゲストログイン中はここまで
+        </Button>
+      }
+      {location.pathname === `/user/${currentUser?.id}/edit` &&
+        <Button
+          variant="contained"
+          size="large"
+          color="default"
+          className={classes.submitBtn}
+          onClick={handleOpen}
+          >
+          Submit
+        </Button>
+      }
       <Modal
         open={open}
         onClose={handleClose}
