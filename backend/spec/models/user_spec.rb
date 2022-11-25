@@ -50,7 +50,7 @@ RSpec.describe User, type: :model do
       it "userに紐づいているquizのデータも削除されること" do
         expect do
           user.destroy
-        end.to change(Quiz, :count).by(-1).and change(QuizAnswerRecord, :count).by(-1)
+        end.to change(Quiz, :count).by(-1)
       end
 
       it "userに紐づいているquiz_answer_recordのデータも削除されること" do
