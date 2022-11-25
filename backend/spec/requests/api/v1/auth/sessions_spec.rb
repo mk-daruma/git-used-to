@@ -72,4 +72,61 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
       end
     end
   end
+
+  describe "POST api/v1/auth/guest_sign_in" do
+    context "guest_userがDBに存在せずリクエストが送信された時" do
+      before do
+        post api_v1_auth_guest_sign_in_path
+      end
+
+      it "ゲストログインできること" do
+        expect(response).to have_http_status(200)
+        header = response.header
+        expect(header["access-token"]).to be_present
+        expect(header["client"]).to be_present
+        expect(header["expiry"]).to be_present
+        expect(header["uid"]).to be_present
+        expect(header["token-type"]).to be_present
+      end
+
+      it "ゲストログインデータの名前/自己紹介文/emailが指定した値であること" do
+        res = JSON.parse(response.body)
+        expect(res["data"]["user_name"]).to eq("guestusergitusedto")
+        expect(res["data"]["user_self_introduction"]).to eq("これは自己紹介用のフォームです。ぜひアカウントを作成してご自身の自己紹介をしてみてください！")
+        expect(res["data"]["email"]).to eq("guest_user@git-used-to.com")
+      end
+    end
+
+    context "本来と違う値を持つguest_userがDBに存在してリクエストが送信された場合" do
+      let!(:guest_user) do
+        create(
+          :user,
+          email: "guest_user@git-used-to.com",
+          user_name: Faker::Alphanumeric.alpha(number: 10),
+          user_self_introduction: Faker::Alphanumeric.alpha(number: 30)
+        )
+      end
+
+      before do
+        post api_v1_auth_guest_sign_in_path
+      end
+
+      it "ゲストログインできること" do
+        expect(response).to have_http_status(200)
+        header = response.header
+        expect(header["access-token"]).to be_present
+        expect(header["client"]).to be_present
+        expect(header["expiry"]).to be_present
+        expect(header["uid"]).to be_present
+        expect(header["token-type"]).to be_present
+      end
+
+      it "ゲストログインデータの名前/自己紹介文/emailが指定した値に更新されること" do
+        res = JSON.parse(response.body)
+        expect(res["data"]["user_name"]).to eq("guestusergitusedto")
+        expect(res["data"]["user_self_introduction"]).to eq("これは自己紹介用のフォームです。ぜひアカウントを作成してご自身の自己紹介をしてみてください！")
+        expect(res["data"]["email"]).to eq("guest_user@git-used-to.com")
+      end
+    end
+  end
 end
