@@ -12,4 +12,11 @@ class User < ActiveRecord::Base
   has_many :quiz_answer_records, dependent: :destroy
   has_many :quiz_bookmarks, dependent: :destroy
   has_many :quiz_comments, dependent: :destroy
+
+  def self.guest
+    find_or_create_by!(email: "guest_user@git-used-to.com") do |user|
+      user.password = "guestusergitusedto"
+      user.user_name = "guest user"
+    end
+  end
 end
