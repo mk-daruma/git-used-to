@@ -293,7 +293,7 @@ const QuizList: React.FC = () => {
       .map((quiz, index) => (
         <div key={index}>
           {currentPath(`/quiz/list`) &&
-            <p>
+            <>
               <Avatar src={quiz.parentUserImage.url} />
               <Button
                 type="submit"
@@ -307,7 +307,7 @@ const QuizList: React.FC = () => {
               >
                 {quiz.parentUserName}
               </Button>
-            </p>
+              </>
           }
           <p>{ quiz.id }</p>
           <p>{ quiz.quizTitle }</p>
