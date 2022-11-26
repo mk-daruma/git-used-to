@@ -60,4 +60,24 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe "self.guest" do
+    context "Userテーブルにゲストユーザーのデータが存在しない場合" do
+      it "ゲストユーザーのデータが作成されること" do
+        expect do
+          User.guest
+        end.to change(User, :count).by(+1)
+      end
+    end
+
+    context "Userテーブルにゲストユーザーのデータが存在する場合" do
+      let!(:guest_user) { create(:user, email: "guest_user@git-used-to.com") }
+
+      it "ゲストユーザーのデータが作成されないこと" do
+        expect do
+          User.guest
+        end.to change(User, :count).by(0)
+      end
+    end
+  end
 end
