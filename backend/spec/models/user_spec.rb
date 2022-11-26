@@ -50,13 +50,33 @@ RSpec.describe User, type: :model do
       it "userに紐づいているquizのデータも削除されること" do
         expect do
           user.destroy
-        end.to change(Quiz, :count).by(-1).and change(QuizAnswerRecord, :count).by(-1)
+        end.to change(Quiz, :count).by(-1)
       end
 
       it "userに紐づいているquiz_answer_recordのデータも削除されること" do
         expect do
           user.destroy
         end.to change(QuizAnswerRecord, :count).by(-1)
+      end
+    end
+  end
+
+  describe "self.guest" do
+    context "Userテーブルにゲストユーザーのデータが存在しない場合" do
+      it "ゲストユーザーのデータが作成されること" do
+        expect do
+          User.guest
+        end.to change(User, :count).by(+1)
+      end
+    end
+
+    context "Userテーブルにゲストユーザーのデータが存在する場合" do
+      let!(:guest_user) { create(:user, email: "guest_user@git-used-to.com") }
+
+      it "ゲストユーザーのデータが作成されないこと" do
+        expect do
+          User.guest
+        end.to change(User, :count).by(0)
       end
     end
   end

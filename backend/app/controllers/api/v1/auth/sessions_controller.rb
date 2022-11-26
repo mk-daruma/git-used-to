@@ -1,4 +1,4 @@
-class Api::V1::Auth::SessionsController < ApplicationController
+class Api::V1::Auth::SessionsController < DeviseTokenAuth::SessionsController
   def index
     if current_api_v1_user
       render json: {
@@ -11,5 +11,16 @@ class Api::V1::Auth::SessionsController < ApplicationController
         message: "ユーザーが存在しません",
       }
     end
+  end
+
+  def guest_sign_in
+    @resource = User.guest
+    @resource.user_name = "guestusergitusedto"
+    @resource.user_self_introduction = "これは自己紹介用のフォームです。ぜひアカウントを作成してご自身の自己紹介をしてみてください！"
+    @resource.email = "guest_user@git-used-to.com"
+    @resource.password = "guestusergitusedto"
+    @token = @resource.create_token
+    @resource.save!
+    render_create_success
   end
 end

@@ -9,10 +9,9 @@ import CancelIcon from "@material-ui/icons/Cancel"
 import { IconButton } from "@material-ui/core";
 import PhotoCamera from "@material-ui/icons/PhotoCamera"
 import { Typography } from "@material-ui/core";
-
-
 import { AuthContext } from "App"
 import { updateUser } from "lib/api/users";
+import ReccomendSignUpModal from "./RecommendSignUpModal";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -162,24 +161,29 @@ const UserEdit: React.FC = () => {
           </Box>
         ) : null
       }
-      <Button
-        onClick={handleFormSubmit}
-        disabled={!name || !introduction ? true : false}
-      >
-        送信
-      </Button>
-      <Box textAlign="center" className={classes.box}>
-        <Typography variant="body2">
-          <Link to="/password" className={classes.link}>
-            パスワード変更はこちら
-          </Link>
-        </Typography>
-        <Typography>
-          <Link to="/user/delete" className={classes.link}>
-            アカウント削除はこちら
-          </Link>
-        </Typography>
-      </Box>
+      {currentUser?.email === "guest_user@git-used-to.com"
+        ? <ReccomendSignUpModal />
+        : <>
+            <Button
+              onClick={handleFormSubmit}
+              disabled={!name || !introduction ? true : false}
+            >
+              送信
+            </Button>
+            <Box textAlign="center" className={classes.box}>
+              <Typography variant="body2">
+                <Link to="/password" className={classes.link}>
+                  パスワード変更はこちら
+                </Link>
+              </Typography>
+              <Typography>
+                <Link to="/user/delete" className={classes.link}>
+                  アカウント削除はこちら
+                </Link>
+              </Typography>
+            </Box>
+          </>
+        }
     </form>
   )
 }

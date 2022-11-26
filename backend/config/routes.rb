@@ -5,8 +5,11 @@ Rails.application.routes.draw do
         registrations: 'api/v1/auth/registrations'
       }
 
-      namespace :auth do
-        resources :sessions, only: %i[index]
+      devise_scope :api_v1_user do
+        namespace :auth do
+          resources :sessions, only: %i[index]
+          post "guest_sign_in", to: "sessions#guest_sign_in"
+        end
       end
 
       resources :users, only: %i[index show update] do

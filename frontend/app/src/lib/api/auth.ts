@@ -11,6 +11,10 @@ export const signIn = (params: SignInParams)  => {
   return client.post("auth/sign_in", params)
 }
 
+export const guestSignIn = ()  => {
+  return client.post("auth/guest_sign_in")
+}
+
 export const signOut = () => {
   return client.delete("auth/sign_out", { headers: {
     "access-token": Cookies.get("_access_token") || "",

@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from "react";
+import React, { useState, createContext, useEffect, useContext } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
 import AboutQuiz from "./AboutQuiz";
@@ -13,6 +13,8 @@ import { getQuizCommitMessage } from "lib/api/quiz_commit_messages";
 import { getQuizRemoteBranch } from "lib/api/quiz_remote_branches";
 import { getQuizRemoteCommitMessage } from "lib/api/quiz_remote_commit_messages";
 import CreateOrUpdateQuizButton from "./CreateQuizButton";
+import { AuthContext } from "App";
+import ReccomendSignUpModal from "./RecommendSignUpModal";
 
 export const QuizContext = createContext({} as {
   quizTitle: string
@@ -410,6 +412,7 @@ export const QuizContext = createContext({} as {
 const CreateQuiz: React.FC = () => {
   const location = useLocation()
   const { id } = useParams<{ id: string }>()
+  const { currentUser } = useContext(AuthContext)
 
   const [quizTitle, setQuizTitle] = useState<string>("")
   const [quizIntroduction, setQuizIntroduction] = useState<string>("")
@@ -1008,7 +1011,10 @@ const CreateQuiz: React.FC = () => {
       <AboutQuiz />
       <Terminal />
     {/* </layout> */}
-      <CreateOrUpdateQuizButton />
+      {currentUser?.email === "guest_user@git-used-to.com"
+      ? <ReccomendSignUpModal />
+      : <CreateOrUpdateQuizButton />
+        }
         <>
         {/* ↓配列の中身確認用 */}
         <p>[branch]</p>

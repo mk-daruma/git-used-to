@@ -10,6 +10,7 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import QuizBookmarkButton from "./QuizBookmarkButton";
 import QuizComment from "./QuizComment";
 import QuizSearchForm from "./QuizSearchForm";
+import ReccomendSignUpModal from "./RecommendSignUpModal";
 
 export const QuizBookmarkContext = createContext({} as {
   quizzes:{
@@ -293,7 +294,7 @@ const QuizList: React.FC = () => {
       .map((quiz, index) => (
         <div key={index}>
           {currentPath(`/quiz/list`) &&
-            <p>
+            <>
               <Avatar src={quiz.parentUserImage.url} />
               <Button
                 type="submit"
@@ -307,7 +308,7 @@ const QuizList: React.FC = () => {
               >
                 {quiz.parentUserName}
               </Button>
-            </p>
+              </>
           }
           <p>{ quiz.id }</p>
           <p>{ quiz.quizTitle }</p>
@@ -348,10 +349,13 @@ const QuizList: React.FC = () => {
           >
             解答する
           </Button>
-          <QuizBookmarkButton
-            quizId={Number(quiz.id)}
-            bookmarkId={getBookmarkId(quiz.id)}
-          />
+          {currentUser?.email === "guest_user@git-used-to.com"
+          ? <ReccomendSignUpModal />
+          : <QuizBookmarkButton
+              quizId={Number(quiz.id)}
+              bookmarkId={getBookmarkId(quiz.id)}
+            />
+            }
           <QuizComment
             quizId={Number(quiz.id)}
           />

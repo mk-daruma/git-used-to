@@ -13,7 +13,7 @@ import Box from "@material-ui/core/Box"
 
 import { AuthContext } from "App"
 import AlertMessage from "components/utils/AlertMessage"
-import { signIn } from "lib/api/auth"
+import { guestSignIn, signIn } from "lib/api/auth"
 import { SignInParams } from "interfaces/index"
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -82,6 +82,33 @@ const SignIn: React.FC = () => {
     }
   }
 
+  const handleGuestSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+
+    try {
+      const res = await guestSignIn()
+      console.log(res)
+
+      if (res.status === 200) {
+        Cookies.set("_access_token", res.headers["access-token"])
+        Cookies.set("_client", res.headers["client"])
+        Cookies.set("_uid", res.headers["uid"])
+
+        setIsSignedIn(true)
+        setCurrentUser(res.data.data)
+
+        history.push("/")
+
+        console.log("Signed in successfully!")
+      } else {
+        setAlertMessageOpen(true)
+      }
+    } catch (err) {
+      console.log(err)
+      setAlertMessageOpen(true)
+    }
+  }
+
   return (
     <>
       <form noValidate autoComplete="off">
@@ -120,6 +147,17 @@ const SignIn: React.FC = () => {
               onClick={handleSubmit}
             >
               Submit
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              size="large"
+              fullWidth
+              color="default"
+              className={classes.submitBtn}
+              onClick={handleGuestSubmit}
+            >
+              ゲストログインはこちら
             </Button>
             <Box textAlign="center" className={classes.box}>
               <Typography variant="body2">
