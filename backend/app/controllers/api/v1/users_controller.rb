@@ -1,6 +1,7 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :profile, :self_bookmarked, :give_title]
-  before_action :user_params, only: [:update, :give_title]
+  before_action :set_user, only: [:show, :update, :profile, :self_bookmarked, :give_title, :user_title]
+  before_action :user_params, only: [:update]
+  before_action :user_title, only: [:give_title]
 
   def index
     users = User.preload(:quizzes)
@@ -109,16 +110,24 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def give_title
-    @user.nickname = user_params[:nickname]
-    if @user.save
-      render json: {
-        status: 200,
-        data: @user,
-      }
+    if @user.nickname != @user_rank
+      @user.nickname = @user_rank
+      if @user.save
+        render json: {
+          status: 200,
+          user_data: @user,
+          message: '称号に変化がありました',
+        }
+      else
+        render json: {
+          status: 500,
+          message: '更新に失敗しました',
+        }
+      end
     else
       render json: {
-        status: 500,
-        message: '更新に失敗しました',
+        status: 200,
+        message: '変化なし',
       }
     end
   end
@@ -137,5 +146,27 @@ class Api::V1::UsersController < ApplicationController
       :id,
       :nickname,
     )
+  end
+
+  def user_title
+    total = User.title(@user)
+    @user_rank =
+      if total > 80
+        "免許皆伝 git-used-to師範代"
+      elsif total > 50
+        "git-used-to達人"
+      elsif total > 30
+        "git-used-to五段"
+      elsif total > 15
+        "git-used-to四段"
+      elsif total > 10
+        "git-used-to三段"
+      elsif total > 5
+        "git-used-to二段"
+      elsif total > 3
+        "git-used-to初段"
+      elsif total > 1
+        "git-used-to見習い"
+      end
   end
 end

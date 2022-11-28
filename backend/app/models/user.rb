@@ -19,4 +19,12 @@ class User < ActiveRecord::Base
       user.user_name = "guest user"
     end
   end
+
+  def self.title(user)
+    quiz_count = user.quizzes.length
+    quiz_answer_record_count = user.quiz_answer_records.length
+    bookmark_count = QuizBookmark.where(quiz_id: Quiz.where(user_id: user.id)).length
+    total_count = quiz_count + quiz_answer_record_count + bookmark_count
+    return total_count
+  end
 end
