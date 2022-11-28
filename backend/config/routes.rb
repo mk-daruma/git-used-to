@@ -16,6 +16,7 @@ Rails.application.routes.draw do
         member do
           get :profile
           get :self_bookmarked
+          post :give_title
         end
         collection do
           get :user_ranking

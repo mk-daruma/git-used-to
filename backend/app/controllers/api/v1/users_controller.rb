@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :profile, :self_bookmarked]
-  before_action :user_params, only: [:update]
+  before_action :set_user, only: [:show, :update, :profile, :self_bookmarked, :give_title]
+  before_action :user_params, only: [:update, :give_title]
 
   def index
     users = User.preload(:quizzes)
@@ -108,6 +108,21 @@ class Api::V1::UsersController < ApplicationController
     }
   end
 
+  def give_title
+    @user.nickname = user_params[:nickname]
+    if @user.save
+      render json: {
+        status: 200,
+        data: @user,
+      }
+    else
+      render json: {
+        status: 500,
+        message: '更新に失敗しました',
+      }
+    end
+  end
+
   private
 
   def set_user
@@ -120,6 +135,7 @@ class Api::V1::UsersController < ApplicationController
       :user_self_introduction,
       :image,
       :id,
+      :nickname,
     )
   end
 end
