@@ -19,6 +19,10 @@ export const getUserProfile = (id: number | undefined | null) => {
   return client.get(`/users/${id}/profile`)
 }
 
+export const updateUsertitle = (id: number | undefined | null) => {
+  return client.post(`/users/${id}/give_title`)
+}
+
 export const getUserSelfBookmarked = (id: number | undefined | null) => {
   return client.get(`/users/${id}/self_bookmarked`)
 }
