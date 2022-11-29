@@ -19,6 +19,7 @@ RSpec.describe "Api::V1::Users", type: :request do
         expect(res["data"][i]["id"]).to eq(user.id)
         expect(res["data"][i]["user_name"]).to eq(user.user_name)
         expect(res["data"][i]["image"]["url"]).to eq(user.image.url)
+        expect(res["data"][i]["nickname"]).to eq(user.nickname)
       end
       expect(User.count).to eq 5
       expect(res["data"].count).to eq 5
@@ -317,6 +318,214 @@ RSpec.describe "Api::V1::Users", type: :request do
     it "取得するdataの要素が2つであること" do
       res = JSON.parse(response.body)
       expect(res.length).to eq 2
+    end
+  end
+
+  describe "GET /api/v1/users#give_title" do
+    let!(:user) { create(:user, nickname: "") }
+
+    it "通信が成功すること" do
+      post give_title_api_v1_user_path(user.id)
+      expect(response).to have_http_status(:success)
+    end
+
+    context "userが作成したクイズ数/回答済みのクイズ数/作成したクイズが得ているブックマーク数の合計が3未満の場合" do
+      let!(:quiz) { create(:quiz, user: user) }
+
+      before do
+        post give_title_api_v1_user_path(user.id)
+      end
+
+      it "'git-used-to見習い'の値が返ってくること" do
+        res = JSON.parse(response.body)
+        expect(res["status"]).to eq(200)
+        expect(res["user_data"]).to eq("git-used-to見習い")
+        expect(res["message"]).to eq("称号に変化がありました")
+        expect(res.length).to eq(3)
+      end
+
+      it "userのnicknameの値が'git-used-to見習い'に更新されること" do
+        expect(user.reload.nickname).to eq("git-used-to見習い")
+      end
+    end
+
+    context "userが作成したクイズ数/回答済みのクイズ数/作成したクイズが得ているブックマーク数の合計が5未満の場合" do
+      let!(:quiz) { create(:quiz, user: user) }
+      let!(:quiz_answer_records) { create_list(:quiz_answer_record, 2, user: user) }
+      let!(:quiz_bookmarks) { create_list(:quiz_bookmark, 2, quiz: quiz) }
+
+      before do
+        post give_title_api_v1_user_path(user.id)
+      end
+
+      it "'git-used-to初段'の値が返ってくること" do
+        res = JSON.parse(response.body)
+        expect(res["status"]).to eq(200)
+        expect(res["user_data"]).to eq("git-used-to初段")
+        expect(res["message"]).to eq("称号に変化がありました")
+        expect(res.length).to eq(3)
+      end
+
+      it "userのnicknameの値が'git-used-to初段'に更新されること" do
+        expect(user.reload.nickname).to eq("git-used-to初段")
+      end
+    end
+
+    context "userが作成したクイズ数/回答済みのクイズ数/作成したクイズが得ているブックマーク数の合計が10未満の場合" do
+      let!(:quiz) { create(:quiz, user: user) }
+      let!(:quiz_answer_records) { create_list(:quiz_answer_record, 5, user: user) }
+      let!(:quiz_bookmarks) { create_list(:quiz_bookmark, 4, quiz: quiz) }
+
+      before do
+        post give_title_api_v1_user_path(user.id)
+      end
+
+      it "'git-used-to二段'の値が返ってくること" do
+        res = JSON.parse(response.body)
+        expect(res["status"]).to eq(200)
+        expect(res["user_data"]).to eq("git-used-to二段")
+        expect(res["message"]).to eq("称号に変化がありました")
+        expect(res.length).to eq(3)
+      end
+
+      it "userのnicknameの値が'git-used-to二段'に更新されること" do
+        expect(user.reload.nickname).to eq("git-used-to二段")
+      end
+    end
+
+    context "userが作成したクイズ数/回答済みのクイズ数/作成したクイズが得ているブックマーク数の合計が15未満の場合" do
+      let!(:quiz) { create(:quiz, user: user) }
+      let!(:quizzes) { create_list(:quiz, 4, user: user) }
+      let!(:quiz_answer_records) { create_list(:quiz_answer_record, 5, user: user) }
+      let!(:quiz_bookmarks) { create_list(:quiz_bookmark, 3, quiz: quiz) }
+
+      before do
+        post give_title_api_v1_user_path(user.id)
+      end
+
+      it "'git-used-to三段'の値が返ってくること" do
+        res = JSON.parse(response.body)
+        expect(res["status"]).to eq(200)
+        expect(res["user_data"]).to eq("git-used-to三段")
+        expect(res["message"]).to eq("称号に変化がありました")
+        expect(res.length).to eq(3)
+      end
+
+      it "userのnicknameの値が'git-used-to三段'に更新されること" do
+        expect(user.reload.nickname).to eq("git-used-to三段")
+      end
+    end
+
+    context "userが作成したクイズ数/回答済みのクイズ数/作成したクイズが得ているブックマーク数の合計が30未満の場合" do
+      let!(:quiz) { create(:quiz, user: user) }
+      let!(:quizzes) { create_list(:quiz, 9, user: user) }
+      let!(:quiz_answer_records) { create_list(:quiz_answer_record, 10, user: user) }
+      let!(:quiz_bookmarks) { create_list(:quiz_bookmark, 10, quiz: quiz) }
+
+      before do
+        post give_title_api_v1_user_path(user.id)
+      end
+
+      it "'git-used-to四段'の値が返ってくること" do
+        res = JSON.parse(response.body)
+        expect(res["status"]).to eq(200)
+        expect(res["user_data"]).to eq("git-used-to四段")
+        expect(res["message"]).to eq("称号に変化がありました")
+        expect(res.length).to eq(3)
+      end
+
+      it "userのnicknameの値が'git-used-to四段'に更新されること" do
+        expect(user.reload.nickname).to eq("git-used-to四段")
+      end
+    end
+
+    context "userが作成したクイズ数/回答済みのクイズ数/作成したクイズが得ているブックマーク数の合計が50未満の場合" do
+      let!(:quiz) { create(:quiz, user: user) }
+      let!(:quizzes) { create_list(:quiz, 17, user: user) }
+      let!(:quiz_answer_records) { create_list(:quiz_answer_record, 16, user: user) }
+      let!(:quiz_bookmarks) { create_list(:quiz_bookmark, 16, quiz: quiz) }
+
+      before do
+        post give_title_api_v1_user_path(user.id)
+      end
+
+      it "'git-used-to五段'の値が返ってくること" do
+        res = JSON.parse(response.body)
+        expect(res["status"]).to eq(200)
+        expect(res["user_data"]).to eq("git-used-to五段")
+        expect(res["message"]).to eq("称号に変化がありました")
+        expect(res.length).to eq(3)
+      end
+
+      it "userのnicknameの値が'git-used-to五段'に更新されること" do
+        expect(user.reload.nickname).to eq("git-used-to五段")
+      end
+    end
+
+    context "userが作成したクイズ数/回答済みのクイズ数/作成したクイズが得ているブックマーク数の合計80未満の場合" do
+      let!(:quiz) { create(:quiz, user: user) }
+      let!(:quizzes) { create_list(:quiz, 26, user: user) }
+      let!(:quiz_answer_records) { create_list(:quiz_answer_record, 27, user: user) }
+      let!(:quiz_bookmarks) { create_list(:quiz_bookmark, 26, quiz: quiz) }
+
+      before do
+        post give_title_api_v1_user_path(user.id)
+      end
+
+      it "'git-used-to達人'の値が返ってくること" do
+        res = JSON.parse(response.body)
+        expect(res["status"]).to eq(200)
+        expect(res["user_data"]).to eq("git-used-to達人")
+        expect(res["message"]).to eq("称号に変化がありました")
+        expect(res.length).to eq(3)
+      end
+
+      it "userのnicknameの値が'git-used-to達人'に更新されること" do
+        expect(user.reload.nickname).to eq("git-used-to達人")
+      end
+    end
+
+    context "userが作成したクイズ数/回答済みのクイズ数/作成したクイズが得ているブックマーク数の合計が80以上の場合" do
+      let!(:quiz) { create(:quiz, user: user) }
+      let!(:quizzes) { create_list(:quiz, 26, user: user) }
+      let!(:quiz_answer_records) { create_list(:quiz_answer_record, 27, user: user) }
+      let!(:quiz_bookmarks) { create_list(:quiz_bookmark, 27, quiz: quiz) }
+
+      before do
+        post give_title_api_v1_user_path(user.id)
+      end
+
+      it "'免許皆伝 git-used-to師範代'の値が返ってくること" do
+        res = JSON.parse(response.body)
+        expect(res["status"]).to eq(200)
+        expect(res["user_data"]).to eq("免許皆伝 git-used-to師範代")
+        expect(res["message"]).to eq("称号に変化がありました")
+        expect(res.length).to eq(3)
+      end
+
+      it "userのnicknameの値が'免許皆伝 git-used-to師範代'に更新されること" do
+        expect(user.reload.nickname).to eq("免許皆伝 git-used-to師範代")
+      end
+    end
+
+    context "現在のuser.nicknameの値から変化がない場合" do
+      let!(:user) { create(:user, nickname: "git-used-to見習い") }
+      let!(:quiz) { create(:quiz, user: user) }
+
+      before do
+        post give_title_api_v1_user_path(user.id)
+      end
+
+      it "変化がないこと" do
+        res = JSON.parse(response.body)
+        expect(res["status"]).to eq(200)
+        expect(res["message"]).to eq("変化なし")
+        expect(res.length).to eq(2)
+      end
+
+      it "userのnicknameの値に変化がないこと" do
+        expect(user.nickname).to eq("git-used-to見習い")
+      end
     end
   end
 end

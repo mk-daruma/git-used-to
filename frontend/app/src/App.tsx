@@ -18,6 +18,7 @@ import QuizSetUp from "components/pages/QuizSetUp"
 import UserProfile from "components/pages/UserProfile"
 import QuizWeeklyRanking from "components/pages/QuizWeeklyRanking"
 import UserRanking from "components/pages/UserRanking"
+import UserUpdateTitleAlert from "components/utils/UserGetTitleAlert"
 
 export const AuthContext = createContext({} as {
   loading: boolean
@@ -59,6 +60,7 @@ const App: React.FC = () => {
   const Private = ({ children }: { children: React.ReactElement }) => {
     if (!loading) {
       if (isSignedIn) {
+        UserUpdateTitleAlert(currentUser?.id)
         return children
       } else {
         return <Redirect to="/signin" />

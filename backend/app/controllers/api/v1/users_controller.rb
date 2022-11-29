@@ -1,5 +1,5 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :profile, :self_bookmarked]
+  before_action :set_user, only: [:show, :update, :profile, :self_bookmarked, :give_title]
   before_action :user_params, only: [:update]
 
   def index
@@ -10,6 +10,7 @@ class Api::V1::UsersController < ApplicationController
         id: user.id,
         user_name: user.user_name,
         image: user.image,
+        nickname: user.nickname,
       })
     end
     render json: {
@@ -108,6 +109,30 @@ class Api::V1::UsersController < ApplicationController
     }
   end
 
+  def give_title
+    user_rank = User.title(@user)
+    if @user.nickname != user_rank
+      @user.nickname = user_rank
+      if @user.save
+        render json: {
+          status: 200,
+          user_data: @user.nickname,
+          message: '称号に変化がありました',
+        }
+      else
+        render json: {
+          status: 500,
+          message: '更新に失敗しました',
+        }
+      end
+    else
+      render json: {
+        status: 200,
+        message: '変化なし',
+      }
+    end
+  end
+
   private
 
   def set_user
@@ -120,6 +145,7 @@ class Api::V1::UsersController < ApplicationController
       :user_self_introduction,
       :image,
       :id,
+      :nickname,
     )
   end
 end
