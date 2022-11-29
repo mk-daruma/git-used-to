@@ -10,6 +10,7 @@ class Api::V1::UsersController < ApplicationController
         id: user.id,
         user_name: user.user_name,
         image: user.image,
+        nickname: user.nickname,
       })
     end
     render json: {

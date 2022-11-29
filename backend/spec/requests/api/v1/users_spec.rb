@@ -19,6 +19,7 @@ RSpec.describe "Api::V1::Users", type: :request do
         expect(res["data"][i]["id"]).to eq(user.id)
         expect(res["data"][i]["user_name"]).to eq(user.user_name)
         expect(res["data"][i]["image"]["url"]).to eq(user.image.url)
+        expect(res["data"][i]["nickname"]).to eq(user.nickname)
       end
       expect(User.count).to eq 5
       expect(res["data"].count).to eq 5
