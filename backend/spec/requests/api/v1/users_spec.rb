@@ -344,7 +344,7 @@ RSpec.describe "Api::V1::Users", type: :request do
       end
 
       it "userのnicknameの値が'git-used-to見習い'に更新されること" do
-        expect("git-used-to見習い").to eq(user.reload.nickname)
+        expect(user.reload.nickname).to eq("git-used-to見習い")
       end
     end
 
@@ -357,7 +357,7 @@ RSpec.describe "Api::V1::Users", type: :request do
         post give_title_api_v1_user_path(user.id)
       end
 
-      it "userのnicknameの値が'git-used-to初段'に更新されること" do
+      it "'git-used-to初段'の値が返ってくること" do
         res = JSON.parse(response.body)
         expect(res["status"]).to eq(200)
         expect(res["user_data"]).to eq("git-used-to初段")
@@ -366,7 +366,7 @@ RSpec.describe "Api::V1::Users", type: :request do
       end
 
       it "userのnicknameの値が'git-used-to初段'に更新されること" do
-        expect("git-used-to初段").to eq(user.reload.nickname)
+        expect(user.reload.nickname).to eq("git-used-to初段")
       end
     end
 
@@ -379,7 +379,7 @@ RSpec.describe "Api::V1::Users", type: :request do
         post give_title_api_v1_user_path(user.id)
       end
 
-      it "userのnicknameの値が'git-used-to二段'に更新されること" do
+      it "'git-used-to二段'の値が返ってくること" do
         res = JSON.parse(response.body)
         expect(res["status"]).to eq(200)
         expect(res["user_data"]).to eq("git-used-to二段")
@@ -388,7 +388,7 @@ RSpec.describe "Api::V1::Users", type: :request do
       end
 
       it "userのnicknameの値が'git-used-to二段'に更新されること" do
-        expect("git-used-to二段").to eq(user.reload.nickname)
+        expect(user.reload.nickname).to eq("git-used-to二段")
       end
     end
 
@@ -402,7 +402,7 @@ RSpec.describe "Api::V1::Users", type: :request do
         post give_title_api_v1_user_path(user.id)
       end
 
-      it "userのnicknameの値が'git-used-to三段'に更新されること" do
+      it "'git-used-to三段'の値が返ってくること" do
         res = JSON.parse(response.body)
         expect(res["status"]).to eq(200)
         expect(res["user_data"]).to eq("git-used-to三段")
@@ -411,7 +411,7 @@ RSpec.describe "Api::V1::Users", type: :request do
       end
 
       it "userのnicknameの値が'git-used-to三段'に更新されること" do
-        expect("git-used-to三段").to eq(user.reload.nickname)
+        expect(user.reload.nickname).to eq("git-used-to三段")
       end
     end
 
@@ -425,7 +425,7 @@ RSpec.describe "Api::V1::Users", type: :request do
         post give_title_api_v1_user_path(user.id)
       end
 
-      it "userのnicknameの値が'git-used-to四段'に更新されること" do
+      it "'git-used-to四段'の値が返ってくること" do
         res = JSON.parse(response.body)
         expect(res["status"]).to eq(200)
         expect(res["user_data"]).to eq("git-used-to四段")
@@ -434,7 +434,7 @@ RSpec.describe "Api::V1::Users", type: :request do
       end
 
       it "userのnicknameの値が'git-used-to四段'に更新されること" do
-        expect("git-used-to四段").to eq(user.reload.nickname)
+        expect(user.reload.nickname).to eq("git-used-to四段")
       end
     end
 
@@ -448,7 +448,7 @@ RSpec.describe "Api::V1::Users", type: :request do
         post give_title_api_v1_user_path(user.id)
       end
 
-      it "userのnicknameの値が'git-used-to五段'に更新されること" do
+      it "'git-used-to五段'の値が返ってくること" do
         res = JSON.parse(response.body)
         expect(res["status"]).to eq(200)
         expect(res["user_data"]).to eq("git-used-to五段")
@@ -457,7 +457,7 @@ RSpec.describe "Api::V1::Users", type: :request do
       end
 
       it "userのnicknameの値が'git-used-to五段'に更新されること" do
-        expect("git-used-to五段").to eq(user.reload.nickname)
+        expect(user.reload.nickname).to eq("git-used-to五段")
       end
     end
 
@@ -471,7 +471,7 @@ RSpec.describe "Api::V1::Users", type: :request do
         post give_title_api_v1_user_path(user.id)
       end
 
-      it "userのnicknameの値が'git-used-to達人'に更新されること" do
+      it "'git-used-to達人'の値が返ってくること" do
         res = JSON.parse(response.body)
         expect(res["status"]).to eq(200)
         expect(res["user_data"]).to eq("git-used-to達人")
@@ -480,7 +480,7 @@ RSpec.describe "Api::V1::Users", type: :request do
       end
 
       it "userのnicknameの値が'git-used-to達人'に更新されること" do
-        expect("git-used-to達人").to eq(user.reload.nickname)
+        expect(user.reload.nickname).to eq("git-used-to達人")
       end
     end
 
@@ -494,7 +494,7 @@ RSpec.describe "Api::V1::Users", type: :request do
         post give_title_api_v1_user_path(user.id)
       end
 
-      it "userのnicknameの値が'免許皆伝 git-used-to師範代'に更新されること" do
+      it "'免許皆伝 git-used-to師範代'の値が返ってくること" do
         res = JSON.parse(response.body)
         expect(res["status"]).to eq(200)
         expect(res["user_data"]).to eq("免許皆伝 git-used-to師範代")
@@ -503,7 +503,7 @@ RSpec.describe "Api::V1::Users", type: :request do
       end
 
       it "userのnicknameの値が'免許皆伝 git-used-to師範代'に更新されること" do
-        expect("免許皆伝 git-used-to師範代").to eq(user.reload.nickname)
+        expect(user.reload.nickname).to eq("免許皆伝 git-used-to師範代")
       end
     end
 
@@ -523,7 +523,7 @@ RSpec.describe "Api::V1::Users", type: :request do
       end
 
       it "userのnicknameの値に変化がないこと" do
-        expect("git-used-to見習い").to eq(user.nickname)
+        expect(user.nickname).to eq("git-used-to見習い")
       end
     end
   end
