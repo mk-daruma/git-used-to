@@ -1,5 +1,6 @@
-import { Avatar, Button, makeStyles, Theme } from "@material-ui/core";
+import { Button, makeStyles, Theme } from "@material-ui/core";
 import { AuthContext } from "App";
+import AvatarImage from "components/layouts/Avatar";
 import { getAllQuizzes } from "lib/api/quizzes";
 import { getAllQuizBookmarks } from "lib/api/quiz_boolmarks";
 import { getAllQuizComments } from "lib/api/quiz_comments";
@@ -20,6 +21,7 @@ export const QuizBookmarkContext = createContext({} as {
     parentUserImage: {
       url: string
     },
+    parentUserNickname: string,
     quizTitle: string,
     quizIntroduction: string,
     createdAt: string
@@ -31,6 +33,7 @@ export const QuizBookmarkContext = createContext({} as {
     parentUserImage: {
       url: string
     },
+    parentUserNickname: string,
     quizTitle: string,
     quizIntroduction: string,
     createdAt: string
@@ -42,6 +45,7 @@ export const QuizBookmarkContext = createContext({} as {
     parentUserImage: {
       url: string
     },
+    parentUserNickname: string,
     quizTitle: string,
     quizIntroduction: string,
     createdAt: string
@@ -53,6 +57,7 @@ export const QuizBookmarkContext = createContext({} as {
     parentUserImage: {
       url: string
     },
+    parentUserNickname: string,
     quizTitle: string,
     quizIntroduction: string,
     createdAt: string
@@ -134,6 +139,7 @@ const QuizList: React.FC = () => {
     parentUserImage: {
       url: ""
     },
+    parentUserNickname: "",
     quizTitle: "",
     quizIntroduction: "",
     createdAt: ""
@@ -145,6 +151,7 @@ const QuizList: React.FC = () => {
     parentUserImage: {
       url: ""
     },
+    parentUserNickname: "",
     quizTitle: "",
     quizIntroduction: "",
     createdAt: ""
@@ -208,6 +215,7 @@ const QuizList: React.FC = () => {
               parentUserImage: {
                   url: resUser.image.url
               },
+              parentUserNickname: resUser.nickname,
               quizTitle: resQuiz.quizTitle,
               quizIntroduction: resQuiz.quizIntroduction,
               createdAt: resQuiz.createdAt,
@@ -295,7 +303,7 @@ const QuizList: React.FC = () => {
         <div key={index}>
           {currentPath(`/quiz/list`) &&
             <>
-              <Avatar src={quiz.parentUserImage.url} />
+              <AvatarImage image={quiz.parentUserImage.url} rank={quiz.parentUserNickname} />
               <Button
                 type="submit"
                 variant="contained"

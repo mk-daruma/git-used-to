@@ -1,5 +1,6 @@
 import { Avatar, Button } from "@material-ui/core"
 import { AuthContext } from "App"
+import AvatarImage from "components/layouts/Avatar"
 import { getUserProfile } from "lib/api/users"
 import { useContext, useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
@@ -13,6 +14,7 @@ const UserProfile: React.FC = () => {
     userImage: {
       url: "",
     },
+    userNickname: "",
     quizzesLength: 0,
     commentsLength: 0,
     answerRecordsLength: 0
@@ -29,6 +31,7 @@ const UserProfile: React.FC = () => {
       userImage: {
         url: userProfileRes.data.userData.image.url,
       },
+      userNickname: userProfileRes.data.userData.nickname,
       quizzesLength: userProfileRes.data.quizzesLength,
       commentsLength: userProfileRes.data.quizCommentsLength,
       answerRecordsLength: userProfileRes.data.quizAnswerRecordsLength,
@@ -70,7 +73,7 @@ const UserProfile: React.FC = () => {
           >
             userがブックマークしたクイズ一覧
           </Button>
-          <Avatar src={userProfile.userImage.url} />
+          <AvatarImage image={userProfile.userImage.url} rank={userProfile.userNickname} />
           <p>{userProfile.userName}</p>
           <p>{userProfile.userSelfIntroduction}</p>
           <p>{userProfile.answerRecordsLength}</p>

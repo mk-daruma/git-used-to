@@ -14,6 +14,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
 import { AuthContext } from "App";
 import { signOut } from "lib/api/auth"
+import AvatarImage from "./Avatar";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -96,7 +97,7 @@ const HeaderMenuList: React.FC = () => {
           color="inherit"
           className={classes.button}
         >
-          <Avatar src={currentUser?.image.url} />
+          <AvatarImage image={currentUser?.image.url} rank={currentUser?.nickname} />
         </MenuListButton>
         <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
           {({ TransitionProps, placement }) => (
