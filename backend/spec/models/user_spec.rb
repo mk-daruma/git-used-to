@@ -80,4 +80,83 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe "self.title" do
+    let!(:user) { create(:user) }
+    let!(:quiz) { create(:quiz, user: user) }
+
+    context "userが作成したクイズ数/回答済みのクイズ数/作成したクイズのブックマーク数の合計が3未満の場合" do
+      it "返ってくる値が'git-used-to見習い'であること" do
+        expect(User.title(user)).to eq "git-used-to見習い"
+      end
+    end
+
+    context "userが作成したクイズ数/回答済みのクイズ数/作成したクイズのブックマーク数の合計が5未満の場合" do
+      let!(:quiz_answer_records) { create_list(:quiz_answer_record, 2, user: user) }
+      let!(:quiz_bookmarks) { create_list(:quiz_bookmark, 2, quiz: quiz) }
+
+      it "返ってくる値が'git-used-to初段'であること" do
+        expect(User.title(user)).to eq "git-used-to初段"
+      end
+    end
+
+    context "userが作成したクイズ数/回答済みのクイズ数/作成したクイズのブックマーク数の合計が10未満の場合" do
+      let!(:quiz_answer_records) { create_list(:quiz_answer_record, 5, user: user) }
+      let!(:quiz_bookmarks) { create_list(:quiz_bookmark, 4, quiz: quiz) }
+
+      it "返ってくる値が'git-used-to二段'であること" do
+        expect(User.title(user)).to eq "git-used-to二段"
+      end
+    end
+
+    context "userが作成したクイズ数/回答済みのクイズ数/作成したクイズのブックマーク数の合計が15未満の場合" do
+      let!(:quizzes) { create_list(:quiz, 4, user: user) }
+      let!(:quiz_answer_records) { create_list(:quiz_answer_record, 5, user: user) }
+      let!(:quiz_bookmarks) { create_list(:quiz_bookmark, 3, quiz: quiz) }
+
+      it "返ってくる値が'git-used-to三段'であること" do
+        expect(User.title(user)).to eq "git-used-to三段"
+      end
+    end
+
+    context "userが作成したクイズ数/回答済みのクイズ数/作成したクイズのブックマーク数の合計が30未満の場合" do
+      let!(:quizzes) { create_list(:quiz, 9, user: user) }
+      let!(:quiz_answer_records) { create_list(:quiz_answer_record, 10, user: user) }
+      let!(:quiz_bookmarks) { create_list(:quiz_bookmark, 10, quiz: quiz) }
+
+      it "返ってくる値が'git-used-to四段'であること" do
+        expect(User.title(user)).to eq "git-used-to四段"
+      end
+    end
+
+    context "userが作成したクイズ数/回答済みのクイズ数/作成したクイズのブックマーク数の合計が50未満の場合" do
+      let!(:quizzes) { create_list(:quiz, 17, user: user) }
+      let!(:quiz_answer_records) { create_list(:quiz_answer_record, 16, user: user) }
+      let!(:quiz_bookmarks) { create_list(:quiz_bookmark, 16, quiz: quiz) }
+
+      it "返ってくる値が'git-used-to五段'であること" do
+        expect(User.title(user)).to eq "git-used-to五段"
+      end
+    end
+
+    context "userが作成したクイズ数/回答済みのクイズ数/作成したクイズのブックマーク数の合計が80未満の場合" do
+      let!(:quizzes) { create_list(:quiz, 26, user: user) }
+      let!(:quiz_answer_records) { create_list(:quiz_answer_record, 27, user: user) }
+      let!(:quiz_bookmarks) { create_list(:quiz_bookmark, 26, quiz: quiz) }
+
+      it "返ってくる値が'git-used-to達人'であること" do
+        expect(User.title(user)).to eq "git-used-to達人"
+      end
+    end
+
+    context "userが作成したクイズ数/回答済みのクイズ数/作成したクイズのブックマーク数の合計が80を超える場合" do
+      let!(:quizzes) { create_list(:quiz, 26, user: user) }
+      let!(:quiz_answer_records) { create_list(:quiz_answer_record, 27, user: user) }
+      let!(:quiz_bookmarks) { create_list(:quiz_bookmark, 27, quiz: quiz) }
+
+      it "返ってくる値が'免許皆伝 git-used-to師範代'であること" do
+        expect(User.title(user)).to eq "免許皆伝 git-used-to師範代"
+      end
+    end
+  end
 end
