@@ -19,6 +19,7 @@ class Api::V1::Auth::SessionsController < DeviseTokenAuth::SessionsController
     @resource.user_self_introduction = "これは自己紹介用のフォームです。ぜひアカウントを作成してご自身の自己紹介をしてみてください！"
     @resource.email = "guest_user@git-used-to.com"
     @resource.password = "guestusergitusedto"
+    @resource.nickname = "git-used-to見習い"
     @token = @resource.create_token
     @resource.save!
     render_create_success

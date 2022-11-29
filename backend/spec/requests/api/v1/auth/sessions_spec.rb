@@ -94,6 +94,7 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
         expect(res["data"]["user_name"]).to eq("guestusergitusedto")
         expect(res["data"]["user_self_introduction"]).to eq("これは自己紹介用のフォームです。ぜひアカウントを作成してご自身の自己紹介をしてみてください！")
         expect(res["data"]["email"]).to eq("guest_user@git-used-to.com")
+        expect(res["data"]["nickname"]).to eq("git-used-to見習い")
       end
     end
 
@@ -103,7 +104,8 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
           :user,
           email: "guest_user@git-used-to.com",
           user_name: Faker::Alphanumeric.alpha(number: 10),
-          user_self_introduction: Faker::Alphanumeric.alpha(number: 30)
+          user_self_introduction: Faker::Alphanumeric.alpha(number: 30),
+          nickname: Faker::Alphanumeric.alpha(number: 10)
         )
       end
 
@@ -126,6 +128,7 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
         expect(res["data"]["user_name"]).to eq("guestusergitusedto")
         expect(res["data"]["user_self_introduction"]).to eq("これは自己紹介用のフォームです。ぜひアカウントを作成してご自身の自己紹介をしてみてください！")
         expect(res["data"]["email"]).to eq("guest_user@git-used-to.com")
+        expect(res["data"]["nickname"]).to eq("git-used-to見習い")
       end
     end
   end
