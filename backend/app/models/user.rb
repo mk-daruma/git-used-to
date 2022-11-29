@@ -25,23 +25,22 @@ class User < ActiveRecord::Base
     quiz_answer_record_count = user.quiz_answer_records.length
     bookmark_count = QuizBookmark.where(quiz_id: Quiz.where(user_id: user.id)).length
     total = quiz_count + quiz_answer_record_count + bookmark_count
-    user_rank =
-      if total > 80
-        "免許皆伝 git-used-to師範代"
-      elsif total > 50
-        "git-used-to達人"
-      elsif total > 30
-        "git-used-to五段"
-      elsif total > 15
-        "git-used-to四段"
-      elsif total > 10
-        "git-used-to三段"
-      elsif total > 5
-        "git-used-to二段"
-      elsif total > 3
-        "git-used-to初段"
-      elsif total >= 0
-        "git-used-to見習い"
-      end
+    if total > 80
+      "免許皆伝 git-used-to師範代"
+    elsif total > 50
+      "git-used-to達人"
+    elsif total > 30
+      "git-used-to五段"
+    elsif total > 15
+      "git-used-to四段"
+    elsif total > 10
+      "git-used-to三段"
+    elsif total > 5
+      "git-used-to二段"
+    elsif total > 3
+      "git-used-to初段"
+    elsif total >= 0
+      "git-used-to見習い"
+    end
   end
 end
