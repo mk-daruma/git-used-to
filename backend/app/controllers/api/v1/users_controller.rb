@@ -128,6 +128,7 @@ class Api::V1::UsersController < ApplicationController
     else
       render json: {
         status: 200,
+        user_data: @user.nickname,
         message: '変化なし',
       }
     end
