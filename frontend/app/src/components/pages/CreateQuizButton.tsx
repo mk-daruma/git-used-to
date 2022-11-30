@@ -589,14 +589,14 @@ const CreateOrUpdateQuizButton: React.FC = () => {
     : false
 
   const quizCountLimitDisabledByUserTitle =
-    userQuizzesCount >= 3 && userTitle === "git used to見習い"
-    || userQuizzesCount >= 5  && userTitle === "git used to初段"
-    || userQuizzesCount >= 7 && userTitle === "git used to二段"
-    || userQuizzesCount >= 10 && userTitle === "git used to三段"
-    || userQuizzesCount >= 12 && userTitle === "git used to四段"
-    || userQuizzesCount >= 15 && userTitle === "git used to五段"
-    || userQuizzesCount >= 20 && userTitle === "git used to達人"
-    || userQuizzesCount >= 30 && userTitle === "免許皆伝 git-used-to師範代"
+    (userQuizzesCount >= 3 && userTitle === "git used to見習い")
+    || (userQuizzesCount >= 5  && userTitle === "git used to初段")
+    || (userQuizzesCount >= 7 && userTitle === "git used to二段")
+    || (userQuizzesCount >= 10 && userTitle === "git used to三段")
+    || (userQuizzesCount >= 12 && userTitle === "git used to四段")
+    || (userQuizzesCount >= 15 && userTitle === "git used to五段")
+    || (userQuizzesCount >= 20 && userTitle === "git used to達人")
+    || (userQuizzesCount >= 30 && userTitle === "免許皆伝 git-used-to師範代")
 
   return(
     <>
