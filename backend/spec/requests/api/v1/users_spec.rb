@@ -519,8 +519,9 @@ RSpec.describe "Api::V1::Users", type: :request do
       it "変化がないこと" do
         res = JSON.parse(response.body)
         expect(res["status"]).to eq(200)
+        expect(user.nickname).to eq("git-used-to見習い")
         expect(res["message"]).to eq("変化なし")
-        expect(res.length).to eq(2)
+        expect(res.length).to eq(3)
       end
 
       it "userのnicknameの値に変化がないこと" do
