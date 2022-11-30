@@ -5,7 +5,7 @@ const UserUpdateTitleAlert = async(userId :number | undefined) => {
     const res = await updateUsertitle(userId)
     if (res?.data.message === "称号に変化がありました") {
       console.log(res?.data)
-      alert(`称号が"${res?.data.userData.nickname}"になりました！`)
+      alert(`称号が"${res?.data.userData}"になりました！`)
     } else {
       console.log(res?.data)
     }
