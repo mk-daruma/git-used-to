@@ -20,6 +20,7 @@ const QuizNewArrivalsOrderButton :React.FC = () => {
         parentUserImage: {
           url: newArrivalsOrderQuiz.parentUserImage.url
         },
+        parentUserNickname: newArrivalsOrderQuiz.parentUserNickname,
         quizTitle: newArrivalsOrderQuiz.quizTitle,
         quizIntroduction: newArrivalsOrderQuiz.quizIntroduction,
         createdAt: newArrivalsOrderQuiz.createdAt

@@ -24,6 +24,7 @@ const QuizBookmarkOrderButton :React.FC = () => {
         parentUserImage: {
           url: sortByNumberOfBookmark.parentUserImage.url
         },
+        parentUserNickname: sortByNumberOfBookmark.parentUserNickname,
         quizTitle: sortByNumberOfBookmark.quizTitle,
         quizIntroduction: sortByNumberOfBookmark.quizIntroduction,
         createdAt: sortByNumberOfBookmark.createdAt
