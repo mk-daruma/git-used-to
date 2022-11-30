@@ -15,8 +15,13 @@ import { getQuizRemoteCommitMessage } from "lib/api/quiz_remote_commit_messages"
 import CreateOrUpdateQuizButton from "./CreateQuizButton";
 import { AuthContext } from "App";
 import ReccomendSignUpModal from "./RecommendSignUpModal";
+import { getUserQuizzes, updateUsertitle } from "lib/api/users";
 
 export const QuizContext = createContext({} as {
+  userQuizzesCount: number
+  setUserQuizzesCount: React.Dispatch<React.SetStateAction<number>>
+  userTitle: string
+  setUserTitle: React.Dispatch<React.SetStateAction<string>>
   quizTitle: string
   setQuizTitle: React.Dispatch<React.SetStateAction<string>>
   quizIntroduction: string
@@ -414,6 +419,8 @@ const CreateQuiz: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { currentUser } = useContext(AuthContext)
 
+  const [userTitle, setUserTitle] = useState<string>("")
+  const [userQuizzesCount, setUserQuizzesCount] = useState(0)
   const [quizTitle, setQuizTitle] = useState<string>("")
   const [quizIntroduction, setQuizIntroduction] = useState<string>("")
   const [quizFirstOrLastId, setQuizFirstOrLastId] = useState<string>("")
@@ -885,15 +892,35 @@ const CreateQuiz: React.FC = () => {
     }
   }
 
+  const handleGetUserTitle = async() => {
+    try {
+      const resGetUserTitle = await updateUsertitle(currentUser?.id)
+      setUserTitle(resGetUserTitle.data.userData)
+      const resGetUserQuizzesCount = await getUserQuizzes(currentUser?.id)
+      setUserQuizzesCount(resGetUserQuizzesCount.data.data.length)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   useEffect(() => {
-    location.pathname === (`/quiz/edit/${id}`)&& handleGetQuizData(0)
-    location.pathname === (`/quiz/init/edit/${id}`)&& handleGetQuizData(1)
+    location.pathname === (`/quiz`) && handleGetUserTitle()
+    location.pathname === (`/quiz/edit/${id}`) && handleGetQuizData(0)
+    location.pathname === (`/quiz/init/edit/${id}`) && handleGetQuizData(1)
     if (location.pathname === (`/quiz/answer/${id}`)) {
       handleGetQuizData(1)
       handleGetQuizAnswer()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    console.log("userTitle", userTitle)
+  },[userTitle])
+
+  useEffect(() => {
+    console.log("userQuizzesCount", userQuizzesCount)
+  },[userQuizzesCount])
 
   useEffect(() => {
     console.log("commitMessages", commitMessages)
@@ -966,6 +993,8 @@ const CreateQuiz: React.FC = () => {
   return(
     <QuizContext.Provider
       value={{
+        userTitle, setUserTitle,
+        userQuizzesCount, setUserQuizzesCount,
         quizTitle, setQuizTitle,
         quizIntroduction, setQuizIntroduction,
         quizFirstOrLastId, setQuizFirstOrLastId,

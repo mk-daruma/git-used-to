@@ -36,7 +36,9 @@ const AvatarImage :React.FC<{image : string | undefined ,rank : string | undefin
       ? {
         border: "solid 2px #ffd700"
         }
-      : {}
+      : {
+        border: "solid 2px #808080"
+        }
 
     return(
       <Avatar

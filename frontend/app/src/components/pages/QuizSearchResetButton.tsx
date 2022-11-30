@@ -20,6 +20,7 @@ const QuizResetSearchStatusButton :React.FC = () => {
         parentUserImage: {
           url: resetSearchStatusQuiz.parentUserImage.url
         },
+        parentUserNickname: resetSearchStatusQuiz.parentUserNickname,
         quizTitle: resetSearchStatusQuiz.quizTitle,
         quizIntroduction: resetSearchStatusQuiz.quizIntroduction,
         createdAt: resetSearchStatusQuiz.createdAt
