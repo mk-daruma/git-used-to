@@ -7,12 +7,13 @@ import Header from "components/layouts/Header"
 import Footer from "./Footer"
 
 const useStyles = makeStyles(() => ({
-  main: {
+  backgroundColor: {
     backgroundColor: "#212121",
     color: "#f5f5f5"
   },
   container: {
-    marginTop: "3rem"
+    marginTop: "3rem",
+    marginBottom: "2rem",
   }
 }))
 
@@ -24,11 +25,11 @@ const CommonLayout = ({ children }: CommonLayoutProps) => {
   const classes = useStyles()
 
   return (
-    <div className={classes.main}>
+    <div  className={classes.backgroundColor}>
       <header>
         <Header />
       </header>
-      <main className={classes.main}>
+      <main>
         <Container maxWidth="lg" className={classes.container} >
           <Grid container justifyContent="center">
             <Grid item>
