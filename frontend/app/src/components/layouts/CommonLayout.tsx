@@ -9,11 +9,17 @@ import Footer from "./Footer"
 const useStyles = makeStyles(() => ({
   backgroundColor: {
     backgroundColor: "#212121",
-    color: "#f5f5f5"
+    color: "#f5f5f5",
+    display: "flex",
+    flexDirection: "column",
+    minHeight: "100vh",
   },
   container: {
     marginTop: "3rem",
     marginBottom: "2rem",
+  },
+  footer: {
+    marginTop: "auto"
   }
 }))
 
@@ -38,7 +44,7 @@ const CommonLayout = ({ children }: CommonLayoutProps) => {
           </Grid>
         </Container>
       </main>
-      <footer>
+      <footer className={classes.footer}>
         <Footer />
       </footer>
     </div>
