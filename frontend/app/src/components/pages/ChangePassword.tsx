@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { useHistory } from "react-router-dom"
+import { motion } from "framer-motion"
 
 import { makeStyles, Theme } from "@material-ui/core/styles"
 import TextField from "@material-ui/core/TextField"
@@ -25,8 +26,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: "center"
   },
   card: {
-    padding: theme.spacing(2),
-    maxWidth: 400
+    padding: theme.spacing(3),
+    margin: theme.spacing(6),
+    maxWidth: 400,
+    borderRadius: "2em",
   },
   box: {
     marginTop: "2rem"
@@ -65,7 +68,7 @@ const ChangePassword: React.FC = () => {
       if (res.status === 200) {
 
         alert("パスワード変更に成功しました！")
-        history.push("/")
+        history.push("/home")
 
         console.log("changed Password successfully!")
       } else {
@@ -80,45 +83,55 @@ const ChangePassword: React.FC = () => {
   return (
     <>
       <form noValidate autoComplete="off">
-        <Card className={classes.card}>
-          <CardHeader className={classes.header} title="パスワード変更" />
-          <CardContent>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              label="Password"
-              type="password"
-              value={password}
-              margin="dense"
-              autoComplete="current-password"
-              onChange={event => setPassword(event.target.value)}
-            />
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              label="Password Confirmation"
-              type="password"
-              value={passwordConfirmation}
-              margin="dense"
-              autoComplete="current-password"
-              onChange={event => setPasswordConfirmation(event.target.value)}
-            />
-            <Button
-              type="submit"
-              variant="contained"
-              size="large"
-              fullWidth
-              color="default"
-              disabled={!password || !passwordConfirmation ? true : false}
-              className={classes.submitBtn}
-              onClick={handleSubmit}
-            >
-              Submit
-            </Button>
-          </CardContent>
-        </Card>
+        <motion.div
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                duration: 0.8,
+                delay: 0.5,
+                ease: [0, 0.71, 0.2, 1.01]
+              }}
+              >
+          <Card className={classes.card}>
+            <CardHeader className={classes.header} title="パスワード変更" />
+            <CardContent>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                label="Password"
+                type="password"
+                value={password}
+                margin="dense"
+                autoComplete="current-password"
+                onChange={event => setPassword(event.target.value)}
+              />
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                label="Password Confirmation"
+                type="password"
+                value={passwordConfirmation}
+                margin="dense"
+                autoComplete="current-password"
+                onChange={event => setPasswordConfirmation(event.target.value)}
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                size="large"
+                fullWidth
+                color="default"
+                disabled={!password || !passwordConfirmation ? true : false}
+                className={classes.submitBtn}
+                onClick={handleSubmit}
+              >
+                Submit
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
       </form>
       <AlertMessage
         open={alertMessageOpen}
