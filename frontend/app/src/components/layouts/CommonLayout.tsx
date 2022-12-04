@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles"
 
 import Header from "components/layouts/Header"
 import Footer from "./Footer"
+import { useLocation } from "react-router-dom"
 
 const useStyles = makeStyles(() => ({
   backgroundColor: {
@@ -29,11 +30,12 @@ interface CommonLayoutProps {
 
 const CommonLayout = ({ children }: CommonLayoutProps) => {
   const classes = useStyles()
+  const location = useLocation()
 
   return (
     <div  className={classes.backgroundColor}>
       <header>
-        <Header />
+        {location.pathname !== (`/`) && <Header />}
       </header>
       <main>
         <Container maxWidth="lg" className={classes.container} >
@@ -45,7 +47,7 @@ const CommonLayout = ({ children }: CommonLayoutProps) => {
         </Container>
       </main>
       <footer className={classes.footer}>
-        <Footer />
+        {location.pathname !== (`/`) && <Footer />}
       </footer>
     </div>
   )
