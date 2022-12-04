@@ -19,6 +19,7 @@ import UserProfile from "components/pages/UserProfile"
 import QuizWeeklyRanking from "components/pages/QuizWeeklyRanking"
 import UserRanking from "components/pages/UserRanking"
 import UserUpdateTitleAlert from "components/utils/UserGetTitleAlert"
+import Top from "components/pages/Top"
 
 export const AuthContext = createContext({} as {
   loading: boolean
@@ -63,7 +64,7 @@ const App: React.FC = () => {
         UserUpdateTitleAlert(currentUser?.id)
         return children
       } else {
-        return <Redirect to="/signin" />
+        return <Redirect to="/" />
       }
     } else {
       return <></>
@@ -75,13 +76,14 @@ const App: React.FC = () => {
       <AuthContext.Provider value={{ loading, setLoading, isSignedIn, setIsSignedIn, currentUser, setCurrentUser}}>
         <CommonLayout>
           <Switch>
+            <Route exact path="/" component={Top} />
             <Route path="/api/v1/auth/password/reset/form" component={RedirectForgetPassword} />
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/signin" component={SignIn} />
             <Route exact path="/password/reset" component={ForgetPassword} />
             <Private>
               <Switch>
-                <Route exact path="/" component={Home} />
+                <Route exact path="/home" component={Home} />
                 <Route exact path="/password" component={ChangePassword} />
                 <Route exact path="/user/:id/edit" component={UserProfile} />
                 <Route exact path="/user/delete" component={UserDelete} />
