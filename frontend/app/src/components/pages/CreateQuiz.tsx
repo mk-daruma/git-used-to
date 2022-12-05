@@ -8,6 +8,7 @@ import Terminal from "./Terminal";
 import QuizBranchArea from "./QuizBranchArea";
 import { getQuizFirstOrLast } from "lib/api/quiz_first_or_lasts";
 import { getQuizBranch } from "lib/api/quiz_branches";
+import QuizWorktreeFiles from "./QuizWorkingTreeArea";
 
 import { getQuizCommitMessage } from "lib/api/quiz_commit_messages";
 import { getQuizRemoteBranch } from "lib/api/quiz_remote_branches";
@@ -16,6 +17,18 @@ import CreateOrUpdateQuizButton from "./CreateQuizButton";
 import { AuthContext } from "App";
 import ReccomendSignUpModal from "./RecommendSignUpModal";
 import { getUserQuizzes, updateUsertitle } from "lib/api/users";
+import { makeStyles } from "@material-ui/core";
+import QuizIndexArea from "./QuizIndexArea";
+import QuizCommitMessageArea from "./QuizCommitMessageArea";
+import QuizLocalRepositoryArea from "./QuizLocalRepositoryArea";
+import QuizRemoteRepositoryArea from "./QuizRemoteRepositoryArea";
+import QuizRemoteCoimmitMessageArea from "./QuizRemoteCommitMessageArea";
+
+const useStyles = makeStyles(() => ({
+  set: {
+    display: "flex",
+  },
+}))
 
 export const QuizContext = createContext({} as {
   userQuizzesCount: number
@@ -416,6 +429,7 @@ export const QuizContext = createContext({} as {
 
 const CreateQuiz: React.FC = () => {
   const location = useLocation()
+  const classes = useStyles()
   const { id } = useParams<{ id: string }>()
   const { currentUser } = useContext(AuthContext)
 
@@ -1029,66 +1043,22 @@ const CreateQuiz: React.FC = () => {
         answerRemoteRepositoryFiles, setAnswerRemoteRepositoryFiles,
         commands, setCommands
         }}>
-      <QuizBranchArea />
-    {/* <layout 5つのコンポーネントを横並びにする> */}
-      {/* <QuizWorktreeIndexArea />
-      <QuizCommitMessageArea />
-      <QuizRepositoryArea /> */}
-    {/* </layout> */}
-
-    {/* <layout 2つのコンポーネントを横並びにする> */}
-      <AboutQuiz />
-      <Terminal />
-    {/* </layout> */}
-      {currentUser?.email === "guest_user@git-used-to.com"
-      ? <ReccomendSignUpModal />
-      : <CreateOrUpdateQuizButton />
-        }
-        <>
-        {/* ↓配列の中身確認用 */}
-        <p>[branch]</p>
-        { branches.filter((branch) => currentBranch.currentBranchName === branch.branchName)
-          .map((branch) => (
-          <p>
-            { branch.branchName }
-          </p>
-          ))}
-          <p>[work]</p>
-        { worktreeFiles.filter((worktreeFile) => currentBranch.currentBranchName === worktreeFile.parentBranch)
-        .map((worktreeFile) => (
-          <p>
-            { worktreeFile.fileName } text: { worktreeFile.textStatus }
-          </p>
-          ))}
-          <p>[index]</p>
-        { indexFiles.filter((indexFile) => currentBranch.currentBranchName === indexFile.parentBranch)
-        .map((indexFile) => (
-          <p>
-            { indexFile.fileName } text: { indexFile.textStatus }
-          </p>
-          ))}
-          <p>[repo]</p>
-        { repositoryFiles.filter((repositoryFile) => currentBranch.currentBranchName === repositoryFile.parentBranch)
-        .map((repositoryFile) => (
-          <p>
-            { repositoryFile.fileName } text: { repositoryFile.textStatus }
-          </p>
-          ))}
-          <p>[commit]</p>
-        { commitMessages.filter((commitMessage) => currentBranch.currentBranchName === commitMessage.parentBranch)
-        .map((commitMessage) => (
-          <p>
-            { commitMessage.message }
-          </p>
-          ))}
-          <p>[remoteRepo]</p>
-        { remoteRepositoryFiles.filter((repositoryFile) => currentBranch.currentBranchName === repositoryFile.parentRemoteBranch)
-        .map((repositoryFile) => (
-          <p>
-            { repositoryFile.fileName } text: { repositoryFile.textStatus }
-          </p>
-          ))}
-      </>
+      <div className={classes.set}>
+        <div>
+          <AboutQuiz />
+          {currentUser?.email === "guest_user@git-used-to.com" ? <ReccomendSignUpModal /> : <CreateOrUpdateQuizButton />}
+        </div>
+        <QuizBranchArea />
+        <QuizWorktreeFiles />
+        <QuizIndexArea />
+        <QuizCommitMessageArea />
+        <QuizLocalRepositoryArea />
+      </div>
+      <div className={classes.set}>
+        <QuizRemoteCoimmitMessageArea />
+        <QuizRemoteRepositoryArea />
+        <Terminal />
+      </div>
     </QuizContext.Provider>
   )
 }
