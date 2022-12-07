@@ -37,7 +37,7 @@ const QuizLocalRepositoryArea :React.FC = () => {
     <div className={classes.area}>
       <h4 className={classes.title}>
         <StorageIcon className={classes.icon} />
-        local repository file
+        local repository
       </h4>
       {repositoryFiles.filter((repositoryFile) => repositoryFile.fileName && currentBranch.currentBranchName === repositoryFile.parentBranch)
         .map((repositoryFile, index) => (

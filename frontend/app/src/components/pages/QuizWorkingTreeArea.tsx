@@ -1,4 +1,4 @@
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@material-ui/core"
+import { Box, FormControl, MenuItem, Select } from "@material-ui/core"
 import { makeStyles } from "@material-ui/styles"
 import { useContext } from "react"
 import { QuizContext } from "./CreateQuiz"
@@ -61,7 +61,7 @@ const QuizWorktreeFiles :React.FC = () => {
     <div className={classes.area}>
       <h4 className={classes.title}>
         <InsertDriveFileIcon className={classes.icon} />
-        workingtree area
+        working directory
       </h4>
       {worktreeFiles.filter((worktreeFile) => worktreeFile.fileName && currentBranch.currentBranchName === worktreeFile.parentBranch)
         .map((worktreeFile, index) => (

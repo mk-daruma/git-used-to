@@ -38,7 +38,7 @@ const QuizIndexArea :React.FC = () => {
     <div className={classes.area}>
       <h4 className={classes.title}>
         <DescriptionIcon className={classes.icon} />
-        index area
+        staging area (index)
       </h4>
       {currentBranchIndexFiles.map((indexFile, index) => (
           <div key={index} className={classes.form}>
