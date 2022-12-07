@@ -979,8 +979,8 @@ const InputCommand: React.FC = () => {
                   gitRemoteAdd()
                 } else if (text.startsWith("git add ")){
                   checkMultiData(text, 8, indexFiles) <= 8 ? gitAdd(text, 8) : limitDataErrorMessage("indexFiles", 8)
-                } else if (text.startsWith("git commit --amend")){
-                  gitCommitAmend(text, 19)
+                } else if (text.startsWith("git commit --amend -m")){
+                  gitCommitAmend(text, 22)
                 } else if (text.startsWith("git commit -m")){
                   checkDatacount(repositoryFiles) <= 8
                     && checkDatacount(commitMessages) <= 10
