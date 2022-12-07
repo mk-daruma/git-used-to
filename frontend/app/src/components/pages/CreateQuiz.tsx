@@ -23,6 +23,7 @@ import QuizCommitMessageArea from "./QuizCommitMessageArea";
 import QuizLocalRepositoryArea from "./QuizLocalRepositoryArea";
 import QuizRemoteRepositoryArea from "./QuizRemoteRepositoryArea";
 import QuizRemoteCoimmitMessageArea from "./QuizRemoteCommitMessageArea";
+import AboutAnswerQuiz from "./AboutAnswerQuiz";
 
 const useStyles = makeStyles(() => ({
   set: {
@@ -1107,7 +1108,7 @@ const CreateQuiz: React.FC = () => {
           <Terminal />
         </div>
         <div className={classes.borderForm}>
-          <AboutQuiz />
+          {location.pathname === (`/quiz/answer/${id}`) ? <AboutAnswerQuiz /> : <AboutQuiz />}
           {currentUser?.email === "guest_user@git-used-to.com" ? <ReccomendSignUpModal /> : <CreateOrUpdateQuizButton />}
         </div>
       </div>
