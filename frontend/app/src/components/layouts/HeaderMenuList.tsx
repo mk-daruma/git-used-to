@@ -110,7 +110,7 @@ const HeaderMenuList: React.FC = () => {
                   <MenuItem
                       onClick={handleClose}
                       component={Link}
-                      to="/"
+                      to="/home"
                     >
                       Home
                     </MenuItem>

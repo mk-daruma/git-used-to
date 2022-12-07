@@ -110,7 +110,7 @@ const UserEdit: React.FC = () => {
       if (res.status === 200) {
         setCurrentUser(res.data.data)
 
-        histroy.push("/")
+        histroy.push("/home")
 
         console.log("Update user successfullly!")
       } else {
