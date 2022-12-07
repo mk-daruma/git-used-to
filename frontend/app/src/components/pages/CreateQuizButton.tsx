@@ -20,10 +20,12 @@ import { getUserQuizzes } from "lib/api/users";
 
 const useStyles = makeStyles((theme: Theme) => ({
   submitBtn: {
-    marginTop: theme.spacing(2),
+    margin: theme.spacing(2),
+    marginTop: theme.spacing(0.5),
     flexGrow: 1,
+    width: "90%",
     textTransform: "none",
-    backgroundColor: "#f5f5f5"
+    backgroundColor: "#f5f5f5",
   }
 }))
 

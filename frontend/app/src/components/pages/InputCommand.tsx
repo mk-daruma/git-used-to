@@ -6,7 +6,7 @@ import { AuthContext } from "App";
 const useStyles = makeStyles(() => ({
   input: {
     paddingLeft: 5,
-    color: "#f5f5f5"
+    color: "#00ff7f"
   },
   p: {
     marginTop: 2,
@@ -928,7 +928,7 @@ const InputCommand: React.FC = () => {
         setWorktreeFiles(worktreeFile => [...worktreeFile,{
           fileName: afterCommandMultipleString,
           parentBranch: currentBranch.currentBranchName,
-          textStatus: "おはようございます",
+          textStatus: "おはよう",
           parentBranchId: currentBranch.currentBranchId,
           worktreeFileId: ""
         }])

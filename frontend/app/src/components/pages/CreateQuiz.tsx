@@ -28,6 +28,40 @@ const useStyles = makeStyles(() => ({
   set: {
     display: "flex",
   },
+  branch: {
+    width: "100%",
+    border: "solid",
+    borderRadius: "2rem",
+  },
+  border: {
+    width: "20rem",
+    height: "25rem",
+    border: "solid",
+    borderRadius: "2rem",
+    overflow: 'scroll',
+  },
+  borderRemoteRepository: {
+    width: "20rem",
+    height: "25rem",
+    border: "solid",
+    borderRadius: "2rem",
+    overflow: 'scroll',
+  },
+  borderForm: {
+    width: "20rem",
+    height: "25rem",
+    border: "solid",
+    borderRadius: "2rem",
+    backgroundColor: "#a9a9a9",
+    overflow: 'scroll',
+  },
+  borderTerminal: {
+    width: "20rem",
+    height: "25rem",
+    border: "solid",
+    borderRadius: "2rem",
+    overflow: 'scroll',
+  },
 }))
 
 export const QuizContext = createContext({} as {
@@ -1044,20 +1078,38 @@ const CreateQuiz: React.FC = () => {
         commands, setCommands
         }}>
       <div className={classes.set}>
-        <div>
+        <div className={classes.branch}>
+          <QuizBranchArea />
+        </div>
+      </div>
+      <div className={classes.set}>
+        <div className={classes.border}>
+          <QuizWorktreeFiles />
+        </div>
+        <div className={classes.border}>
+          <QuizIndexArea />
+        </div>
+        <div className={classes.border}>
+          <QuizCommitMessageArea />
+        </div>
+        <div className={classes.border}>
+          <QuizLocalRepositoryArea />
+        </div>
+      </div>
+      <div className={classes.set}>
+        <div className={classes.borderRemoteRepository}>
+          <QuizRemoteCoimmitMessageArea />
+        </div>
+        <div className={classes.borderRemoteRepository}>
+          <QuizRemoteRepositoryArea />
+        </div>
+        <div className={classes.borderTerminal}>
+          <Terminal />
+        </div>
+        <div className={classes.borderForm}>
           <AboutQuiz />
           {currentUser?.email === "guest_user@git-used-to.com" ? <ReccomendSignUpModal /> : <CreateOrUpdateQuizButton />}
         </div>
-        <QuizBranchArea />
-        <QuizWorktreeFiles />
-        <QuizIndexArea />
-        <QuizCommitMessageArea />
-        <QuizLocalRepositoryArea />
-      </div>
-      <div className={classes.set}>
-        <QuizRemoteCoimmitMessageArea />
-        <QuizRemoteRepositoryArea />
-        <Terminal />
       </div>
     </QuizContext.Provider>
   )

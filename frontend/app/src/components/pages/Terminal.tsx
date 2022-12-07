@@ -1,14 +1,38 @@
 import React, { useContext } from "react";
 
 import { makeStyles } from "@material-ui/core/styles"
+import LaptopChromebookIcon from '@material-ui/icons/LaptopChromebook';
 import { AuthContext } from "App";
 import InputCommand from "./InputCommand";
 import { QuizContext } from "./CreateQuiz";
 
 const useStyles = makeStyles(() => ({
-  p: {
-    marginTop: 2,
-    marginBottom: 2
+  userName: {
+    paddingTop: "4px"
+  },
+  terminalForm: {
+    display: "flex",
+  },
+  commandText: {
+    color: "#00ff7f",
+    paddingTop: "1px",
+    paddingLeft: "1rem",
+    display: "flex",
+    flexFlow: "column"
+  },
+  textRecord: {
+    display: "flex",
+    flexFlow: "column"
+  },
+  title: {
+    display: "flex",
+    alignItems: "center",
+    paddingLeft: "2rem",
+    paddingBottom: "1.5rem",
+    borderBottom: "solid",
+  },
+  icon: {
+    marginRight: "1rem"
   }
 }))
 
@@ -18,17 +42,27 @@ const Terminal: React.FC = () => {
   const { commands, addText } = useContext(QuizContext)
 
   return (
-    <div className="App">
-      { commands.map((command) => (
-        <>
-          <p className={classes.p}>{ command.addText }</p>
-          <p className={classes.p}>{currentUser?.userName} % { command.text }</p>
-        </>
-        ))}
-      <p className={classes.p}>{addText}</p>
-        {currentUser?.userName} %
-        <InputCommand />
-    </div>
+    <>
+      <h4 className={classes.title}>
+        <LaptopChromebookIcon className={classes.icon} />
+        Terminal
+      </h4>
+      <div className={classes.commandText}>
+        { commands.map((command) => (
+          <div className={classes.textRecord}>
+            <div>{ command.addText }</div>
+            <div>{currentUser?.userName} % { command.text }</div>
+          </div>
+          ))}
+          {addText}
+        <div className={classes.terminalForm}>
+          <div className={classes.userName}>
+            {currentUser?.userName} %
+          </div>
+          <InputCommand />
+        </div>
+      </div>
+    </>
   );
 }
 
