@@ -2,9 +2,43 @@ import { Avatar, Button } from "@material-ui/core"
 import { AuthContext } from "App"
 import AvatarImage from "components/layouts/Avatar"
 import { getUserProfile } from "lib/api/users"
-import { useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import UserEdit from "./UserEdit"
+
+export const UserProfileContext = createContext({} as {
+  userProfile: {
+    userId: number,
+    userName: string,
+    userSelfIntroduction: string,
+    userImage: {
+      url: string,
+    },
+    userNickname: string,
+    quizzesLength: number,
+    bookmarksLength: number,
+    answerRecordsLength: number,
+    quizAverage: number,
+    answerRecordAverage: number,
+    bookmarkAverage: number
+  }
+
+  setUserProfile: React.Dispatch<React.SetStateAction<{
+    userId: number,
+    userName: string,
+    userSelfIntroduction: string,
+    userImage: {
+      url: string,
+    },
+    userNickname: string,
+    quizzesLength: number,
+    bookmarksLength: number,
+    answerRecordsLength: number,
+    quizAverage: number,
+    answerRecordAverage: number,
+    bookmarkAverage: number
+  }>>
+})
 
 const UserProfile: React.FC = () => {
   const [userProfile, setUserProfile] = useState({
@@ -16,9 +50,13 @@ const UserProfile: React.FC = () => {
     },
     userNickname: "",
     quizzesLength: 0,
-    commentsLength: 0,
-    answerRecordsLength: 0
+    bookmarksLength: 0,
+    answerRecordsLength: 0,
+    quizAverage: 0,
+    answerRecordAverage: 0,
+    bookmarkAverage: 0
   })
+
   const { currentUser } = useContext(AuthContext)
   const { id } = useParams<{ id: string }>()
 
@@ -33,8 +71,12 @@ const UserProfile: React.FC = () => {
       },
       userNickname: userProfileRes.data.userData.nickname,
       quizzesLength: userProfileRes.data.quizzesLength,
-      commentsLength: userProfileRes.data.quizCommentsLength,
+      bookmarksLength: userProfileRes.data.quizBookmarksLength,
       answerRecordsLength: userProfileRes.data.quizAnswerRecordsLength,
+      quizAverage: userProfileRes.data.quizAverage,
+      answerRecordAverage: userProfileRes.data.quizAnswerRecordAverage,
+      bookmarkAverage: userProfileRes.data.quizBookmarkAverage,
+
     })
   }
 
@@ -48,7 +90,11 @@ const UserProfile: React.FC = () => {
 
 
   return(
-    <>
+    <UserProfileContext.Provider
+      value={{
+        userProfile, setUserProfile
+      }}
+      >
       {id === String(currentUser?.id) &&
         <UserEdit />
         }
@@ -77,13 +123,13 @@ const UserProfile: React.FC = () => {
           <p>{userProfile.userName}</p>
           <p>{userProfile.userSelfIntroduction}</p>
           <p>{userProfile.answerRecordsLength}</p>
-          <p>{userProfile.commentsLength}</p>
+          <p>{userProfile.bookmarksLength}</p>
           <p>{userProfile.quizzesLength}</p>
           <p>{userProfile.userName}</p>
           <p>{userProfile.userSelfIntroduction}</p>
         </>
         }
-    </>
+    </UserProfileContext.Provider>
   )
 }
 
