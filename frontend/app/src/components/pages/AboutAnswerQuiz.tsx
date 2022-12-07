@@ -1,9 +1,7 @@
 import React, { useContext } from "react";
 
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles"
-import { AuthContext } from "App";
 import { QuizContext } from "./CreateQuiz";
-import { TextField } from "@material-ui/core";
 import BackupOutlinedIcon from '@material-ui/icons/BackupOutlined';
 
 
@@ -30,8 +28,7 @@ const userStyles = makeStyles((theme: Theme) => createStyles({
 const AboutAnswerQuiz: React.FC = () => {
   const classes = userStyles()
 
-  const { currentUser } = useContext(AuthContext)
-  const { quizTitle, setQuizTitle, quizIntroduction, setQuizIntroduction } = useContext(QuizContext)
+  const { quizTitle, quizIntroduction } = useContext(QuizContext)
 
   return(
     <>
