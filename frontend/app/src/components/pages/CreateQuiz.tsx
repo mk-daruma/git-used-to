@@ -26,41 +26,28 @@ import QuizRemoteCoimmitMessageArea from "./QuizRemoteCommitMessageArea";
 import AboutAnswerQuiz from "./AboutAnswerQuiz";
 
 const useStyles = makeStyles(() => ({
-  set: {
+  position: {
     display: "flex",
+    flexWrap: "wrap"
   },
   branch: {
     width: "100%",
     border: "solid",
     borderRadius: "2rem",
   },
-  border: {
-    width: "20rem",
-    height: "25rem",
-    border: "solid",
-    borderRadius: "2rem",
-    overflow: 'scroll',
-  },
-  borderRemoteRepository: {
-    width: "20rem",
+  area: {
+    width: "19rem",
     height: "25rem",
     border: "solid",
     borderRadius: "2rem",
     overflow: 'scroll',
   },
   borderForm: {
-    width: "20rem",
+    width: "19rem",
     height: "25rem",
     border: "solid",
     borderRadius: "2rem",
     backgroundColor: "#a9a9a9",
-    overflow: 'scroll',
-  },
-  borderTerminal: {
-    width: "20rem",
-    height: "25rem",
-    border: "solid",
-    borderRadius: "2rem",
     overflow: 'scroll',
   },
 }))
@@ -1078,33 +1065,29 @@ const CreateQuiz: React.FC = () => {
         answerRemoteRepositoryFiles, setAnswerRemoteRepositoryFiles,
         commands, setCommands
         }}>
-      <div className={classes.set}>
+      <div className={classes.position}>
         <div className={classes.branch}>
           <QuizBranchArea />
         </div>
-      </div>
-      <div className={classes.set}>
-        <div className={classes.border}>
+        <div className={classes.area}>
           <QuizWorktreeFiles />
         </div>
-        <div className={classes.border}>
+        <div className={classes.area}>
           <QuizIndexArea />
         </div>
-        <div className={classes.border}>
+        <div className={classes.area}>
           <QuizCommitMessageArea />
         </div>
-        <div className={classes.border}>
+        <div className={classes.area}>
           <QuizLocalRepositoryArea />
         </div>
-      </div>
-      <div className={classes.set}>
-        <div className={classes.borderRemoteRepository}>
+        <div className={classes.area}>
           <QuizRemoteCoimmitMessageArea />
         </div>
-        <div className={classes.borderRemoteRepository}>
+        <div className={classes.area}>
           <QuizRemoteRepositoryArea />
         </div>
-        <div className={classes.borderTerminal}>
+        <div className={classes.area}>
           <Terminal />
         </div>
         <div className={classes.borderForm}>
