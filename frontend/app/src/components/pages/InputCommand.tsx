@@ -954,40 +954,6 @@ const InputCommand: React.FC = () => {
     }])
   }
 
-  const forCheck = (text :string, str :number) => {
-    setWorktreeFiles(
-      worktreeFiles.map(worktreeFile =>
-        worktreeFile.fileName === text.substring(str)
-        && worktreeFile.parentBranch === currentBranch.currentBranchName
-        ? {
-          fileName: worktreeFile.fileName,
-          parentBranch: worktreeFile.parentBranch,
-          textStatus: text.substring(str),
-          parentBranchId: worktreeFile.parentBranchId,
-          worktreeFileId: worktreeFile.worktreeFileId
-          }
-        : worktreeFile
-      )
-    )
-  }
-
-  const forCheck2 = (text :string, str :number) => {
-    setWorktreeFiles(
-      worktreeFiles.map(worktreeFile =>
-        worktreeFile.fileName === text.substring(str)
-        && worktreeFile.parentBranch === currentBranch.currentBranchName
-        ? {
-          fileName: worktreeFile.fileName,
-          parentBranch: worktreeFile.parentBranch,
-          textStatus: "こんにちは",
-          parentBranchId: worktreeFile.parentBranchId,
-          worktreeFileId: worktreeFile.worktreeFileId
-          }
-        : worktreeFile
-      )
-    )
-  }
-
   const limitDataErrorMessage = (data: string, num: number) => setAddText(`error: 申し訳ありません。DBの容量確保のため${data}を作成できる数は${num}つまでになっています。`)
   const resetFailedErrorMessage = () => setAddText(`error: 申し訳ありません。DBの容量確保のためgit resetで指定できる数は3以下の数字です。`)
 
@@ -1013,10 +979,6 @@ const InputCommand: React.FC = () => {
                   gitRemoteAdd()
                 } else if (text.startsWith("git add ")){
                   checkMultiData(text, 8, indexFiles) <= 8 ? gitAdd(text, 8) : limitDataErrorMessage("indexFiles", 8)
-                } else if (text.startsWith("kakunin")){
-                  forCheck(text, 8)
-                } else if (text.startsWith("kakunin2")){
-                  forCheck2(text, 9)
                 } else if (text.startsWith("git commit --amend")){
                   gitCommitAmend(text, 19)
                 } else if (text.startsWith("git commit -m")){
