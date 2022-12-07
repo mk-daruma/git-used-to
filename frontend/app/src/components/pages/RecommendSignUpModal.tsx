@@ -118,6 +118,7 @@ const ReccomendSignUpModal :React.FC = () => {
           variant="contained"
           size="large"
           color="default"
+          fullWidth
           className={classes.submitBtn}
           onClick={handleOpen}
           >
