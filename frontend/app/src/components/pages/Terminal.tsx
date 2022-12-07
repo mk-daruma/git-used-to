@@ -5,6 +5,7 @@ import LaptopChromebookIcon from '@material-ui/icons/LaptopChromebook';
 import { AuthContext } from "App";
 import InputCommand from "./InputCommand";
 import { QuizContext } from "./CreateQuiz";
+import QuizCommandCheatModal from "./QuizCommandCheatModal";
 
 const useStyles = makeStyles(() => ({
   userName: {
@@ -33,6 +34,9 @@ const useStyles = makeStyles(() => ({
   },
   icon: {
     marginRight: "1rem"
+  },
+  commandHelp: {
+    paddingLeft: "6rem"
   }
 }))
 
@@ -46,6 +50,9 @@ const Terminal: React.FC = () => {
       <h4 className={classes.title}>
         <LaptopChromebookIcon className={classes.icon} />
         Terminal
+        <div className={classes.commandHelp}>
+          <QuizCommandCheatModal />
+        </div>
       </h4>
       <div className={classes.commandText}>
         { commands.map((command) => (
