@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback } from "react"
+import React, { useContext, useState, useCallback, useEffect } from "react"
 import { useHistory, Link } from "react-router-dom";
 import { Avatar, Card } from "@material-ui/core"
 import { motion } from "framer-motion"
@@ -6,12 +6,9 @@ import { motion } from "framer-motion"
 import TextField from "@material-ui/core/TextField";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button"
-import { Box } from "@material-ui/core";
-import CancelIcon from "@material-ui/icons/Cancel"
 import { IconButton } from "@material-ui/core";
 import { AuthContext } from "App"
 import { updateUser } from "lib/api/users";
-import ReccomendSignUpModal from "./RecommendSignUpModal";
 import UserChart from "./UserChart";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -76,16 +73,10 @@ const UserEdit: React.FC = () => {
   const [name, setName] = useState<string | undefined>(currentUser?.userName)
   const [introduction, setIntroduction] = useState<string | undefined>(currentUser?.userSelfIntroduction)
   const [image, setImage] = useState<string>("")
-  const [preview, setPreview] = useState<string>("")
 
   const uploadImage = useCallback((e :any) => {
     const file = e.target.files[0]
     setImage(file)
-  }, [])
-
-  const previewImage = useCallback((e :any) => {
-    const file = e.target.files[0]
-    setPreview(window.URL.createObjectURL(file))
   }, [])
 
   const createFormData = () => {
@@ -143,7 +134,6 @@ const UserEdit: React.FC = () => {
                 type="file"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   uploadImage(e)
-                  previewImage(e)
                 }}
               />
               <label htmlFor="icon-button-file">
@@ -159,25 +149,6 @@ const UserEdit: React.FC = () => {
                 </IconButton>
               </label>
             </div>
-            {
-              preview ? (
-                <Box
-                  className={classes.box}
-                >
-                  <IconButton
-                    color="inherit"
-                    onClick={() => setPreview("")}
-                  >
-                    <CancelIcon />
-                  </IconButton>
-                  <img
-                    src={preview}
-                    alt="preview img"
-                    className={classes.preview}
-                  />
-                </Box>
-              ) : null
-            }
             <div className={classes.titleFont}>
               【現在の称号】{currentUser?.nickname}
             </div>
@@ -204,47 +175,44 @@ const UserEdit: React.FC = () => {
               setIntroduction(e.target.value)
             }}
             />
-          {currentUser?.email === "guest_user@git-used-to.com"
-            ? <ReccomendSignUpModal />
-            : <>
-                <Button
-                  className={classes.btn}
-                  onClick={handleFormSubmit}
-                  type="submit"
-                  variant="contained"
-                  size="large"
-                  fullWidth
-                  color="default"
-                  disabled={!name || !introduction ? true : false}
-                >
-                  ユーザー情報を更新
-                </Button>
-                <Button
-                  className={classes.btn}
-                  type="submit"
-                  variant="contained"
-                  size="large"
-                  fullWidth
-                  color="default"
-                  component={Link}
-                  to={`/password`}
-                >
-                  パスワード変更はこちら
-                </Button>
-                <Button
-                  className={classes.btn}
-                  type="submit"
-                  variant="contained"
-                  size="large"
-                  fullWidth
-                  color="default"
-                  component={Link}
-                  to={`/user/delete`}
-                >
-                  アカウント削除はこちら
-                </Button>
-              </>
-            }
+          <>
+            <Button
+              className={classes.btn}
+              onClick={handleFormSubmit}
+              type="submit"
+              variant="contained"
+              size="large"
+              fullWidth
+              color="default"
+              disabled={!name || !introduction ? true : false}
+            >
+              ユーザー情報を更新
+            </Button>
+            <Button
+              className={classes.btn}
+              type="submit"
+              variant="contained"
+              size="large"
+              fullWidth
+              color="default"
+              component={Link}
+              to={`/password`}
+            >
+              パスワード変更はこちら
+            </Button>
+            <Button
+              className={classes.btn}
+              type="submit"
+              variant="contained"
+              size="large"
+              fullWidth
+              color="default"
+              component={Link}
+              to={`/user/delete`}
+            >
+              アカウント削除はこちら
+            </Button>
+          </>
         </form>
         <div className={classes.chart}>
           <UserChart />
