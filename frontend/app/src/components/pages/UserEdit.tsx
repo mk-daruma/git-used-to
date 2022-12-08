@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback, useEffect } from "react"
+import React, { useContext, useState, useCallback } from "react"
 import { useHistory, Link } from "react-router-dom";
 import { Avatar, Card } from "@material-ui/core"
 import { motion } from "framer-motion"
@@ -16,11 +16,9 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       "& .MuiTextField-root": {
         marginBottom: theme.spacing(2),
-        width: "100%"
+        maxWidth: 800,
+        width: "100%",
       }
-    },
-    preview: {
-      width: "100%"
     },
     box: {
       margin: "1.5rem"
@@ -30,10 +28,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     input: {
       display: "none"
-    },
-    link: {
-      textDecoration: "none",
-      padding: "1.5rem"
     },
     image: {
       width: theme.spacing(10),
@@ -51,10 +45,16 @@ const useStyles = makeStyles((theme: Theme) =>
       maxWidth: 1600,
       borderRadius: "2rem",
       display: "flex",
-      alignItems: "center"
+      flexWrap: "wrap",
+      alignItems: "center",
+      justifyContent: "center"
     },
     btn: {
       marginBottom: "1.5rem"
+    },
+    btns: {
+      display: "flex",
+      flexFlow: "column",
     },
     chart: {
       paddingLeft: "1.5rem"
@@ -153,36 +153,37 @@ const UserEdit: React.FC = () => {
               【現在の称号】{currentUser?.nickname}
             </div>
           </div>
-          <TextField
-            required
-            id="outlined-required"
-            label="名前"
-            defaultValue={`${currentUser?.userName}`}
-            variant="outlined"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>{
-              setName(e.target.value)
-            }}
-            />
-          <TextField
-            required
-            multiline
-            minRows="10"
-            id="outlined-required"
-            label="自己紹介文"
-            defaultValue={currentUser?.userSelfIntroduction}
-            variant="outlined"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>{
-              setIntroduction(e.target.value)
-            }}
-            />
-          <>
+          <div>
+            <TextField
+              required
+              id="outlined-required"
+              label="名前"
+              defaultValue={`${currentUser?.userName}`}
+              variant="outlined"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>{
+                setName(e.target.value)
+              }}
+              />
+            <TextField
+              required
+              multiline
+              minRows="10"
+              id="outlined-required"
+              label="自己紹介文"
+              defaultValue={currentUser?.userSelfIntroduction}
+              variant="outlined"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>{
+                setIntroduction(e.target.value)
+              }}
+              />
+          </div>
+          <div className={classes.btns}>
             <Button
               className={classes.btn}
               onClick={handleFormSubmit}
               type="submit"
               variant="contained"
               size="large"
-              fullWidth
               color="default"
               disabled={!name || !introduction ? true : false}
             >
@@ -193,7 +194,6 @@ const UserEdit: React.FC = () => {
               type="submit"
               variant="contained"
               size="large"
-              fullWidth
               color="default"
               component={Link}
               to={`/password`}
@@ -205,14 +205,13 @@ const UserEdit: React.FC = () => {
               type="submit"
               variant="contained"
               size="large"
-              fullWidth
               color="default"
               component={Link}
               to={`/user/delete`}
             >
               アカウント削除はこちら
             </Button>
-          </>
+          </div>
         </form>
         <div className={classes.chart}>
           <UserChart />

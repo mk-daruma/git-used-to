@@ -1,3 +1,4 @@
+import { makeStyles, Theme } from "@material-ui/core";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -54,8 +55,8 @@ const UserChart: React.FC = () => {
 
   return(
     <Bar
-      height={600}
-      width={600}
+      height={500}
+      width={450}
       options={options}
       data={data}
       />

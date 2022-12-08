@@ -16,24 +16,15 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       "& .MuiTextField-root": {
         marginBottom: theme.spacing(2),
-        width: "100%"
+        maxWidth: 800,
+        width: "100%",
       }
-    },
-    preview: {
-      width: "100%"
     },
     box: {
       margin: "1.5rem"
     },
     imageUploadBtn: {
       textAlign: "right"
-    },
-    input: {
-      display: "none"
-    },
-    link: {
-      textDecoration: "none",
-      padding: "1.5rem"
     },
     image: {
       width: theme.spacing(10),
@@ -51,10 +42,16 @@ const useStyles = makeStyles((theme: Theme) =>
       maxWidth: 1600,
       borderRadius: "2rem",
       display: "flex",
-      alignItems: "center"
+      flexWrap: "wrap",
+      alignItems: "center",
+      justifyContent: "center"
     },
     btn: {
       marginBottom: "1.5rem"
+    },
+    btns: {
+      display: "flex",
+      flexFlow: "column",
     },
     chart: {
       paddingLeft: "1.5rem"
@@ -95,51 +92,51 @@ const OtherUserProfile: React.FC = () => {
               【現在の称号】{userProfile.userNickname}
             </div>
           </div>
-          <TextField
-            required
-            multiline
-            id="outlined-required"
-            disabled={true}
-            defaultValue={`${userProfile.userName}`}
-            variant="outlined"
-            />
-          <TextField
-            required
-            multiline
-            minRows="10"
-            id="outlined-required"
-            disabled={true}
-            defaultValue={userProfile.userSelfIntroduction}
-            variant="outlined"
-            />
-            {checkGuestUser
-            ? <ReccomendSignUpModal />
-            : <>
-                <Button
-                  className={classes.btn}
-                  type="submit"
-                  variant="contained"
-                  size="large"
-                  fullWidth
-                  color="default"
-                  component={Link}
-                  to={`/user/${userProfile.userId}/quiz/list`}
-                >
-                  {userProfile.userName}が作成したクイズ一覧
-                </Button>
-                <Button
-                  className={classes.btn}
-                  type="submit"
-                  variant="contained"
-                  size="large"
-                  fullWidth
-                  color="default"
-                  component={Link}
-                  to={`/user/${userProfile.userId}/quiz/bookmark/list`}
-                >
-                  {userProfile.userName}がブックマークしたクイズ一覧
-                </Button>
-              </>
+          <div>
+            <TextField
+              required
+              multiline
+              id="outlined-required"
+              disabled={true}
+              defaultValue={`${userProfile.userName}`}
+              variant="outlined"
+              />
+            <TextField
+              required
+              multiline
+              minRows="10"
+              id="outlined-required"
+              disabled={true}
+              defaultValue={`${userProfile.userSelfIntroduction}`}
+              variant="outlined"
+              />
+            </div>
+          {checkGuestUser
+          ? <ReccomendSignUpModal />
+          : <div className={classes.btns}>
+              <Button
+                className={classes.btn}
+                type="submit"
+                variant="contained"
+                size="large"
+                color="default"
+                component={Link}
+                to={`/user/${userProfile.userId}/quiz/list`}
+              >
+                {userProfile.userName}が作成したクイズ一覧
+              </Button>
+              <Button
+                className={classes.btn}
+                type="submit"
+                variant="contained"
+                size="large"
+                color="default"
+                component={Link}
+                to={`/user/${userProfile.userId}/quiz/bookmark/list`}
+              >
+                {userProfile.userName}がブックマークしたクイズ一覧
+              </Button>
+            </div>
             }
         </form>
         <div className={classes.chart}>
