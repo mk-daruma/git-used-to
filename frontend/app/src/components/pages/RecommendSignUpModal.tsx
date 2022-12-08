@@ -34,6 +34,14 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
     flexGrow: 1,
     textTransform: "none"
+  },
+  quizButton: {
+    margin: theme.spacing(2),
+    marginTop: theme.spacing(0.5),
+    flexGrow: 1,
+    width: "90%",
+    textTransform: "none",
+    backgroundColor: "#f5f5f5",
   }
 }));
 
@@ -90,20 +98,7 @@ const ReccomendSignUpModal :React.FC = () => {
       {location.pathname === "/quiz" &&
         <Button
           onClick={handleOpen}
-          className={classes.submitBtn}
-          type="submit"
-          variant="contained"
-          size="large"
-          fullWidth
-          color="default"
-          >
-          ゲストログイン中はここまで
-        </Button>
-      }
-      {location.pathname === "/quiz" &&
-        <Button
-          onClick={handleOpen}
-          className={classes.submitBtn}
+          className={classes.quizButton}
           type="submit"
           variant="contained"
           size="large"
@@ -122,7 +117,7 @@ const ReccomendSignUpModal :React.FC = () => {
           className={classes.submitBtn}
           onClick={handleOpen}
           >
-          Submit
+          ゲストログイン中はここまで
         </Button>
       }
       <Modal
