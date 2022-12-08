@@ -1,4 +1,3 @@
-import { AuthContext } from "App";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -22,7 +21,6 @@ ChartJS.register(
 );
 
 const UserChart: React.FC = () => {
-  const { currentUser } = useContext(AuthContext)
   const { userProfile } = useContext(UserProfileContext)
   const options = {
     responsive: false,
@@ -32,7 +30,7 @@ const UserChart: React.FC = () => {
       },
       title: {
         display: true,
-        text: `${currentUser?.userName}さんの記録`
+        text: `${userProfile.userName}さんの記録`
       }
     }
   };
@@ -42,7 +40,7 @@ const UserChart: React.FC = () => {
     labels,
     datasets: [
       {
-        label: `${currentUser?.userName}さん`,
+        label: `${userProfile.userName}さん`,
         data: [userProfile.quizzesLength, userProfile.answerRecordsLength, userProfile.bookmarksLength],
         backgroundColor: "rgba(255, 99, 132, 0.5)"
       },
