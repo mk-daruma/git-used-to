@@ -56,14 +56,21 @@ class Api::V1::UsersController < ApplicationController
   def profile
     quizzes = @user.quizzes.length
     quiz_answer_records = @user.quiz_answer_records.length
-    quiz_comments = @user.quiz_comments.length
+    quiz_bookmarks = QuizBookmark.where(quiz_id: Quiz.where(user_id: @user.id)).length
+    all_user_count = User.preload(:quizzes).length
+    quiz_average = Quiz.preload(:user).length
+    quiz_answer_record_average = QuizAnswerRecord.preload(:quiz).length
+    quiz_bookmark_average = QuizBookmark.preload(:quiz).length
     render json: {
       status: 'SUCCESS',
       message: 'Loaded user info',
       user_data: @user,
       quizzes_length: quizzes,
       quiz_answer_records_length: quiz_answer_records,
-      quiz_comments_length: quiz_comments,
+      quiz_bookmarks_length: quiz_bookmarks,
+      quiz_average: quiz_average / all_user_count,
+      quiz_answer_record_average: quiz_answer_record_average / all_user_count,
+      quiz_bookmark_average: quiz_bookmark_average / all_user_count,
     }
   end
 

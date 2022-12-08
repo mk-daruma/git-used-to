@@ -125,12 +125,14 @@ RSpec.describe "Api::V1::Users", type: :request do
 
   describe "GET /api/v1/users#profile" do
     let!(:user) { create(:user) }
-    let!(:related_quizzes) { create_list(:quiz, 5, user: user) }
-    let!(:no_related_quiz) { create(:quiz) }
+    let!(:no_related_user) { create(:user) }
+    let!(:related_quiz) { create(:quiz, user: user) }
+    let!(:related_quizzes) { create_list(:quiz, 4, user: user) }
+    let!(:no_related_quiz) { create(:quiz, user: no_related_user) }
     let!(:related_quiz_answer_records) { create_list(:quiz_answer_record, 5, user: user) }
-    let!(:no_related_quiz_answer_record) { create(:quiz_answer_record) }
-    let!(:related_quiz_comments) { create_list(:quiz_comment, 5, user: user) }
-    let!(:no_related_quiz_comment) { create(:quiz_comment) }
+    let!(:no_related_quiz_answer_record) { create(:quiz_answer_record, user: no_related_user) }
+    let!(:related_quiz_bookmarks) { create_list(:quiz_bookmark, 5, quiz: related_quiz) }
+    let!(:no_related_quiz_bookmarks) { create(:quiz_bookmark, quiz: no_related_quiz) }
 
     context "引数がuserのidの場合" do
       before do
@@ -159,14 +161,29 @@ RSpec.describe "Api::V1::Users", type: :request do
         expect(res["quiz_answer_records_length"]).to eq(5)
       end
 
-      it "userに関連するquiz_commentデータ数を取得できること" do
+      it "userが作成したクイズに関連しているquiz_bookmarkのデータ数を取得できること" do
         res = JSON.parse(response.body)
-        expect(res["quiz_comments_length"]).to eq(5)
+        expect(res["quiz_bookmarks_length"]).to eq(5)
       end
 
-      it "取得するdataの要素が6つであること" do
+      it "ユーザーの合計数と作成されたクイズ数の合計で一人当たりが作成したクイズの平均数を取得できること" do
         res = JSON.parse(response.body)
-        expect(res.length).to eq 6
+        expect(res["quiz_average"]).to eq(Quiz.count / User.count)
+      end
+
+      it "ユーザーの合計数と解答されたクイズ数の合計で一人当たりが解答したクイズの平均数を取得できること" do
+        res = JSON.parse(response.body)
+        expect(res["quiz_answer_record_average"]).to eq(QuizAnswerRecord.count / User.count)
+      end
+
+      it "ユーザーの合計数と作成されたクイズのブックマークされた数の合計で一人当たりがブックマークされた平均数を取得できること" do
+        res = JSON.parse(response.body)
+        expect(res["quiz_bookmark_average"]).to eq(QuizBookmark.count / User.count)
+      end
+
+      it "取得するdataの要素が9つであること" do
+        res = JSON.parse(response.body)
+        expect(res.length).to eq 9
       end
     end
   end
