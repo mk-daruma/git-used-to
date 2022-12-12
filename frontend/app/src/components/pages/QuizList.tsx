@@ -12,6 +12,7 @@ import QuizBookmarkButton from "./QuizBookmarkButton";
 import QuizComment from "./QuizComment";
 import QuizSearchForm from "./QuizSearchForm";
 import ReccomendSignUpModal from "./RecommendSignUpModal";
+import { motion } from "framer-motion"
 
 export const QuizBookmarkContext = createContext({} as {
   quizzes:{
@@ -103,24 +104,65 @@ export const QuizBookmarkContext = createContext({} as {
 })
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: '2px 4px',
-    display: 'flex',
-    alignItems: 'center',
-    width: 400,
+  list: {
+    display: "flex",
+  },
+  searchForm: {
+    maxWidth: 1000,
+    minWidth: 1,
+    width: "35%",
+    padding: theme.spacing(8),
+    height: "25rem",
+    overflow: 'scroll',
+  },
+  quizList: {
+    maxWidth: 1000,
+    minWidth: 1,
+    width: "65%",
+    padding: theme.spacing(3),
+    height: "50rem",
+    overflow: 'scroll',
+  },
+  quiz: {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent:"space-between",
+    maxWidth: 1000,
+    minWidth: 1,
+    width: "90%",
+    backgroundColor: "white",
+    borderRadius: "2rem",
+    margin: theme.spacing(1),
+    padding: theme.spacing(1)
+  },
+  rightPosition: {
+    display: "flex",
+    flexFlow: "column",
+    width: "10rem"
+  },
+  leftPosition: {
+    width: "10rem"
   },
   input: {
     marginLeft: theme.spacing(1),
     flex: 1,
-  },
-  iconButton: {
-    padding: 10,
   },
   submitBtn: {
     marginTop: theme.spacing(2),
     flexGrow: 1,
     textTransform: "none",
     backgroundColor: "#f5f5f5"
+  },
+  userName: {
+    paddingLeft: theme.spacing(2)
+  },
+  quizName: {
+    color: "black"
+  },
+  quizIntro: {
+    flexFlow: "column",
+    color: "black",
+    overflowWrap: "break-word"
   }
 }))
 
@@ -296,79 +338,114 @@ const QuizList: React.FC = () => {
         quizComment, setQuizComment,
         quizTags, setQuizTags
       }}>
-      <QuizSearchForm />
-      {quizzes
-      .filter(quiz => quiz.id)
-      .map((quiz, index) => (
-        <div key={index}>
-          {currentPath(`/quiz/list`) &&
-            <>
-              <AvatarImage image={quiz.parentUserImage.url} rank={quiz.parentUserNickname} />
-              <Button
-                type="submit"
-                variant="contained"
-                size="large"
-                fullWidth
-                color="default"
-                className={classes.submitBtn}
-                component={Link}
-                to={`/user/${quiz.userId}/edit`}
-              >
-                {quiz.parentUserName}
-              </Button>
-              </>
-          }
-          <p>{ quiz.id }</p>
-          <p>{ quiz.quizTitle }</p>
-          <p>{ quiz.quizIntroduction }</p>
-          <Button
-            type="submit"
-            variant="contained"
-            size="large"
-            fullWidth
-            color="default"
-            className={classes.submitBtn}
-            component={Link}
-            to={`/quiz/edit/${quiz.id}`}
-          >
-            編集
-          </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            size="large"
-            fullWidth
-            color="default"
-            className={classes.submitBtn}
-            component={Link}
-            to={`/quiz/init/edit/${quiz.id}`}
-          >
-            初期値を編集
-          </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            size="large"
-            fullWidth
-            color="default"
-            className={classes.submitBtn}
-            component={Link}
-            to={`/quiz/answer/${quiz.id}`}
-          >
-            解答する
-          </Button>
-          {currentUser?.email === "guest_user@git-used-to.com"
-          ? <ReccomendSignUpModal />
-          : <QuizBookmarkButton
-              quizId={Number(quiz.id)}
-              bookmarkId={getBookmarkId(quiz.id)}
-            />
-            }
-          <QuizComment
-            quizId={Number(quiz.id)}
-          />
-        </div>
-        ))}
+        <motion.div
+          className={classes.list}
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            duration: 1.5,
+            delay: 1.2,
+            ease: [0, 0.71, 0.2, 1.01]
+          }}
+        >
+          <div className={classes.searchForm}>
+            <QuizSearchForm />
+          </div>
+          <div className={classes.quizList}>
+            {quizzes
+            .filter(quiz => quiz.id)
+            .map((quiz, index) => (
+              <motion.div
+                className={classes.quiz}
+                key={index}
+                whileHover={{ scale: 1.1 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 10
+                }}
+                variants={{
+                  offscreen: {
+                    y: 100,
+                    opacity: 0,
+                  },
+                  onscreen: {
+                    y: 0,
+                    opacity: 1,
+                    transition: {
+                      duration: 0.5,
+                    },
+                  },
+                }}
+                initial="offscreen"
+                whileInView="onscreen"
+                viewport={{ once: false, amount: 0 }}
+                >
+                <div className={classes.leftPosition}>
+                  <Button
+                    component={Link}
+                    to={`/user/${quiz.userId}/edit`}
+                    >
+                    <AvatarImage image={quiz.parentUserImage.url} rank={quiz.parentUserNickname} />
+                    <div className={classes.userName}>
+                      {quiz.parentUserName}
+                    </div>
+                  </Button>
+                  <div className={classes.quizName}>
+                    【クイズ】<br />
+                    { quiz.quizTitle }
+                  </div>
+                  <div className={classes.quizIntro}>
+                    【紹介文】<br/>
+                    { quiz.quizIntroduction }
+                  </div>
+                </div>
+                <div className={classes.rightPosition}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="default"
+                    className={classes.submitBtn}
+                    component={Link}
+                    to={`/quiz/edit/${quiz.id}`}
+                  >
+                    編集
+                  </Button>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="default"
+                    className={classes.submitBtn}
+                    component={Link}
+                    to={`/quiz/init/edit/${quiz.id}`}
+                  >
+                    初期値を編集
+                  </Button>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="default"
+                    className={classes.submitBtn}
+                    component={Link}
+                    to={`/quiz/answer/${quiz.id}`}
+                  >
+                    解答する
+                  </Button>
+                  {currentUser?.email === "guest_user@git-used-to.com"
+                  ? <ReccomendSignUpModal />
+                  : <QuizBookmarkButton
+                      quizId={Number(quiz.id)}
+                      bookmarkId={getBookmarkId(quiz.id)}
+                    />
+                    }
+                  {/* <QuizComment
+                    quizId={Number(quiz.id)}
+                  /> */}
+                </div>
+              </motion.div>
+              ))}
+            </div>
+        </motion.div>
       </QuizBookmarkContext.Provider>
     </>
   )
