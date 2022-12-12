@@ -74,16 +74,24 @@ export const QuizBookmarkContext = createContext({} as {
     quizId: string,
   }[]>>
   quizCommentHistory: {
-    id: number,
-    userId: number,
-    quizId: number,
-    comment: string
+    comment: {
+      id: number,
+      userId: number,
+      quizId: number,
+      comment: string,
+    },
+    commentedUserName: string,
+    commentedUserImage: string
   }[]
   setQuizCommentHistory :React.Dispatch<React.SetStateAction<{
-    id: number,
-    userId: number,
-    quizId: number,
-    comment: string
+    comment: {
+      id: number,
+      userId: number,
+      quizId: number,
+      comment: string,
+    },
+    commentedUserName: string,
+    commentedUserImage: string
   }[]>>
   quizTags: {
     id: number,
@@ -208,10 +216,14 @@ const QuizList: React.FC = () => {
     quizId: "",
   }])
   const [quizCommentHistory, setQuizCommentHistory] = useState([{
-    id: 0,
-    userId: 0,
-    quizId: 0,
-    comment: ""
+    comment: {
+      id: 0,
+      userId: 0,
+      quizId: 0,
+      comment: "",
+    },
+    commentedUserName: "",
+    commentedUserImage: ""
   }])
   const [quizTags, setQuizTags] = useState([{
     id: 0,
@@ -331,17 +343,17 @@ const QuizList: React.FC = () => {
 
   return (
     <>
-    <QuizBookmarkContext.Provider
-      value={{
-        searchQuiztitle, setSearchQuiztitle,
-        searchQuizIntroduction, setSearchQuizIntroduction,
-        quizzes, setQuizzes,
-        quizzesForSearch, setQuizzesForSearch,
-        quizBookmarks, setQuizBookmarks,
-        quizCommentHistory, setQuizCommentHistory,
-        quizComment, setQuizComment,
-        quizTags, setQuizTags
-      }}>
+      <QuizBookmarkContext.Provider
+        value={{
+          searchQuiztitle, setSearchQuiztitle,
+          searchQuizIntroduction, setSearchQuizIntroduction,
+          quizzes, setQuizzes,
+          quizzesForSearch, setQuizzesForSearch,
+          quizBookmarks, setQuizBookmarks,
+          quizCommentHistory, setQuizCommentHistory,
+          quizComment, setQuizComment,
+          quizTags, setQuizTags
+        }}>
         <motion.div
           className={classes.list}
           initial={{ opacity: 0, scale: 0.5 }}
