@@ -1,4 +1,4 @@
-import { Button, createStyles, makeStyles, Modal, TextField, Theme } from "@material-ui/core"
+import { Avatar, Button, createStyles, makeStyles, Modal, TextField, Theme } from "@material-ui/core"
 import DeleteIcon from '@material-ui/icons/Delete';
 import { AuthContext } from "App"
 import { createQuizComment, deleteQuizComment } from "lib/api/quiz_comments"
@@ -6,18 +6,9 @@ import { useContext, useState } from "react"
 import { QuizBookmarkContext } from "./QuizList"
 import SmsIcon from '@material-ui/icons/Sms';
 
-const rand = () => {
-  return Math.round(Math.random() * 20) - 10;
-}
-
 const getModalStyle = () => {
-  const top = 50 + rand();
-  const left = 50 + rand();
-
   return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
+    top: `50%`
   };
 }
 
@@ -36,9 +27,30 @@ const userStyles = makeStyles((theme: Theme) => createStyles({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
+  modal: {
+    padding: theme.spacing(3),
+    height: "20rem",
+    overflow: 'scroll',
+  },
   comment: {
     display: "flex",
-    flexFlow: "column",
+    flexDirection: "column",
+    marginBottom: theme.spacing(2),
+  },
+  commentedUser: {
+    display: "flex",
+    alignItems: "center",
+  },
+  commentedUserImage: {
+    marginRight: theme.spacing(1),
+  },
+  commentForm: {
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column",
+  },
+  commentBtn: {
+    height: "100%"
   },
   submitBtn: {
     marginTop: theme.spacing(2),
@@ -67,7 +79,7 @@ const QuizComment: React.FC<{ quizId: number }> = ({quizId}) => {
     setOpen(false)
   }
 
-  const quizComments = quizCommentHistory.filter(commentHistory => commentHistory.quizId === quizId)
+  const quizComments = quizCommentHistory.filter(commentHistory => commentHistory.comment.quizId === quizId)
 
   const handleCreateQuizCommentSubmit = async() => {
     try {
@@ -78,10 +90,14 @@ const QuizComment: React.FC<{ quizId: number }> = ({quizId}) => {
       }
       const quizCommentRes = await createQuizComment(quizCommentData)
       setQuizCommentHistory((commentHistory) => [...commentHistory,{
-        id: quizCommentRes.data.data.id,
-        quizId: quizCommentRes.data.data.quizId,
-        userId:quizCommentRes.data.data.userId,
-        comment: quizCommentRes.data.data.comment
+        comment: {
+          id: quizCommentRes.data.comment.id,
+          userId: quizCommentRes.data.comment.userId,
+          quizId: quizCommentRes.data.comment.quizId,
+          comment: quizCommentRes.data.comment.comment,
+        },
+        commentedUserName: quizCommentRes.data.commentedUserName,
+        commentedUserImage: quizCommentRes.data.commentedUserImage
       }])
       setQuizComment("")
       console.log("quizCommentRes", quizCommentRes)
@@ -93,7 +109,7 @@ const QuizComment: React.FC<{ quizId: number }> = ({quizId}) => {
   const handleDeleteQuizCommentSubmit = async(e: React.MouseEvent<HTMLButtonElement>,commentId :any) => {
     try {
       deleteQuizComment(commentId)
-      setQuizCommentHistory(quizCommentHistory.filter(comment => comment.id !== commentId))
+      setQuizCommentHistory(quizCommentHistory.filter(comment => comment.comment.id !== commentId))
     } catch (err) {
       console.log(err)
     }
@@ -111,52 +127,61 @@ const QuizComment: React.FC<{ quizId: number }> = ({quizId}) => {
         <SmsIcon /> {quizComments.length}
       </Button>
       <Modal
+        className={classes.modal}
         open={open}
         onClose={closeModal}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
         <div style={modalStyle} className={classes.paper}>
-          <form className={classes.root} noValidate autoComplete="off">
-            <TextField
-              required
-              id="outlined-required"
-              label="コメント(100文字まで)"
-              variant="outlined"
-              value={quizComment}
-              onKeyDown={e => {e.key === 'Enter' && e.preventDefault()}}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>{
-                setQuizComment(e.target.value)
-              }}
-            />
-          </form>
-          <Button
-            type="submit"
-            variant="contained"
-            size="large"
-            color="default"
-            disabled={!quizComment || quizComment.length > 100}
-            className={classes.submitBtn}
-            onClick={handleCreateQuizCommentSubmit}
-            >
-            Submit
-          </Button>
           {quizCommentHistory &&
             quizComments.map(comment =>
-              <p key={comment.id}>
-                {comment.comment}
-                <Button
-                  type="submit"
-                  variant="contained"
-                  size="large"
-                  color="default"
-                  className={classes.submitBtn}
-                  onClick={e => handleDeleteQuizCommentSubmit(e, comment.id)}
-                  >
-                  <DeleteIcon />
-                </Button>
-              </p>
+              <div key={comment.comment.id} className={classes.comment}>
+                <div className={classes.commentedUser}>
+                  <Avatar
+                    className={classes.commentedUserImage}
+                    src={comment.commentedUserImage}
+                    />
+                  {comment.commentedUserName}
+                </div>
+                <div>
+                  コメント:<br /> {comment.comment.comment}
+                  {comment.comment.userId === currentUser?.id &&
+                    <Button
+                      onClick={e => handleDeleteQuizCommentSubmit(e, comment.comment.id)}
+                      >
+                      <DeleteIcon />
+                    </Button>
+                  }
+                </div>
+              </div>
             )}
+          <div className={classes.commentForm}>
+            <form className={classes.root} noValidate autoComplete="off">
+              <TextField
+                required
+                multiline
+                minRows="3"
+                id="outlined-required"
+                label="コメント(100文字まで)"
+                variant="outlined"
+                value={quizComment}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>{
+                  setQuizComment(e.target.value)
+                }}
+              />
+            </form>
+            <Button
+              type="submit"
+              variant="contained"
+              color="default"
+              disabled={!quizComment || quizComment.length > 100}
+              className={classes.commentBtn}
+              onClick={handleCreateQuizCommentSubmit}
+              >
+              Submit
+            </Button>
+          </div>
         </div>
       </Modal>
     </div>
