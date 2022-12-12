@@ -133,7 +133,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: "white",
     borderRadius: "2rem",
     margin: theme.spacing(1),
-    padding: theme.spacing(1)
+    padding: theme.spacing(2)
   },
   rightPosition: {
     display: "flex",
@@ -163,6 +163,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexFlow: "column",
     color: "black",
     overflowWrap: "break-word"
+  },
+  bookmarkAndCommentButton: {
+    display: "flex",
+    alignItems: "center"
   }
 }))
 
@@ -438,9 +442,9 @@ const QuizList: React.FC = () => {
                       bookmarkId={getBookmarkId(quiz.id)}
                     />
                     }
-                  {/* <QuizComment
+                  <QuizComment
                     quizId={Number(quiz.id)}
-                  /> */}
+                  />
                 </div>
               </motion.div>
               ))}
