@@ -198,6 +198,7 @@ RSpec.describe "Api::V1::Quizzes", type: :request do
           expect(res["rank_in_quiz_data"][i]["rank_in_quiz_data"]["quiz_type"]).to eq(quiz.quiz_type)
           expect(res["rank_in_quiz_data"][i]["create_user_name"]).to eq(user.user_name)
           expect(res["rank_in_quiz_data"][i]["create_user_image"]).to eq(user.image.url)
+          expect(res["rank_in_quiz_data"][i]["create_user_title"]).to eq(user.nickname)
           expect(res["rank_in_quiz_data"][i]["bookmark_count"]).to eq(quiz.quiz_bookmarks.length)
         end
         expect(res["rank_in_quiz_data"].length).to eq(3)
