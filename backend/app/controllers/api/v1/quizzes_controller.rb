@@ -86,6 +86,7 @@ class Api::V1::QuizzesController < ApplicationController
           rank_in_quiz_data: rank_in_quiz,
           create_user_name: create_user.first.user_name,
           create_user_image: create_user.first.image.url,
+          create_user_title: create_user.first.nickname,
           bookmark_count: bookmark_count,
         })
       end

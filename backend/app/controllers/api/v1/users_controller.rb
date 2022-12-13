@@ -104,7 +104,9 @@ class Api::V1::UsersController < ApplicationController
         rank_in_users_hash.push({
           create_user_id: user.id,
           create_user_name: user.user_name,
+          create_user_introduction: user.user_self_introduction,
           create_user_image: user.image.url,
+          create_user_title: user.nickname,
           bookmark_count: bookmark_count,
         })
       end
