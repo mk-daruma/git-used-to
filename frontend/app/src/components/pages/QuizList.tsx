@@ -5,7 +5,7 @@ import { getAllQuizzes } from "lib/api/quizzes";
 import { getAllQuizBookmarks } from "lib/api/quiz_boolmarks";
 import { getAllQuizComments } from "lib/api/quiz_comments";
 import { getAllQuizTags } from "lib/api/quiz_tags";
-import { getAllUsers, getUserQuizzes, getUserSelfBookmarked } from "lib/api/users"
+import { getUserQuizzes, getUserSelfBookmarked } from "lib/api/users"
 import React, { useContext, useState, useEffect, createContext } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import QuizBookmarkButton from "./QuizBookmarkButton";
@@ -254,31 +254,27 @@ const QuizList: React.FC = () => {
   const handleGetQuizzes = async () => {
     try {
       const quizStates = [setQuizzes, setQuizzesForSearch]
-      const resUsers = await getAllUsers()
       const resQuizzes = await getAllQuizzes()
       const resAllBookmarks = await getAllQuizBookmarks()
       const resQuizComments = await getAllQuizComments()
       const resAllTags = await getAllQuizTags()
       console.log(resQuizzes)
       if (resQuizzes?.status === 200) {
-        resUsers?.data.data.forEach((resUser :any) =>
-          resQuizzes.data.data
-          .filter((resQuiz :any) => resQuiz.userId === resUser.id)
+        resQuizzes.data.data
           .map((resQuiz :any) =>
           quizStates.map(quizState =>
             quizState(quizzes => [...quizzes,{
-              id: resQuiz.id,
-              userId: resUser.id,
-              parentUserName: resUser.userName,
+              id: resQuiz.quiz.id,
+              userId: resQuiz.quiz.userId,
+              parentUserName: resQuiz.createdUserName,
               parentUserImage: {
-                  url: resUser.image.url
+                  url: resQuiz.createdUserImage
               },
-              parentUserNickname: resUser.nickname,
-              quizTitle: resQuiz.quizTitle,
-              quizIntroduction: resQuiz.quizIntroduction,
-              createdAt: resQuiz.createdAt,
+              parentUserNickname: resQuiz.createdUserNickname,
+              quizTitle: resQuiz.quiz.quizTitle,
+              quizIntroduction: resQuiz.quiz.quizIntroduction,
+              createdAt: resQuiz.quiz.createdAt,
             }])))
-          )
         setQuizBookmarks(resAllBookmarks?.data.data)
         setQuizCommentHistory(resQuizComments?.data.data)
         setQuizTags(resAllTags?.data.data)

@@ -2,11 +2,21 @@ class Api::V1::QuizzesController < ApplicationController
   before_action :set_quiz, only: [:show, :update, :destroy, :tag]
 
   def index
+    quiz_hash = []
     quizzes = Quiz.preload(:user)
+    quizzes.map do |quiz|
+      user = User.find(quiz.user_id)
+      quiz_hash.push({
+        quiz: quiz,
+        created_user_name: user.user_name,
+        created_user_nickname: user.nickname,
+        created_user_image: user.image.url,
+      })
+    end
     render json: {
       status: 'SUCCESS',
       message: 'Loaded quizzes',
-      data: quizzes,
+      data: quiz_hash,
     }
   end
 
