@@ -3,8 +3,9 @@ require "date"
 
 RSpec.describe "Api::V1::Quizzes", type: :request do
   let(:user) { create(:user) }
-  let!(:quiz) { create(:quiz) }
-  let!(:quiz2) { create(:quiz) }
+  let(:user2) { create(:user) }
+  let!(:quiz) { create(:quiz, user: user) }
+  let!(:quiz2) { create(:quiz, user: user2) }
   let!(:quiz_first_or_last) { create(:quiz_first_or_last, quiz: quiz) }
   let!(:quiz_first_or_last2) { create(:quiz_first_or_last, quiz: quiz) }
   let!(:quiz_first_or_last3) { create(:quiz_first_or_last, quiz: quiz2) }
@@ -35,12 +36,18 @@ RSpec.describe "Api::V1::Quizzes", type: :request do
       get api_v1_quizzes_path
     end
 
-    it "全てのquizデータを取得できていること" do
+    it "全てのquizと関連するuserのデータを取得できていること" do
       res = JSON.parse(response.body)
       expect(res["status"]).to eq("SUCCESS")
       expect(res["message"]).to eq("Loaded quizzes")
-      expect(res["data"][0]["id"]).to eq(quiz.id)
-      expect(res["data"][1]["id"]).to eq(quiz2.id)
+      expect(res["data"][0]["quiz"]["id"]).to eq(quiz.id)
+      expect(res["data"][1]["quiz"]["id"]).to eq(quiz2.id)
+      expect(res["data"][0]["created_user_name"]).to eq(user.user_name)
+      expect(res["data"][1]["created_user_name"]).to eq(user2.user_name)
+      expect(res["data"][0]["created_user_nickname"]).to eq(user.nickname)
+      expect(res["data"][1]["created_user_nickname"]).to eq(user2.nickname)
+      expect(res["data"][0]["created_user_image"]).to eq(user.image.url)
+      expect(res["data"][1]["created_user_image"]).to eq(user2.image.url)
       expect(Quiz.count).to eq 2
       expect(res["data"].count).to eq 2
       expect(response).to have_http_status(:success)
