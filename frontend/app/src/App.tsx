@@ -20,6 +20,7 @@ import QuizWeeklyRanking from "components/pages/QuizWeeklyRanking"
 import UserRanking from "components/pages/UserRanking"
 import UserUpdateTitleAlert from "components/utils/UserGetTitleAlert"
 import Top from "components/pages/Top"
+import { ScrollTop } from "components/utils/ScroollTop"
 
 export const AuthContext = createContext({} as {
   loading: boolean
@@ -73,6 +74,7 @@ const App: React.FC = () => {
 
   return (
     <BrowserRouter>
+      <ScrollTop />
       <AuthContext.Provider value={{ loading, setLoading, isSignedIn, setIsSignedIn, currentUser, setCurrentUser}}>
         <CommonLayout>
           <Switch>
