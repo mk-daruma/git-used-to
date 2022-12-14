@@ -70,6 +70,45 @@ const commandLists = [
     name: "git branch -d {ブランチ名}",
     intro: "ローカルに存在するブランチを削除できます。"
   },
+  {
+    name: "git branch {ブランチ名}",
+    intro: "ブランチを新規で作成します。"
+  },
+  {
+    name: "git checkout -b {ブランチ名}",
+    intro: "ブランチを新規作成し、そのブランチに移動します。"
+  },
+  {
+    name: "rm {ファイル名}",
+    intro: "workingtree上の指定したファイルを削除します。"
+  },
+  {
+    name: "git rm {ファイル名}",
+    intro: "workingtreeとindex area上の指定したファイルを削除します。"
+  },
+  {
+    name: "git rm --cashed {ファイル名}",
+    intro: "index area上のファイルのみ削除します。"
+  },
+  {
+    name: "git reset",
+    intro: "git addで行ったステージングをリセットします。"
+  },
+  {
+    name: "git reset --mixed HEAD~{数字}",
+    intro: "指定した数のコミットと関連するインデックスの変更をリセットします。",
+    attention: "※⚠️本来はHEAD^の`^`の数などでリセットする箇所を指定できますが、git-used-toは仕様上、数字で指定するようにお願いします。"
+  },
+  {
+    name: "git reset --hard HEAD~{数字}",
+    intro: "指定した数のコミットと関連したインデックス/ワーキングツリーの変更をリセットします",
+    attention: "※⚠️本来はHEAD^の`^`の数などでリセットする箇所を指定できますが、git-used-toは仕様上、数字で指定するようにお願いします。"
+  },
+  {
+    name: "git reset --soft HEAD~{数字}",
+    intro: "指定した数のcommitをリセットするこことができます。",
+    attention: "※⚠️本来はHEAD^の`^`の数などでリセットする箇所を指定できますが、git-used-toは仕様上、数字で指定するようにお願いします。"
+  },
 ];
 
 const QuizCommandList :React.FC = () => {
