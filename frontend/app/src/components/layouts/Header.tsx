@@ -15,18 +15,25 @@ import HeaderMenuList from "components/layouts/HeaderMenuList"
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
-    backgroundColor: '#3a3a3a',
+    backgroundColor: "rgba(255, 0, 0, 0)",
+    borderBottom: "solid",
+    borderColor: "white",
+    position: "fixed",
+    top: 0,
+    width: "100%",
   },
   iconButton: {
     marginRight: theme.spacing(2),
   },
   title: {
     flexGrow: 1,
+    width: "8rem",
     textDecoration: "none",
     color: "inherit"
   },
   linkBtn: {
-    textTransform: "none"
+    textTransform: "none",
+    marginLeft: "auto"
   }
 }))
 
@@ -80,7 +87,7 @@ const Header: React.FC = () => {
           </IconButton>
           <Typography
             component={Link}
-            to="/"
+            to="/home"
             variant="h6"
             className={classes.title}
           >
