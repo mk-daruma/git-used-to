@@ -32,6 +32,7 @@ const useStyles = makeStyles(() => ({
     flexWrap: "wrap"
   },
   branch: {
+    maxWidth: "76rem",
     width: "100%",
     border: "solid",
     borderRadius: "2rem",
@@ -1029,6 +1030,42 @@ const CreateQuiz: React.FC = () => {
     console.log("remoteadd", remoteAdd)
   },[remoteAdd])
 
+  const areaList = [
+    {
+      class: classes.area,
+      area: <QuizWorktreeFiles />
+    },
+    {
+      class: classes.area,
+      area: <QuizIndexArea />
+    },
+    {
+      class: classes.area,
+      area: <QuizCommitMessageArea />
+    },
+    {
+      class: classes.area,
+      area: <QuizLocalRepositoryArea />
+    },
+    {
+      class: classes.area,
+      area: <QuizRemoteCoimmitMessageArea />
+    },
+    {
+      class: classes.area,
+      area: <QuizRemoteRepositoryArea />
+    },
+    {
+      class: classes.area,
+      area: <Terminal />
+    },
+    {
+      class: classes.borderForm,
+      area: location.pathname === (`/quiz/answer/${id}`) ? <AboutAnswerQuiz /> : <AboutQuiz />,
+      area2: currentUser?.email === "guest_user@git-used-to.com" ? <ReccomendSignUpModal /> : <CreateOrUpdateQuizButton />
+    }
+  ]
+
   return(
     <QuizContext.Provider
       value={{
@@ -1069,12 +1106,11 @@ const CreateQuiz: React.FC = () => {
         commands, setCommands
         }}>
       <motion.div
-        className={classes.position}
         initial={{ opacity: 0, scale: 0.5 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{
           duration: 1.5,
-          delay: 0.5,
+          delay: 0.1,
           ease: [0, 0.71, 0.2, 1.01]
         }}
         >
@@ -1085,64 +1121,29 @@ const CreateQuiz: React.FC = () => {
         >
           <QuizBranchArea />
         </motion.div>
-        <motion.div
-          className={classes.area}
-          whileHover={{ scale: 1.1 }}
-          transition={{ type: "spring", stiffness: 400, damping: 10 }}
-        >
-          <QuizWorktreeFiles />
-        </motion.div>
-        <motion.div
-          className={classes.area}
-          whileHover={{ scale: 1.1 }}
-          transition={{ type: "spring", stiffness: 400, damping: 10 }}
-        >
-          <QuizIndexArea />
-        </motion.div>
-        <motion.div
-          className={classes.area}
-          whileHover={{ scale: 1.1 }}
-          transition={{ type: "spring", stiffness: 400, damping: 10 }}
-        >
-          <QuizCommitMessageArea />
-        </motion.div>
-        <motion.div
-          className={classes.area}
-          whileHover={{ scale: 1.1 }}
-          transition={{ type: "spring", stiffness: 400, damping: 10 }}
-        >
-          <QuizLocalRepositoryArea />
-        </motion.div>
-        <motion.div
-          className={classes.area}
-          whileHover={{ scale: 1.1 }}
-          transition={{ type: "spring", stiffness: 400, damping: 10 }}
-        >
-          <QuizRemoteCoimmitMessageArea />
-        </motion.div>
-        <motion.div
-          className={classes.area}
-          whileHover={{ scale: 1.1 }}
-          transition={{ type: "spring", stiffness: 400, damping: 10 }}
-        >
-          <QuizRemoteRepositoryArea />
-        </motion.div>
-        <motion.div
-          className={classes.area}
-          whileHover={{ scale: 1.1 }}
-          transition={{ type: "spring", stiffness: 400, damping: 10 }}
-        >
-          <Terminal />
-        </motion.div>
-        <motion.div
-          className={classes.borderForm}
-          whileHover={{ scale: 1.1 }}
-          transition={{ type: "spring", stiffness: 400, damping: 10 }}
-        >
-          {location.pathname === (`/quiz/answer/${id}`) ? <AboutAnswerQuiz /> : <AboutQuiz />}
-          {currentUser?.email === "guest_user@git-used-to.com" ? <ReccomendSignUpModal /> : <CreateOrUpdateQuizButton />}
-        </motion.div>
       </motion.div>
+      <div className={classes.position}>
+        {areaList.map((area, index) =>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              duration: 1.5,
+              delay: index/10 + 0.3,
+              ease: [0, 0.71, 0.2, 1.01]
+            }}
+          >
+            <motion.div
+              className={area.class}
+              whileHover={{ scale: 1.1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            >
+              {area.area}
+              {area.area2 && area.area2}
+            </motion.div>
+          </motion.div>
+        )}
+      </div>
     </QuizContext.Provider>
   )
 }
