@@ -30,16 +30,26 @@ const QuizTagSearch :React.FC<{ tagName :string }> = ({tagName}) => {
   }
 
   return (
-    <Button
-      type="submit"
-      variant="contained"
-      size="large"
-      color="default"
-      onClick={e => tagSearch()}
-      className={classes.btn}
-      >
-      {tagName + filetedQuizTags.length + "件" }
-    </Button>
+    filetedQuizTags.length > 0
+    ? <Button
+        type="submit"
+        variant="contained"
+        size="large"
+        color="default"
+        onClick={e => tagSearch()}
+        className={classes.btn}
+        >
+        {tagName + filetedQuizTags.length + "件" }
+      </Button>
+    : <Button
+        type="submit"
+        variant="contained"
+        size="large"
+        color="default"
+        className={classes.btn}
+        >
+        {tagName + filetedQuizTags.length + "件" }
+      </Button>
   )
 }
 
