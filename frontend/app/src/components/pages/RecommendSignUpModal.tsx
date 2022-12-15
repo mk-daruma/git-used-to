@@ -3,8 +3,9 @@ import { AuthContext } from "App";
 import Cookies from "js-cookie";
 import { signOut } from "lib/api/auth";
 import { useContext, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
+import { QuizBookmarkContext } from "./QuizList";
 
 const rand = () => {
   return Math.round(Math.random() * 20) - 10;
@@ -32,7 +33,6 @@ const useStyles = makeStyles((theme) => ({
   },
   submitBtn: {
     marginTop: theme.spacing(2),
-    flexGrow: 1,
     textTransform: "none"
   },
   quizButton: {
@@ -45,11 +45,13 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const ReccomendSignUpModal :React.FC = () => {
+const ReccomendSignUpModal :React.FC<{ btnType? :string, quizId?: number }> = ({btnType, quizId}) => {
   const classes = useStyles()
   const location = useLocation()
+  const { id } = useParams<{ id: string }>()
   const history = useHistory()
   const { setIsSignedIn, currentUser } = useContext(AuthContext)
+  const { quizBookmarks } = useContext(QuizBookmarkContext)
   const [modalStyle] = useState(getModalStyle);
   const [open, setOpen] = useState(false);
 
@@ -82,9 +84,17 @@ const ReccomendSignUpModal :React.FC = () => {
     }
   }
 
+  const quizListPath =
+    location.pathname === "/quiz/list"
+    || location.pathname === `/user/${id}/quiz/bookmark/list`
+    || location.pathname === `/user/${id}/quiz/list`
+
+  const bookmarkBtn = quizListPath && btnType === "bookmarkBtn"
+  const commentBtn = quizListPath && btnType === "commentBtn"
+
   return(
     <>
-      {location.pathname === "/quiz/list" &&
+      {bookmarkBtn &&
         <Button
           type="submit"
           variant="contained"
@@ -93,6 +103,18 @@ const ReccomendSignUpModal :React.FC = () => {
           onClick={handleOpen}
           >
           <BookmarkBorderIcon />
+          {quizBookmarks.filter(bookmark => Number(bookmark.quizId) === quizId).length}
+        </Button>
+      }
+      {commentBtn &&
+        <Button
+          type="submit"
+          variant="contained"
+          color="default"
+          className={classes.submitBtn}
+          onClick={handleOpen}
+          >
+          ゲストログイン中はここまで
         </Button>
       }
       {location.pathname === "/quiz" &&
