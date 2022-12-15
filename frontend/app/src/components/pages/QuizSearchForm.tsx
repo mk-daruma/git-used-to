@@ -148,9 +148,9 @@ const QuizSearchForm :React.FC = () => {
           >
           {typeof searchButton === "string"
             ? <QuizTagSearch
-            key={index}
-            tagName={searchButton}
-            />
+                key={index}
+                tagName={searchButton}
+                />
             : searchButton
           }
         </motion.div>
