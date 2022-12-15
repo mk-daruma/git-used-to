@@ -146,6 +146,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   rightPosition: {
     display: "flex",
     flexFlow: "column",
+    justifyContent:"space-around",
     width: "10rem"
   },
   leftPosition: {
@@ -231,16 +232,29 @@ const QuizList: React.FC = () => {
     tag: ""
   }])
   const [quizComment, setQuizComment] = useState("")
+  const quizStates = [setQuizzes, setQuizzesForSearch]
 
   const handleGetUserQuizzes = async (userId :number) => {
     try {
       const resUserQuizzes = await getUserQuizzes(userId)
-      const resAllBookmarks = await getAllQuizBookmarks()
       console.log(resUserQuizzes)
       if (resUserQuizzes?.status === 200) {
-        setQuizzes(resUserQuizzes?.data.data)
-        setQuizzesForSearch(resUserQuizzes?.data.data)
-        setQuizBookmarks(resAllBookmarks?.data.data)
+        resUserQuizzes.data.data
+          .map((resQuiz :any) =>
+          quizStates.map(quizState =>
+            quizState(quizzes => [...quizzes,{
+              id: resQuiz.id,
+              userId: resQuiz.userId,
+              parentUserName: resUserQuizzes.data.createdUserName,
+              parentUserImage: {
+                  url: resUserQuizzes.data.createdUserImage
+              },
+              parentUserNickname: resUserQuizzes.data.createdUserTitle,
+              quizTitle: resQuiz.quizTitle,
+              quizIntroduction: resQuiz.quizIntroduction,
+              createdAt: resQuiz.createdAt,
+            }])))
+        setQuizBookmarks(resUserQuizzes?.data.dataBookmarks)
         setQuizCommentHistory(resUserQuizzes?.data.dataComments)
         setQuizTags(resUserQuizzes?.data.dataTags)
       } else {
@@ -253,7 +267,6 @@ const QuizList: React.FC = () => {
 
   const handleGetQuizzes = async () => {
     try {
-      const quizStates = [setQuizzes, setQuizzesForSearch]
       const resQuizzes = await getAllQuizzes()
       const resAllBookmarks = await getAllQuizBookmarks()
       const resQuizComments = await getAllQuizComments()
@@ -290,11 +303,24 @@ const QuizList: React.FC = () => {
     const resUserSelf = await getUserSelfBookmarked(userId)
 
     if (resUserSelf?.status === 200) {
-      setQuizzes(resUserSelf?.data.selfBookmarkedQuizzes)
-      setQuizzesForSearch(resUserSelf?.data.selfBookmarkedQuizzes)
-      setQuizBookmarks(resUserSelf?.data.selfBookmarkedQuizBookmarks)
-      setQuizCommentHistory(resUserSelf?.data.selfBookmarkedQuizCommnets)
-      setQuizTags(resUserSelf?.data.selfBookmarkedQuizTags)
+      resUserSelf.data.data.selfBookmarkedQuizzes
+        .map((resUserSelf :any) =>
+        quizStates.map(quizState =>
+          quizState(quizzes => [...quizzes,{
+            id: resUserSelf.quiz.id,
+            userId: resUserSelf.quiz.userId,
+            parentUserName: resUserSelf.createdUserName,
+            parentUserImage: {
+                url: resUserSelf.createdUserImage
+            },
+            parentUserNickname: resUserSelf.createdUserNickname,
+            quizTitle: resUserSelf.quiz.quizTitle,
+            quizIntroduction: resUserSelf.quiz.quizIntroduction,
+            createdAt: resUserSelf.quiz.createdAt,
+          }])))
+      setQuizBookmarks(resUserSelf?.data.data.selfBookmarkedQuizBookmarks)
+      setQuizCommentHistory(resUserSelf?.data.data.selfBookmarkedQuizComments)
+      setQuizTags(resUserSelf?.data.data.selfBookmarkedQuizTags)
       console.log(resUserSelf)
     } else {
       console.log("No likes")
@@ -308,9 +334,34 @@ const QuizList: React.FC = () => {
 
   const currentPath = (path :string) => location.pathname === (path)
 
+  const QuizEditButton :React.FC<{quizId :number}> = ({quizId}) => {
+    return(
+      <>
+        <Button
+          type="submit"
+          variant="contained"
+          color="default"
+          className={classes.submitBtn}
+          component={Link}
+          to={`/quiz/edit/${quizId}`}
+        >
+          編集
+        </Button>
+        <Button
+          type="submit"
+          variant="contained"
+          color="default"
+          className={classes.submitBtn}
+          component={Link}
+          to={`/quiz/init/edit/${quizId}`}
+        >
+          初期値を編集
+        </Button>
+      </>
+    )
+  }
+
   useEffect(() => {
-    currentPath(`/user/quiz/list`) && handleGetUserQuizzes(Number(currentUser?.id))
-    currentPath(`/user/bookmark/list`) && handleGetSelfBookmarkedQuizzes(Number(currentUser?.id))
     currentPath(`/quiz/list`) && handleGetQuizzes()
     currentPath(`/user/${id}/quiz/list`) && handleGetUserQuizzes(Number(id))
     currentPath(`/user/${id}/quiz/bookmark/list`) && handleGetSelfBookmarkedQuizzes(Number(id))
@@ -413,26 +464,7 @@ const QuizList: React.FC = () => {
                   </div>
                 </div>
                 <div className={classes.rightPosition}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="default"
-                    className={classes.submitBtn}
-                    component={Link}
-                    to={`/quiz/edit/${quiz.id}`}
-                  >
-                    編集
-                  </Button>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="default"
-                    className={classes.submitBtn}
-                    component={Link}
-                    to={`/quiz/init/edit/${quiz.id}`}
-                  >
-                    初期値を編集
-                  </Button>
+                  {Number(quiz.userId) === currentUser?.id && <QuizEditButton quizId={Number(quiz.id)}/>}
                   <Button
                     type="submit"
                     variant="contained"
@@ -444,7 +476,10 @@ const QuizList: React.FC = () => {
                     解答する
                   </Button>
                   {currentUser?.email === "guest_user@git-used-to.com"
-                  ? <ReccomendSignUpModal />
+                  ? <ReccomendSignUpModal
+                      btnType="bookmarkBtn"
+                      quizId={Number(quiz.id)}
+                    />
                   : <QuizBookmarkButton
                       quizId={Number(quiz.id)}
                       bookmarkId={getBookmarkId(quiz.id)}
