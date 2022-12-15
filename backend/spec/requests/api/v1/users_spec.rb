@@ -39,9 +39,12 @@ RSpec.describe "Api::V1::Users", type: :request do
     let!(:user_quiz2) { create(:quiz, user: user) }
     let!(:user2_quiz1) { create(:quiz, user: user2) }
     let!(:user2_quiz2) { create(:quiz, user: user2) }
-    let!(:related_quiz_comment) { create(:quiz_comment, quiz: user_quiz1) }
+    let!(:related_quiz_comment) { create(:quiz_comment, quiz: user_quiz1, user: user) }
     let!(:related_quiz_comment2) { create(:quiz_comment, quiz: user_quiz1, user: user2) }
     let!(:not_related_quiz_comment) { create(:quiz_comment, quiz: user2_quiz1, user: user2) }
+    let!(:related_quiz_bookmark) { create(:quiz_bookmark, quiz: user_quiz1) }
+    let!(:related_quiz_bookmark2) { create(:quiz_bookmark, quiz: user_quiz2) }
+    let!(:not_related_quiz_bookmark) { create(:quiz_bookmark, quiz: user2_quiz1) }
     let!(:related_quiz_tag) { create(:quiz_tag, quiz: user_quiz1) }
     let!(:not_related_quiz_tag) { create(:quiz_comment, quiz: user2_quiz1) }
     let!(:related_quiz_answer_record) { create(:quiz_answer_record, user: user, quiz: user2_quiz1) }
@@ -68,17 +71,35 @@ RSpec.describe "Api::V1::Users", type: :request do
         expect(res["data"].length).to eq 2
       end
 
+      it "userの名前/称号/プロフィール画像を取得できること" do
+        res = JSON.parse(response.body)
+        expect(res["created_user_name"]).to eq(user.user_name)
+        expect(res["created_user_title"]).to eq(user.nickname)
+        expect(res["created_user_image"]).to eq(user.image.url)
+      end
+
       it "userの関連しているquiz_answer_recordデータのみを取得できること" do
         res = JSON.parse(response.body)
         expect(res["data_answer_records"][0]["id"]).to eq(related_quiz_answer_record.id)
         expect(res["data_answer_records"].length).to eq 1
       end
 
-      it "userが作成したquizデータに関連しているcommentのみを取得できること" do
+      it "userが作成したquizデータに関連しているcomment/コメントをしたuserの名前とプロフィール画像を取得できること" do
         res = JSON.parse(response.body)
-        expect(res["data_comments"][0]["id"]).to eq(related_quiz_comment.id)
-        expect(res["data_comments"][1]["id"]).to eq(related_quiz_comment2.id)
+        expect(res["data_comments"][0]["comment"]["id"]).to eq(related_quiz_comment.id)
+        expect(res["data_comments"][0]["commented_user_name"]).to eq(user.user_name)
+        expect(res["data_comments"][0]["commented_user_image"]).to eq(user.image.url)
+        expect(res["data_comments"][1]["comment"]["id"]).to eq(related_quiz_comment2.id)
+        expect(res["data_comments"][1]["commented_user_name"]).to eq(user2.user_name)
+        expect(res["data_comments"][1]["commented_user_image"]).to eq(user2.image.url)
         expect(res["data_comments"].length).to eq 2
+      end
+
+      it "userが作成したquizデータに関連しているbookmarkデータのみを取得できること" do
+        res = JSON.parse(response.body)
+        expect(res["data_bookmarks"][0]["id"]).to eq(related_quiz_bookmark.id)
+        expect(res["data_bookmarks"][1]["id"]).to eq(related_quiz_bookmark2.id)
+        expect(res["data_bookmarks"].length).to eq 2
       end
 
       it "userが作成したquizデータに関連しているtagのみを取得できること" do
@@ -87,9 +108,9 @@ RSpec.describe "Api::V1::Users", type: :request do
         expect(res["data_tags"].length).to eq 1
       end
 
-      it "取得するdataの要素が6つであること" do
+      it "取得するdataの要素が10個であること" do
         res = JSON.parse(response.body)
-        expect(res.length).to eq 6
+        expect(res.length).to eq 10
       end
     end
   end
@@ -190,14 +211,15 @@ RSpec.describe "Api::V1::Users", type: :request do
 
   describe "GET /api/v1/users#self_bookmarked" do
     let!(:user) { create(:user) }
-    let!(:bookmarked_quiz) { create(:quiz) }
-    let!(:bookmarked_quiz2) { create(:quiz) }
+    let!(:user2) { create(:user) }
+    let!(:bookmarked_quiz) { create(:quiz, user: user) }
+    let!(:bookmarked_quiz2) { create(:quiz, user: user2) }
     let!(:not_bookmarked_quiz) { create(:quiz) }
     let!(:user_related_bookmark) { create(:quiz_bookmark, quiz: bookmarked_quiz, user: user) }
     let!(:user_related_bookmark2) { create(:quiz_bookmark, quiz: bookmarked_quiz2, user: user) }
     let!(:user_created_quiz_related_bookmarks) { create_list(:quiz_bookmark, 5, quiz: bookmarked_quiz) }
     let!(:not_related_bookmark) { create(:quiz_bookmark, quiz: not_bookmarked_quiz) }
-    let!(:user_created_quiz_related_comments) { create_list(:quiz_comment, 5, quiz: bookmarked_quiz) }
+    let!(:user_created_quiz_related_comments) { create_list(:quiz_comment, 5, quiz: bookmarked_quiz, user: user2) }
     let!(:not_related_comment) { create(:quiz_comment, quiz: not_bookmarked_quiz) }
     let!(:user_created_quiz_related_tags) { create_list(:quiz_tag, 5, quiz: bookmarked_quiz) }
     let!(:not_related_tag) { create(:quiz_tag, quiz: not_bookmarked_quiz) }
@@ -212,69 +234,77 @@ RSpec.describe "Api::V1::Users", type: :request do
       expect(response).to have_http_status(:success)
     end
 
-    it "userがブックマークしたクイズのデータが取得できること" do
+    it "userがブックマークしたクイズ/クイズを作成したuserの名前/称号/プロフィール画像のデータが取得できること" do
       res = JSON.parse(response.body)
-      expect(res["self_bookmarked_quizzes"][0]["id"]).to eq(bookmarked_quiz.id)
-      expect(res["self_bookmarked_quizzes"][1]["id"]).to eq(bookmarked_quiz2.id)
-      expect(res["self_bookmarked_quizzes"].length).to eq(2)
+      expect(res["data"]["self_bookmarked_quizzes"][0]["quiz"]["id"]).to eq(bookmarked_quiz.id)
+      expect(res["data"]["self_bookmarked_quizzes"][0]["created_user_name"]).to eq(user.user_name)
+      expect(res["data"]["self_bookmarked_quizzes"][0]["created_user_nickname"]).to eq(user.nickname)
+      expect(res["data"]["self_bookmarked_quizzes"][0]["created_user_image"]).to eq(user.image.url)
+      expect(res["data"]["self_bookmarked_quizzes"][1]["quiz"]["id"]).to eq(bookmarked_quiz2.id)
+      expect(res["data"]["self_bookmarked_quizzes"][1]["created_user_name"]).to eq(user2.user_name)
+      expect(res["data"]["self_bookmarked_quizzes"][1]["created_user_nickname"]).to eq(user2.nickname)
+      expect(res["data"]["self_bookmarked_quizzes"][1]["created_user_image"]).to eq(user2.image.url)
+      expect(res["data"]["self_bookmarked_quizzes"].length).to eq(2)
     end
 
     it "userがブックマークしていないクイズのデータが取得されないこと" do
       res = JSON.parse(response.body)
-      res["self_bookmarked_quizzes"].each do |self_bookmarked_quizzes|
-        expect(self_bookmarked_quizzes["id"]).not_to eq(not_bookmarked_quiz.id)
+      res["data"]["self_bookmarked_quizzes"].each do |self_bookmarked_quizzes|
+        expect(self_bookmarked_quizzes["quiz"]["id"]).not_to eq(not_bookmarked_quiz.id)
       end
     end
 
     it "userがブックマークしたクイズと関連しているブックマークのデータを取得できること" do
       res = JSON.parse(response.body)
-      expect(res["self_bookmarked_quiz_bookmarks"][0]["id"]).to eq(user_related_bookmark.id)
+      expect(res["data"]["self_bookmarked_quiz_bookmarks"][0]["id"]).to eq(user_related_bookmark.id)
       user_created_quiz_related_bookmarks.each_with_index do |user_created_quiz_related_bookmark, i|
-        expect(res["self_bookmarked_quiz_bookmarks"][i + 1]["id"]).to eq(user_created_quiz_related_bookmark.id)
+        expect(res["data"]["self_bookmarked_quiz_bookmarks"][i + 1]["id"]).to eq(user_created_quiz_related_bookmark.id)
       end
-      expect(res["self_bookmarked_quiz_bookmarks"][6]["id"]).to eq(user_related_bookmark2.id)
+      expect(res["data"]["self_bookmarked_quiz_bookmarks"][6]["id"]).to eq(user_related_bookmark2.id)
     end
 
     it "userがブックマークしていないクイズのブックマークのデータが取得されないこと" do
       res = JSON.parse(response.body)
-      res["self_bookmarked_quiz_bookmarks"].each do |self_bookmarked_quiz_bookmarks|
+      res["data"]["self_bookmarked_quiz_bookmarks"].each do |self_bookmarked_quiz_bookmarks|
         expect(self_bookmarked_quiz_bookmarks["id"]).not_to eq(not_related_bookmark.id)
       end
     end
 
-    it "userがブックマークしたクイズと関連しているコメントのデータが取得できること" do
+    it "userがブックマークしたクイズと関連しているコメントのデータ/コメントをしたuserの名前とプロフィール画像データが取得できること" do
       res = JSON.parse(response.body)
-      user_created_quiz_related_comments.each_with_index do |user_created_quiz_related_comment, i|
-        expect(res["self_bookmarked_quiz_comments"][i]["id"]).to eq(user_created_quiz_related_comment.id)
-        expect(res["self_bookmarked_quiz_comments"][i]["id"]).not_to eq(not_related_comment.id)
-      end
-    end
-
-    it "userがブックマークしていないクイズのコメントのデータが取得されないこと" do
-      res = JSON.parse(response.body)
-      res["self_bookmarked_quiz_comments"].each do |self_bookmarked_quiz_comments|
-        expect(self_bookmarked_quiz_comments["id"]).not_to eq(not_related_comment.id)
+      user_created_quiz_related_comments.each_with_index do |comment, i|
+        expect(res["data"]["self_bookmarked_quiz_comments"][i]["comment"]["id"]).to eq(comment.id)
+        expect(res["data"]["self_bookmarked_quiz_comments"][i]["commented_user_name"]).to eq(user2.user_name)
+        expect(res["data"]["self_bookmarked_quiz_comments"][i]["commented_user_image"]).to eq(user2.image.url)
+        expect(res["data"]["self_bookmarked_quiz_comments"][i]["comment"]["id"]).not_to eq(not_related_comment.id)
+        expect(res["data"]["self_bookmarked_quiz_comments"][i]["commented_user_name"]).not_to eq(user.user_name)
+        expect(res["data"]["self_bookmarked_quiz_comments"][i]["commented_user_image"]).not_to eq(user.image.url)
       end
     end
 
     it "userがブックマークしたクイズと関連しているタグのデータが取得できること" do
       res = JSON.parse(response.body)
       user_created_quiz_related_tags.each_with_index do |user_created_quiz_related_tag, i|
-        expect(res["self_bookmarked_quiz_tags"][i]["id"]).to eq(user_created_quiz_related_tag.id)
-        expect(res["self_bookmarked_quiz_tags"][i]["id"]).not_to eq(not_related_tag.id)
+        expect(res["data"]["self_bookmarked_quiz_tags"][i]["id"]).to eq(user_created_quiz_related_tag.id)
+        expect(res["data"]["self_bookmarked_quiz_tags"][i]["id"]).not_to eq(not_related_tag.id)
       end
     end
 
     it "userがブックマークしていないクイズのタグのデータが取得されないこと" do
       res = JSON.parse(response.body)
-      res["self_bookmarked_quiz_tags"].each do |self_bookmarked_quiz_tags|
+      res["data"]["self_bookmarked_quiz_tags"].each do |self_bookmarked_quiz_tags|
         expect(self_bookmarked_quiz_tags["id"]).not_to eq(not_related_tag.id)
       end
     end
 
-    it "取得するdataの要素が5つであること" do
+    it "取得するdataの要素が2つであること" do
       res = JSON.parse(response.body)
-      expect(res.length).to eq 5
+      expect(res.length).to eq 2
+    end
+
+    it "取得するjson.data内の要素が4つであること" do
+      res = JSON.parse(response.body)
+      expect(res["data"].length).to eq 4
     end
   end
 
