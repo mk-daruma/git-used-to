@@ -10,13 +10,11 @@ import { QuizBookmarkContext } from "./QuizList";
 const useStyles = makeStyles((theme: Theme) => ({
   submitBtn: {
     marginTop: theme.spacing(2),
-    flexGrow: 1,
     textTransform: "none",
     backgroundColor: "#f5f5f5"
   },
   bookmarkedBtn: {
     marginTop: theme.spacing(2),
-    flexGrow: 1,
     textTransform: "none",
     backgroundColor: "#f5f5f5",
     opacity: 0.5
