@@ -5,6 +5,7 @@ import { createQuizComment, deleteQuizComment } from "lib/api/quiz_comments"
 import { useContext, useState } from "react"
 import { QuizBookmarkContext } from "./QuizList"
 import SmsIcon from '@material-ui/icons/Sms';
+import ReccomendSignUpModal from "./RecommendSignUpModal";
 
 const getModalStyle = () => {
   return {
@@ -124,7 +125,8 @@ const QuizComment: React.FC<{ quizId: number }> = ({quizId}) => {
         onClick={opneModal}
         className={classes.submitBtn}
       >
-        <SmsIcon /> {quizComments.length}
+        <SmsIcon />
+        {quizComments.length}
       </Button>
       <Modal
         className={classes.modal}
@@ -171,16 +173,21 @@ const QuizComment: React.FC<{ quizId: number }> = ({quizId}) => {
                 }}
               />
             </form>
-            <Button
-              type="submit"
-              variant="contained"
-              color="default"
-              disabled={!quizComment || quizComment.length > 100}
-              className={classes.commentBtn}
-              onClick={handleCreateQuizCommentSubmit}
-              >
-              Submit
-            </Button>
+            {currentUser?.email === "guest_user@git-used-to.com"
+              ? <ReccomendSignUpModal
+                  btnType="commentBtn"
+                />
+              : <Button
+                  type="submit"
+                  variant="contained"
+                  color="default"
+                  disabled={!quizComment || quizComment.length > 100}
+                  className={classes.commentBtn}
+                  onClick={handleCreateQuizCommentSubmit}
+                  >
+                  Submit
+                </Button>
+                }
           </div>
         </div>
       </Modal>
