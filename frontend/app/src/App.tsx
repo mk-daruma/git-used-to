@@ -89,8 +89,6 @@ const App: React.FC = () => {
                 <Route exact path="/password" component={ChangePassword} />
                 <Route exact path="/user/:id/edit" component={UserProfile} />
                 <Route exact path="/user/delete" component={UserDelete} />
-                <Route exact path="/user/quiz/list" component={QuizList} />
-                <Route exact path="/user/bookmark/list" component={QuizList} />
                 <Route exact path="/user/ranking" component={UserRanking} />
                 <Route exact path="/quiz/list" component={QuizList} />
                 <Route exact path="/quiz" component={CreateQuiz} />
