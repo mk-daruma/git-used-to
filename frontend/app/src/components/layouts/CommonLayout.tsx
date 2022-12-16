@@ -35,7 +35,7 @@ const CommonLayout = ({ children }: CommonLayoutProps) => {
   return (
     <div  className={classes.backgroundColor}>
       <header>
-        {location.pathname !== (`/`) && <Header />}
+        <Header />
       </header>
       <main>
         <Container maxWidth="lg" className={classes.container} >
@@ -47,7 +47,7 @@ const CommonLayout = ({ children }: CommonLayoutProps) => {
         </Container>
       </main>
       <footer className={classes.footer}>
-        {location.pathname !== (`/`) && <Footer />}
+        <Footer />
       </footer>
     </div>
   )
