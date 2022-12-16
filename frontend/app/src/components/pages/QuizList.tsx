@@ -1,7 +1,7 @@
 import { Button, makeStyles, Theme } from "@material-ui/core";
 import { AuthContext } from "App";
 import AvatarImage from "components/layouts/Avatar";
-import { getAllQuizzes } from "lib/api/quizzes";
+import { deleteQuiz, getAllQuizzes } from "lib/api/quizzes";
 import { getAllQuizBookmarks } from "lib/api/quiz_boolmarks";
 import { getAllQuizComments } from "lib/api/quiz_comments";
 import { getAllQuizTags } from "lib/api/quiz_tags";
@@ -13,6 +13,7 @@ import QuizComment from "./QuizComment";
 import QuizSearchForm from "./QuizSearchForm";
 import ReccomendSignUpModal from "./RecommendSignUpModal";
 import { motion } from "framer-motion"
+import DeleteIcon from '@material-ui/icons/Delete';
 
 export const QuizBookmarkContext = createContext({} as {
   quizzes:{
@@ -327,6 +328,17 @@ const QuizList: React.FC = () => {
     }
   }
 
+  const handleDeleteQuiz = (quizId :number) => {
+    try{
+      console.log(deleteQuiz(quizId))
+      setQuizzes(quizzes.filter(quiz => Number(quiz.id) !== quizId))
+      setQuizzesForSearch(quizzesForSearch.filter(quiz => Number(quiz.id) !== quizId))
+      setQuizTags(quizTags.filter(quiz => quiz.quizId === quizId))
+    } catch(err) {
+      console.log(err)
+    }
+  }
+
   const getBookmarkId = (quizId :string) =>
     quizBookmarks.some(bookmark => bookmark.quizId === quizId && Number(bookmark.userId) === currentUser?.id)
     ? quizBookmarks.filter(bookmark => bookmark.quizId === quizId && Number(bookmark.userId) === currentUser?.id)[0].id
@@ -356,6 +368,15 @@ const QuizList: React.FC = () => {
           to={`/quiz/init/edit/${quizId}`}
         >
           初期値を編集
+        </Button>
+        <Button
+          type="submit"
+          variant="contained"
+          color="default"
+          className={classes.submitBtn}
+          onClick={e => handleDeleteQuiz(quizId)}
+        >
+          <DeleteIcon />
         </Button>
       </>
     )
