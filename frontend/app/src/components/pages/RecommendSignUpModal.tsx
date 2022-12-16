@@ -5,7 +5,7 @@ import { signOut } from "lib/api/auth";
 import { useContext, useState } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
-import { QuizBookmarkContext } from "./QuizList";
+import { QuizBookmarkContext } from "./QuizListPage";
 
 const rand = () => {
   return Math.round(Math.random() * 20) - 10;

@@ -1,6 +1,6 @@
 import { Button } from "@material-ui/core";
 import { useContext } from "react"
-import { QuizBookmarkContext } from "./QuizList";
+import { QuizBookmarkContext } from "./QuizListPage";
 
 const QuizBookmarkOrderButton :React.FC = () => {
   const {

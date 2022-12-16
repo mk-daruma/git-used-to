@@ -2,7 +2,7 @@ import { IconButton, InputBase, makeStyles, Paper, Theme } from "@material-ui/co
 import SearchIcon from '@material-ui/icons/Search';
 import { useContext } from "react";
 import QuizBookmarkOrderButton from "./QuizBookmarkOrderButton";
-import { QuizBookmarkContext } from "./QuizList";
+import { QuizBookmarkContext } from "./QuizListPage";
 import QuizNewArrivalsOrderButton from "./QuizNewArrivalsOrderButton";
 import QuizResetSearchStatusButton from "./QuizSearchResetButton";
 import QuizTagSearch from "./QuizTagSearchButton";

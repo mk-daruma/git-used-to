@@ -180,7 +180,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }))
 
-const QuizList: React.FC = () => {
+const QuizListPage: React.FC = () => {
   const classes = useStyles()
   const location = useLocation()
   const { id } = useParams<{ id: string }>()
@@ -519,4 +519,4 @@ const QuizList: React.FC = () => {
   )
 }
 
-export default QuizList
+export default QuizListPage

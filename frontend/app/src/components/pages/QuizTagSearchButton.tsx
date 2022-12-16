@@ -1,7 +1,7 @@
 import { Button, makeStyles, Theme } from "@material-ui/core";
 import { AboutQuizzesData } from "interfaces";
 import { useContext } from "react"
-import { QuizBookmarkContext } from "./QuizList";
+import { QuizBookmarkContext } from "./QuizListPage";
 
 const useStyles = makeStyles((theme: Theme) => ({
   btn: {

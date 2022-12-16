@@ -3,7 +3,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { AuthContext } from "App"
 import { createQuizComment, deleteQuizComment } from "lib/api/quiz_comments"
 import { useContext, useState } from "react"
-import { QuizBookmarkContext } from "./QuizList"
+import { QuizBookmarkContext } from "./QuizListPage"
 import SmsIcon from '@material-ui/icons/Sms';
 import ReccomendSignUpModal from "./RecommendSignUpModal";
 

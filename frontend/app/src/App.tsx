@@ -13,7 +13,7 @@ import CreateQuiz from "components/pages/CreateQuiz"
 
 import { getCurrentUser } from "lib/api/auth"
 import { User } from "interfaces/index"
-import QuizList from "components/pages/QuizList"
+import QuizListPage from "components/pages/QuizListPage"
 import QuizSetUp from "components/pages/QuizSetUp"
 import UserProfile from "components/pages/UserProfile"
 import QuizWeeklyRanking from "components/pages/QuizWeeklyRanking"
@@ -90,14 +90,14 @@ const App: React.FC = () => {
                 <Route exact path="/user/:id/edit" component={UserProfile} />
                 <Route exact path="/user/delete" component={UserDelete} />
                 <Route exact path="/user/ranking" component={UserRanking} />
-                <Route exact path="/quiz/list" component={QuizList} />
-                <Route exact path="/quiz/lesson/elementary" component={QuizList} />
-                <Route exact path="/quiz/lesson/intermediate" component={QuizList} />
-                <Route exact path="/quiz/lesson/advanced" component={QuizList} />
+                <Route exact path="/quiz/list" component={QuizListPage} />
+                <Route exact path="/quiz/lesson/elementary" component={QuizListPage} />
+                <Route exact path="/quiz/lesson/intermediate" component={QuizListPage} />
+                <Route exact path="/quiz/lesson/advanced" component={QuizListPage} />
                 <Route exact path="/quiz" component={CreateQuiz} />
                 <Route exact path="/quiz/ranking/weekly" component={QuizWeeklyRanking} />
-                <Route path="/user/:id/quiz/list" component={QuizList} />
-                <Route path="/user/:id/quiz/bookmark/list" component={QuizList} />
+                <Route path="/user/:id/quiz/list" component={QuizListPage} />
+                <Route path="/user/:id/quiz/bookmark/list" component={QuizListPage} />
                 <Route path="/quiz/setup/:id" component={QuizSetUp} />
                 <Route path="/quiz/edit/:id" component={CreateQuiz} />
                 <Route path="/quiz/init/edit/:id" component={CreateQuiz} />
