@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { QuizContext } from "./CreateQuiz";
 import { Button, makeStyles, Theme } from "@material-ui/core"
 import { AboutQuizData } from "interfaces";
-import { createQuiz } from "lib/api/quizzes";
+import { createQuiz, updateQuiz } from "lib/api/quizzes";
 import { createQuizFirstOrLast } from "lib/api/quiz_first_or_lasts";
 import { createQuizBranch, deleteQuizBranch, updateQuizBranch } from "lib/api/quiz_branches";
 import { createQuizWorktreeFile, deleteQuizWorktreeFile, updateQuizWorktreeFile } from "lib/api/quiz_worktree_files";
@@ -407,6 +407,15 @@ const CreateOrUpdateQuizButton: React.FC = () => {
       await Promise.all(deleteRemoteRepositoryFiles.map(deleteRemoteRepositoryFile => deleteQuizRemoteRepositoryFile(Number(deleteRemoteRepositoryFile.remoteRepositoryFileId))))
       await Promise.all(deleteRemoteCommitMessages.map(deleteRemoteCommitMessage => deleteQuizRemoteCommitMessage(Number(deleteRemoteCommitMessage.remoteCommitMessageId))))
       await Promise.all(deleteRemoteBranches.map(deleteRemoteBranch => deleteQuizRemoteBranch(Number(deleteRemoteBranch.remoteBranchId))))
+
+      const updateQuizData = {
+        quizTitle: quizTitle,
+        quizIntroduction: quizIntroduction,
+        quizType: quizType,
+        userId: currentUser?.id
+      }
+
+      await updateQuiz(Number(id), updateQuizData)
 
       //新規作成用の関数(branchも新規作成の場合)
       await handleCreateQuizSubmit(

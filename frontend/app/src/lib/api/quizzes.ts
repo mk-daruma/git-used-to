@@ -7,6 +7,10 @@ export const createQuiz = (data: AboutQuizData | undefined) => {
   }
 }
 
+export const updateQuiz = (id: number | undefined | null, data: AboutQuizData) => {
+  return client.put(`/quizzes/${id}`, data)
+}
+
 export const getAllQuizzes = () => {
   return client.get("quizzes")
 }
