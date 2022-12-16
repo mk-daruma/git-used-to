@@ -8,12 +8,16 @@ import { AuthContext } from "App"
 
 const useStyles = makeStyles((theme: Theme) => ({
   font: {
-    fontSize: "10rem",
+    marginTop: theme.spacing(6),
+    padding: theme.spacing(3),
+    fontSize: "7rem",
+    overflowWrap: "break-word",
     fontWeight: "bold"
   },
   btn: {
     display: "flex",
     justifyContent: "space-between",
+    flexWrap: "wrap",
   },
   box: {
     marginTop: theme.spacing(6),
@@ -23,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: "white",
     cursor: "pointer",
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   text: {
     height: "8rem",
@@ -86,8 +90,7 @@ const Top: React.FC = () => {
           whileHover={{ scale: 1.1 }}
           transition={{ type: "spring", stiffness: 400, damping: 10 }}
         >
-          welcome! <br />
-          GIT USED TO!!
+          GIT USED TO
         </motion.div>
       </motion.div>
       <motion.div
