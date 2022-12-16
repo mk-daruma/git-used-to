@@ -91,6 +91,9 @@ const App: React.FC = () => {
                 <Route exact path="/user/delete" component={UserDelete} />
                 <Route exact path="/user/ranking" component={UserRanking} />
                 <Route exact path="/quiz/list" component={QuizList} />
+                <Route exact path="/quiz/lesson/elementary" component={QuizList} />
+                <Route exact path="/quiz/lesson/intermediate" component={QuizList} />
+                <Route exact path="/quiz/lesson/advanced" component={QuizList} />
                 <Route exact path="/quiz" component={CreateQuiz} />
                 <Route exact path="/quiz/ranking/weekly" component={QuizWeeklyRanking} />
                 <Route path="/user/:id/quiz/list" component={QuizList} />
