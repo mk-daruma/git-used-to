@@ -81,21 +81,21 @@ const Home: React.FC = () => {
     },
     {
       icon: <SchoolIcon />,
-      path: "検討中",
+      path: "/quiz/lesson/elementary",
       title: "道場/初級",
-      text: "gitコマンドの使い方を理解するための簡単なクイズです。gitが初めての方はこちらがおすすめ!"
+      text: "使用率の高い基本のコマンドの使い方を理解するための簡単なクイズです。gitが初めての方はこちらがおすすめ!"
     },
     {
       icon: <SchoolIcon />,
-      path: "検討中",
+      path: "/quiz/lesson/intermediate",
       title: "道場/中級",
-      text: "複数のコマンドを使用したクイズを用意しています。コマンドについて理解が深まったらこちらも挑戦してみてくささい!"
+      text: "基本のコマンドの理解が深まったらこちらも挑戦してみてくささい!"
     },
     {
       icon: <SchoolIcon />,
-      path: "検討中",
+      path: "/quiz/lesson/advanced",
       title: "道場/上級",
-      text: "初級/中級でコマンドに慣れてきたら、最後に少し複雑なクイズに挑戦してみましょう！"
+      text: "初級/中級に慣れてきたら最後に少し複雑なクイズに挑戦してみましょう！"
     },
     {
       icon: <EqualizerIcon />,
@@ -132,21 +132,21 @@ const Home: React.FC = () => {
     },
     {
       icon: <SchoolIcon />,
-      path: "検討中",
+      path: "/quiz/lesson/elementary",
       title: "道場/初級",
-      text: "gitコマンドの使い方を理解するための簡単なクイズです。gitが初めての方はこちらがおすすめ!"
+      text: "使用率の高い基本のコマンドの使い方を理解するための簡単なクイズです。gitが初めての方はこちらがおすすめ!"
     },
     {
       icon: <SchoolIcon />,
-      path: "検討中",
+      path: "/quiz/lesson/intermediate",
       title: "道場/中級",
-      text: "複数のコマンドを使用したクイズを用意しています。コマンドについて理解が深まったらこちらも挑戦してみてくささい!"
+      text: "基本のコマンドの理解が深まったらこちらも挑戦してみてくささい!"
     },
     {
       icon: <SchoolIcon />,
-      path: "検討中",
+      path: "/quiz/lesson/advanced",
       title: "道場/上級",
-      text: "初級/中級でコマンドに慣れてきたら、最後に少し複雑なクイズに挑戦してみましょう！"
+      text: "初級/中級に慣れてきたら最後に少し複雑なクイズに挑戦してみましょう！"
     },
     {
       icon: <EqualizerIcon />,
