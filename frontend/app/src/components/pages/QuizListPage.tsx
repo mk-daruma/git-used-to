@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from "@material-ui/core";
-import { getAllQuizzes } from "lib/api/quizzes";
+import { getAllQuizzes, getLessonQuizes } from "lib/api/quizzes";
 import { getAllQuizBookmarks } from "lib/api/quiz_boolmarks";
 import { getAllQuizComments } from "lib/api/quiz_comments";
 import { getAllQuizTags } from "lib/api/quiz_tags";
@@ -328,12 +328,45 @@ const QuizListPage: React.FC = () => {
     }
   }
 
+  const handleGetLessonQuizzes = async () => {
+    const quizType = {
+      quizType: location.pathname.substring(13)
+    }
+    const resLessonQuizzes = await getLessonQuizes(quizType)
+    console.log(resLessonQuizzes)
+    if (resLessonQuizzes?.status === 200) {
+      resLessonQuizzes.data.lessonQuizzesData
+        .map((resLessonQuiz :any) =>
+        quizStates.map(quizState =>
+          quizState(quizzes => [...quizzes,{
+            id: resLessonQuiz.id,
+            userId: resLessonQuiz.userId,
+            parentUserName: "道場の問題",
+            parentUserImage: {
+                url: ""
+            },
+            parentUserNickname: "",
+            quizTitle: resLessonQuiz.quizTitle,
+            quizIntroduction: resLessonQuiz.quizIntroduction,
+            createdAt: resLessonQuiz.createdAt,
+          }])))
+    } else {
+      console.log("No likes")
+    }
+  }
+
   const currentPath = (path :string) => location.pathname === (path)
+
+  const checkLessonQuizPath =
+    currentPath("/quiz/lesson/elementary")
+    || currentPath("/quiz/lesson/intermediate")
+    || currentPath("/quiz/lesson/advanced")
 
   useEffect(() => {
     currentPath(`/quiz/list`) && handleGetQuizzes()
     currentPath(`/user/${id}/quiz/list`) && handleGetUserQuizzes(Number(id))
     currentPath(`/user/${id}/quiz/bookmark/list`) && handleGetSelfBookmarkedQuizzes(Number(id))
+    checkLessonQuizPath && handleGetLessonQuizzes()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
