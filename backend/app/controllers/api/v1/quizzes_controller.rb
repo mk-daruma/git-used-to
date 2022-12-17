@@ -1,5 +1,6 @@
 class Api::V1::QuizzesController < ApplicationController
   before_action :set_quiz, only: [:show, :update, :destroy, :tag]
+  before_action :quiz_params, only: [:create, :update]
 
   def index
     quiz_hash = []
@@ -96,6 +97,15 @@ class Api::V1::QuizzesController < ApplicationController
       status: 'SUCCESS',
       message: 'Loaded quiz weekly ranking',
       rank_in_quiz_data: rank_in_quizzes_hash,
+    }
+  end
+
+  def lesson_quizzes
+    lesson_quizzes = Quiz.where(quiz_type: params[:quiz_type])
+    render json: {
+      status: 'SUCCESS',
+      message: 'Loaded lesson quizzes',
+      lesson_quizzes_data: lesson_quizzes,
     }
   end
 

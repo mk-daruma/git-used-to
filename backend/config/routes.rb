@@ -28,6 +28,7 @@ Rails.application.routes.draw do
         end
         collection do
           get :weekly_ranking
+          post :lesson_quizzes
         end
       end
       resources :quiz_answer_records, only: %i[create]
