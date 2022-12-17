@@ -246,4 +246,106 @@ RSpec.describe "Api::V1::Quizzes", type: :request do
       expect(res.length).to eq 3
     end
   end
+
+  describe "GET /lesson_quizzes" do
+    let!(:elementary_quizzes) { create_list(:quiz, 5, quiz_type: "elementary") }
+    let!(:intermediate_quizzes) { create_list(:quiz, 6, quiz_type: "intermediate") }
+    let!(:advanced_quizzes) { create_list(:quiz, 7, quiz_type: "advanced") }
+
+    context "引数がelementaryの場合" do
+      let!(:elementary_param) do
+        {
+          quiz_type: "elementary",
+        }
+      end
+
+      before do
+        post lesson_quizzes_api_v1_quizzes_path, params: elementary_param
+      end
+
+      it "通信が成功すること" do
+        res = JSON.parse(response.body)
+        expect(res["status"]).to eq("SUCCESS")
+        expect(res["message"]).to eq("Loaded lesson quizzes")
+        expect(response).to have_http_status(:success)
+      end
+
+      it "quiz_typeの値がelementaryのクイズデータのみを取得すること" do
+        res = JSON.parse(response.body)
+        res["lesson_quizzes_data"].each do |data|
+          expect(data["quiz_type"]).to eq("elementary")
+        end
+        expect(res["lesson_quizzes_data"].length).to eq 5
+      end
+
+      it "取得するdataの要素が3つであること" do
+        res = JSON.parse(response.body)
+        expect(res.length).to eq 3
+      end
+    end
+
+    context "引数がintermediateの場合" do
+      let!(:intermediate_param) do
+        {
+          quiz_type: "intermediate",
+        }
+      end
+
+      before do
+        post lesson_quizzes_api_v1_quizzes_path, params: intermediate_param
+      end
+
+      it "通信が成功すること" do
+        res = JSON.parse(response.body)
+        expect(res["status"]).to eq("SUCCESS")
+        expect(res["message"]).to eq("Loaded lesson quizzes")
+        expect(response).to have_http_status(:success)
+      end
+
+      it "quiz_typeの値がintermediateのクイズデータのみを取得すること" do
+        res = JSON.parse(response.body)
+        res["lesson_quizzes_data"].each do |data|
+          expect(data["quiz_type"]).to eq("intermediate")
+        end
+        expect(res["lesson_quizzes_data"].length).to eq 6
+      end
+
+      it "取得するdataの要素が3つであること" do
+        res = JSON.parse(response.body)
+        expect(res.length).to eq 3
+      end
+    end
+
+    context "引数がadvancedの場合" do
+      let!(:advanced_param) do
+        {
+          quiz_type: "advanced",
+        }
+      end
+
+      before do
+        post lesson_quizzes_api_v1_quizzes_path, params: advanced_param
+      end
+
+      it "通信が成功すること" do
+        res = JSON.parse(response.body)
+        expect(res["status"]).to eq("SUCCESS")
+        expect(res["message"]).to eq("Loaded lesson quizzes")
+        expect(response).to have_http_status(:success)
+      end
+
+      it "quiz_typeの値がadvancedのクイズデータのみを取得すること" do
+        res = JSON.parse(response.body)
+        res["lesson_quizzes_data"].each do |data|
+          expect(data["quiz_type"]).to eq("advanced")
+        end
+        expect(res["lesson_quizzes_data"].length).to eq 7
+      end
+
+      it "取得するdataの要素が3つであること" do
+        res = JSON.parse(response.body)
+        expect(res.length).to eq 3
+      end
+    end
+  end
 end
