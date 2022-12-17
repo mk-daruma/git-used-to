@@ -1,19 +1,14 @@
-import { Button, makeStyles, Theme } from "@material-ui/core";
-import { AuthContext } from "App";
-import AvatarImage from "components/layouts/Avatar";
-import { deleteQuiz, getAllQuizzes } from "lib/api/quizzes";
+import { makeStyles, Theme } from "@material-ui/core";
+import { getAllQuizzes } from "lib/api/quizzes";
 import { getAllQuizBookmarks } from "lib/api/quiz_boolmarks";
 import { getAllQuizComments } from "lib/api/quiz_comments";
 import { getAllQuizTags } from "lib/api/quiz_tags";
 import { getUserQuizzes, getUserSelfBookmarked } from "lib/api/users"
-import React, { useContext, useState, useEffect, createContext } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
-import QuizBookmarkButton from "./QuizBookmarkButton";
-import QuizComment from "./QuizComment";
+import React, { useState, useEffect, createContext } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import QuizSearchForm from "./QuizSearchForm";
-import ReccomendSignUpModal from "./RecommendSignUpModal";
 import { motion } from "framer-motion"
-import DeleteIcon from '@material-ui/icons/Delete';
+import QuizList from "./QuizList";
 
 export const QuizBookmarkContext = createContext({} as {
   quizzes:{
@@ -113,8 +108,14 @@ export const QuizBookmarkContext = createContext({} as {
 })
 
 const useStyles = makeStyles((theme: Theme) => ({
+  title: {
+    textAlign: "center",
+    fontSize: "3rem",
+    fontWeight: "bold",
+  },
   list: {
     display: "flex",
+    padding: theme.spacing(3),
   },
   searchForm: {
     maxWidth: 1000,
@@ -185,7 +186,6 @@ const QuizListPage: React.FC = () => {
   const location = useLocation()
   const { id } = useParams<{ id: string }>()
 
-  const { currentUser } = useContext(AuthContext)
   const [searchQuiztitle, setSearchQuiztitle] = useState("")
   const [searchQuizIntroduction, setSearchQuizIntroduction] = useState("")
   const [quizzes, setQuizzes] = useState([{
@@ -328,59 +328,7 @@ const QuizListPage: React.FC = () => {
     }
   }
 
-  const handleDeleteQuiz = (quizId :number) => {
-    try{
-      console.log(deleteQuiz(quizId))
-      setQuizzes(quizzes.filter(quiz => Number(quiz.id) !== quizId))
-      setQuizzesForSearch(quizzesForSearch.filter(quiz => Number(quiz.id) !== quizId))
-      setQuizTags(quizTags.filter(quiz => quiz.quizId === quizId))
-    } catch(err) {
-      console.log(err)
-    }
-  }
-
-  const getBookmarkId = (quizId :string) =>
-    quizBookmarks.some(bookmark => bookmark.quizId === quizId && Number(bookmark.userId) === currentUser?.id)
-    ? quizBookmarks.filter(bookmark => bookmark.quizId === quizId && Number(bookmark.userId) === currentUser?.id)[0].id
-    : undefined
-
   const currentPath = (path :string) => location.pathname === (path)
-
-  const QuizEditButton :React.FC<{quizId :number}> = ({quizId}) => {
-    return(
-      <>
-        <Button
-          type="submit"
-          variant="contained"
-          color="default"
-          className={classes.submitBtn}
-          component={Link}
-          to={`/quiz/edit/${quizId}`}
-        >
-          編集
-        </Button>
-        <Button
-          type="submit"
-          variant="contained"
-          color="default"
-          className={classes.submitBtn}
-          component={Link}
-          to={`/quiz/init/edit/${quizId}`}
-        >
-          初期値を編集
-        </Button>
-        <Button
-          type="submit"
-          variant="contained"
-          color="default"
-          className={classes.submitBtn}
-          onClick={e => handleDeleteQuiz(quizId)}
-        >
-          <DeleteIcon />
-        </Button>
-      </>
-    )
-  }
 
   useEffect(() => {
     currentPath(`/quiz/list`) && handleGetQuizzes()
@@ -388,6 +336,21 @@ const QuizListPage: React.FC = () => {
     currentPath(`/user/${id}/quiz/bookmark/list`) && handleGetSelfBookmarkedQuizzes(Number(id))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const quizListTitle =
+    currentPath(`/quiz/list`)
+    ? "クイズ一覧"
+    : currentPath(`/user/${id}/quiz/list`)
+    ? `作成クイズ一覧`
+    : currentPath(`/user/${id}/quiz/bookmark/list`)
+    ? `ブックマークしたクイズ一覧`
+    : currentPath("/quiz/lesson/elementary")
+    ? "git used to道場 初級"
+    : currentPath("/quiz/lesson/intermediate")
+    ? "git used to道場 中級"
+    : currentPath("/quiz/lesson/advanced")
+    ? "git used to道場 上級"
+    : ""
 
   useEffect(() => {
     console.log("quizzes", quizzes)
@@ -422,6 +385,9 @@ const QuizListPage: React.FC = () => {
           quizComment, setQuizComment,
           quizTags, setQuizTags
         }}>
+        <div className={classes.title}>
+          {quizListTitle}
+        </div>
         <motion.div
           className={classes.list}
           initial={{ opacity: 0, scale: 0.5 }}
@@ -436,83 +402,8 @@ const QuizListPage: React.FC = () => {
             <QuizSearchForm />
           </div>
           <div className={classes.quizList}>
-            {quizzes
-            .filter(quiz => quiz.id)
-            .map((quiz, index) => (
-              <motion.div
-                className={classes.quiz}
-                key={index}
-                whileHover={{ scale: 1.1 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 400,
-                  damping: 10
-                }}
-                variants={{
-                  offscreen: {
-                    y: 100,
-                    opacity: 0,
-                  },
-                  onscreen: {
-                    y: 0,
-                    opacity: 1,
-                    transition: {
-                      duration: 0.5,
-                    },
-                  },
-                }}
-                initial="offscreen"
-                whileInView="onscreen"
-                viewport={{ once: false, amount: 0 }}
-                >
-                <div className={classes.leftPosition}>
-                  <Button
-                    component={Link}
-                    to={`/user/${quiz.userId}/edit`}
-                    >
-                    <AvatarImage image={quiz.parentUserImage.url} rank={quiz.parentUserNickname} />
-                    <div className={classes.userName}>
-                      {quiz.parentUserName}
-                    </div>
-                  </Button>
-                  <div className={classes.quizName}>
-                    【クイズ】<br />
-                    { quiz.quizTitle }
-                  </div>
-                  <div className={classes.quizIntro}>
-                    【紹介文】<br/>
-                    { quiz.quizIntroduction }
-                  </div>
-                </div>
-                <div className={classes.rightPosition}>
-                  {Number(quiz.userId) === currentUser?.id && <QuizEditButton quizId={Number(quiz.id)}/>}
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="default"
-                    className={classes.submitBtn}
-                    component={Link}
-                    to={`/quiz/answer/${quiz.id}`}
-                  >
-                    解答する
-                  </Button>
-                  {currentUser?.email === "guest_user@git-used-to.com"
-                  ? <ReccomendSignUpModal
-                      btnType="bookmarkBtn"
-                      quizId={Number(quiz.id)}
-                    />
-                  : <QuizBookmarkButton
-                      quizId={Number(quiz.id)}
-                      bookmarkId={getBookmarkId(quiz.id)}
-                    />
-                    }
-                  <QuizComment
-                    quizId={Number(quiz.id)}
-                  />
-                </div>
-              </motion.div>
-              ))}
-            </div>
+            <QuizList />
+          </div>
         </motion.div>
       </QuizBookmarkContext.Provider>
     </>
