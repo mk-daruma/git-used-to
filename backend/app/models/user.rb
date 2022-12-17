@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
     quiz_answer_record_count = user.quiz_answer_records.length
     bookmark_count = QuizBookmark.where(quiz_id: Quiz.where(user_id: user.id)).length
     total = quiz_count + quiz_answer_record_count + bookmark_count
-    if total > 80
+    if total > 80 || user.email === "admin@git-used-to.com"
       "免許皆伝 git-used-to師範代"
     elsif total > 50
       "git-used-to達人"
