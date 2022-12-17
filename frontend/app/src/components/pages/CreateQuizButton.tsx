@@ -68,7 +68,14 @@ const CreateOrUpdateQuizButton: React.FC = () => {
     answerRemoteRepositoryFiles,
   } = useContext(QuizContext)
 
-  const quizType = "user"
+  const quizType =
+  currentUser?.email === "admin@git-used-to.com" && quizTitle.substring(0, 3) === "初級:"
+  ? "elementary"
+  : currentUser?.email === "admin@git-used-to.com" && quizTitle.substring(0, 3) === "中級:"
+  ? "intermediate"
+  : currentUser?.email === "admin@git-used-to.com" && quizTitle.substring(0, 3) === "上級:"
+  ? "advanced"
+  : "user"
 
   const aboutQuizData: AboutQuizData | undefined  =
   location.pathname === "/quiz"
