@@ -588,10 +588,17 @@ const CreateOrUpdateQuizButton: React.FC = () => {
       const res = await getUserQuizzes(currentUser?.id)
 
       !res.data.dataAnswerRecords.some((answerRecords :any) => answerRecords.userId === Number(currentUser?.id) && answerRecords.quizId === Number(id))
-      ? console.log(createQuizAnswerRecord(quizAnswerRecordData))
-      : alert("正解!")
+      ? (
+        createQuizAnswerRecord(quizAnswerRecordData),
+        alert("正解!"),
+        history.push(`/home`)
+      )
+      : (
+        alert("正解!"),
+        history.push(`/home`)
+      )
     } else {
-      console.log("不正解!")
+      alert("不正解!")
     }
   }
 
