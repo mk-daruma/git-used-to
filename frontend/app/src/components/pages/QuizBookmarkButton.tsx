@@ -5,18 +5,16 @@ import { Button, makeStyles, Theme } from "@material-ui/core";
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import { createQuizBookmark, deleteQuizBookmark } from "lib/api/quiz_boolmarks";
-import { QuizBookmarkContext } from "./QuizList";
+import { QuizBookmarkContext } from "./QuizListPage";
 
 const useStyles = makeStyles((theme: Theme) => ({
   submitBtn: {
     marginTop: theme.spacing(2),
-    flexGrow: 1,
     textTransform: "none",
     backgroundColor: "#f5f5f5"
   },
   bookmarkedBtn: {
     marginTop: theme.spacing(2),
-    flexGrow: 1,
     textTransform: "none",
     backgroundColor: "#f5f5f5",
     opacity: 0.5

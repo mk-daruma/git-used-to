@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { QuizContext } from "./CreateQuiz";
 import { Button, makeStyles, Theme } from "@material-ui/core"
 import { AboutQuizData } from "interfaces";
-import { createQuiz } from "lib/api/quizzes";
+import { createQuiz, updateQuiz } from "lib/api/quizzes";
 import { createQuizFirstOrLast } from "lib/api/quiz_first_or_lasts";
 import { createQuizBranch, deleteQuizBranch, updateQuizBranch } from "lib/api/quiz_branches";
 import { createQuizWorktreeFile, deleteQuizWorktreeFile, updateQuizWorktreeFile } from "lib/api/quiz_worktree_files";
@@ -20,10 +20,12 @@ import { getUserQuizzes } from "lib/api/users";
 
 const useStyles = makeStyles((theme: Theme) => ({
   submitBtn: {
-    marginTop: theme.spacing(2),
+    margin: theme.spacing(2),
+    marginTop: theme.spacing(0.5),
     flexGrow: 1,
+    width: "90%",
     textTransform: "none",
-    backgroundColor: "#f5f5f5"
+    backgroundColor: "#f5f5f5",
   }
 }))
 
@@ -66,7 +68,14 @@ const CreateOrUpdateQuizButton: React.FC = () => {
     answerRemoteRepositoryFiles,
   } = useContext(QuizContext)
 
-  const quizType = "user"
+  const quizType =
+  currentUser?.email === "admin@git-used-to.com" && quizTitle.substring(0, 3) === "初級:"
+  ? "elementary"
+  : currentUser?.email === "admin@git-used-to.com" && quizTitle.substring(0, 3) === "中級:"
+  ? "intermediate"
+  : currentUser?.email === "admin@git-used-to.com" && quizTitle.substring(0, 3) === "上級:"
+  ? "advanced"
+  : "user"
 
   const aboutQuizData: AboutQuizData | undefined  =
   location.pathname === "/quiz"
@@ -406,6 +415,15 @@ const CreateOrUpdateQuizButton: React.FC = () => {
       await Promise.all(deleteRemoteCommitMessages.map(deleteRemoteCommitMessage => deleteQuizRemoteCommitMessage(Number(deleteRemoteCommitMessage.remoteCommitMessageId))))
       await Promise.all(deleteRemoteBranches.map(deleteRemoteBranch => deleteQuizRemoteBranch(Number(deleteRemoteBranch.remoteBranchId))))
 
+      const updateQuizData = {
+        quizTitle: quizTitle,
+        quizIntroduction: quizIntroduction,
+        quizType: quizType,
+        userId: currentUser?.id
+      }
+
+      await updateQuiz(Number(id), updateQuizData)
+
       //新規作成用の関数(branchも新規作成の場合)
       await handleCreateQuizSubmit(
         createBranches,
@@ -570,10 +588,17 @@ const CreateOrUpdateQuizButton: React.FC = () => {
       const res = await getUserQuizzes(currentUser?.id)
 
       !res.data.dataAnswerRecords.some((answerRecords :any) => answerRecords.userId === Number(currentUser?.id) && answerRecords.quizId === Number(id))
-      ? console.log(createQuizAnswerRecord(quizAnswerRecordData))
-      : alert("正解!")
+      ? (
+        createQuizAnswerRecord(quizAnswerRecordData),
+        alert("正解!"),
+        history.push(`/home`)
+      )
+      : (
+        alert("正解!"),
+        history.push(`/home`)
+      )
     } else {
-      console.log("不正解!")
+      alert("不正解!")
     }
   }
 

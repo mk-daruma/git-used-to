@@ -1,8 +1,8 @@
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@material-ui/core"
 import { makeStyles } from "@material-ui/styles"
 import { useContext } from "react"
 import { QuizContext } from "./CreateQuiz"
-import SmsIcon from '@material-ui/icons/Sms';
+import GitHubIcon from '@material-ui/icons/GitHub';
+import DescriptionIcon from '@material-ui/icons/Description';
 
 const useStyles = makeStyles(() => ({
   form: {
@@ -30,25 +30,25 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-const QuizCommitMessageArea :React.FC = () => {
+const QuizRemoteRepositoryArea :React.FC = () => {
   const classes = useStyles()
-  const { commitMessages, currentBranch } = useContext(QuizContext)
+  const { remoteRepositoryFiles, currentBranch } = useContext(QuizContext)
 
   return(
     <div className={classes.area}>
       <h4 className={classes.title}>
-        <SmsIcon className={classes.icon} />
-        commit message
+        <GitHubIcon className={classes.icon} />
+        remote repository file
       </h4>
-      {commitMessages.filter((commitMessage) => commitMessage.message && currentBranch.currentBranchName === commitMessage.parentBranch)
-        .map((commitMessage, index) => (
+      {remoteRepositoryFiles.filter((repositoryFile) => repositoryFile.fileName && currentBranch.currentBranchName === repositoryFile.parentRemoteBranch)
+        .map((repositoryFile, index) => (
           <div key={index} className={classes.form}>
-            <SmsIcon className={classes.icon} />
-            <div className={classes.fileName}> message: { commitMessage.message}</div>
+            <DescriptionIcon className={classes.icon} />
+            <div className={classes.fileName}>{ repositoryFile.fileName } : { repositoryFile.textStatus }</div>
           </div>
           ))}
     </div>
   )
 }
 
-export default QuizCommitMessageArea
+export default QuizRemoteRepositoryArea

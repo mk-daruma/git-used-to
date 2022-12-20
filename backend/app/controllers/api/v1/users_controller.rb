@@ -21,17 +21,25 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def show
-    quizzes = @user.quizzes
-    quiz_answer_records = @user.quiz_answer_records
-    quiz_comments = QuizComment.where(quiz_id: @user.quizzes.ids)
-    quiz_tags = QuizTag.where(quiz_id: @user.quizzes.ids)
+    quiz_comments_hash = []
+    QuizComment.where(quiz_id: @user.quizzes.ids).each do |comment|
+      quiz_comments_hash.push({
+        comment: comment,
+        commented_user_name: User.find(comment.user_id).user_name,
+        commented_user_image: User.find(comment.user_id).image.url,
+      })
+    end
     render json: {
       status: 'SUCCESS',
       message: 'Loaded quizzes',
-      data: quizzes,
-      data_answer_records: quiz_answer_records,
-      data_comments: quiz_comments,
-      data_tags: quiz_tags,
+      data: @user.quizzes,
+      created_user_name: @user.user_name,
+      created_user_title: @user.nickname,
+      created_user_image: @user.image.url,
+      data_answer_records: @user.quiz_answer_records,
+      data_comments: quiz_comments_hash,
+      data_bookmarks: QuizBookmark.where(quiz_id: @user.quizzes.ids),
+      data_tags: QuizTag.where(quiz_id: @user.quizzes.ids),
     }
   end
 
@@ -56,14 +64,21 @@ class Api::V1::UsersController < ApplicationController
   def profile
     quizzes = @user.quizzes.length
     quiz_answer_records = @user.quiz_answer_records.length
-    quiz_comments = @user.quiz_comments.length
+    quiz_bookmarks = QuizBookmark.where(quiz_id: Quiz.where(user_id: @user.id)).length
+    all_user_count = User.preload(:quizzes).length
+    quiz_average = Quiz.preload(:user).length
+    quiz_answer_record_average = QuizAnswerRecord.preload(:quiz).length
+    quiz_bookmark_average = QuizBookmark.preload(:quiz).length
     render json: {
       status: 'SUCCESS',
       message: 'Loaded user info',
       user_data: @user,
       quizzes_length: quizzes,
       quiz_answer_records_length: quiz_answer_records,
-      quiz_comments_length: quiz_comments,
+      quiz_bookmarks_length: quiz_bookmarks,
+      quiz_average: quiz_average / all_user_count,
+      quiz_answer_record_average: quiz_answer_record_average / all_user_count,
+      quiz_bookmark_average: quiz_bookmark_average / all_user_count,
     }
   end
 
@@ -74,17 +89,32 @@ class Api::V1::UsersController < ApplicationController
     self_bookmarked_quiz_comments_hash = []
     self_bookmarked_quiz_tags_hash = []
     self_bookmark_ids.each do |bookmark|
-      self_bookmarked_quiz_hash.push(Quiz.where(id: bookmark.quiz_id))
+      quiz = Quiz.find(bookmark.quiz_id)
+      created_user = User.find(quiz.user_id)
+      self_bookmarked_quiz_hash.push({
+        quiz: quiz,
+        created_user_name: created_user.user_name,
+        created_user_nickname: created_user.nickname,
+        created_user_image: created_user.image.url,
+      })
+      QuizComment.where(quiz_id: bookmark.quiz_id).each do |comment|
+        self_bookmarked_quiz_comments_hash.push({
+          comment: comment,
+          commented_user_name: User.find(comment.user_id).user_name,
+          commented_user_image: User.find(comment.user_id).image.url,
+        })
+      end
       self_bookmarked_quiz_bookmarks_hash.push(QuizBookmark.where(quiz_id: bookmark.quiz_id))
-      self_bookmarked_quiz_comments_hash.push(QuizComment.where(quiz_id: bookmark.quiz_id))
       self_bookmarked_quiz_tags_hash.push(QuizTag.where(quiz_id: bookmark.quiz_id))
     end
     render json: {
       status: 'SUCCESS',
-      self_bookmarked_quizzes: self_bookmarked_quiz_hash.flatten,
-      self_bookmarked_quiz_bookmarks: self_bookmarked_quiz_bookmarks_hash.flatten,
-      self_bookmarked_quiz_comments: self_bookmarked_quiz_comments_hash.flatten,
-      self_bookmarked_quiz_tags: self_bookmarked_quiz_tags_hash.flatten,
+      data: {
+        self_bookmarked_quizzes: self_bookmarked_quiz_hash.flatten,
+        self_bookmarked_quiz_bookmarks: self_bookmarked_quiz_bookmarks_hash.flatten,
+        self_bookmarked_quiz_comments: self_bookmarked_quiz_comments_hash.flatten,
+        self_bookmarked_quiz_tags: self_bookmarked_quiz_tags_hash.flatten,
+      },
     }
   end
 
@@ -97,7 +127,9 @@ class Api::V1::UsersController < ApplicationController
         rank_in_users_hash.push({
           create_user_id: user.id,
           create_user_name: user.user_name,
+          create_user_introduction: user.user_self_introduction,
           create_user_image: user.image.url,
+          create_user_title: user.nickname,
           bookmark_count: bookmark_count,
         })
       end

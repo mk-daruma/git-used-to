@@ -1,12 +1,23 @@
 class Api::V1::QuizzesController < ApplicationController
   before_action :set_quiz, only: [:show, :update, :destroy, :tag]
+  before_action :quiz_params, only: [:create, :update]
 
   def index
+    quiz_hash = []
     quizzes = Quiz.preload(:user)
+    quizzes.map do |quiz|
+      user = User.find(quiz.user_id)
+      quiz_hash.push({
+        quiz: quiz,
+        created_user_name: user.user_name,
+        created_user_nickname: user.nickname,
+        created_user_image: user.image.url,
+      })
+    end
     render json: {
       status: 'SUCCESS',
       message: 'Loaded quizzes',
-      data: quizzes,
+      data: quiz_hash,
     }
   end
 
@@ -76,6 +87,7 @@ class Api::V1::QuizzesController < ApplicationController
           rank_in_quiz_data: rank_in_quiz,
           create_user_name: create_user.first.user_name,
           create_user_image: create_user.first.image.url,
+          create_user_title: create_user.first.nickname,
           bookmark_count: bookmark_count,
         })
       end
@@ -85,6 +97,15 @@ class Api::V1::QuizzesController < ApplicationController
       status: 'SUCCESS',
       message: 'Loaded quiz weekly ranking',
       rank_in_quiz_data: rank_in_quizzes_hash,
+    }
+  end
+
+  def lesson_quizzes
+    lesson_quizzes = Quiz.where(quiz_type: params[:quiz_type])
+    render json: {
+      status: 'SUCCESS',
+      message: 'Loaded lesson quizzes',
+      lesson_quizzes_data: lesson_quizzes,
     }
   end
 

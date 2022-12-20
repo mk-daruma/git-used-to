@@ -2,17 +2,21 @@ import { IconButton, InputBase, makeStyles, Paper, Theme } from "@material-ui/co
 import SearchIcon from '@material-ui/icons/Search';
 import { useContext } from "react";
 import QuizBookmarkOrderButton from "./QuizBookmarkOrderButton";
-import { QuizBookmarkContext } from "./QuizList";
+import { QuizBookmarkContext } from "./QuizListPage";
 import QuizNewArrivalsOrderButton from "./QuizNewArrivalsOrderButton";
 import QuizResetSearchStatusButton from "./QuizSearchResetButton";
 import QuizTagSearch from "./QuizTagSearchButton";
+import { motion } from "framer-motion"
 
 const useStyles = makeStyles((theme: Theme) => ({
+  searchForm: {
+    display: "flex",
+    flexFlow: "column",
+  },
   root: {
     padding: '2px 4px',
     display: 'flex',
     alignItems: 'center',
-    width: 400,
   },
   input: {
     marginLeft: theme.spacing(1),
@@ -32,7 +36,27 @@ const QuizSearchForm :React.FC = () => {
     quizzesForSearch
   } = useContext(QuizBookmarkContext)
 
-  const tagLists = [
+  const quizInfoList = [
+    {
+      key: 1,
+      placeholder: "クイズ名検索",
+      quizProps: "quizTitle",
+      searchState: searchQuiztitle,
+      searchSetState: setSearchQuiztitle
+    },
+    {
+      key: 2,
+      placeholder: "クイズ説明文検索",
+      quizProps: "quizIntroduction",
+      searchState: searchQuizIntroduction,
+      searchSetState: setSearchQuizIntroduction
+    },
+  ]
+
+  const searchButtonList = [
+    <QuizNewArrivalsOrderButton />,
+    <QuizBookmarkOrderButton />,
+    <QuizResetSearchStatusButton />,
     "add" ,
     "commit",
     "commit --amend",
@@ -53,23 +77,6 @@ const QuizSearchForm :React.FC = () => {
     "reset --hard"
   ];
 
-  const quizInfoList = [
-    {
-      key: 1,
-      placeholder: "クイズ名検索",
-      quizProps: "quizTitle",
-      searchState: searchQuiztitle,
-      searchSetState: setSearchQuiztitle
-    },
-    {
-      key: 2,
-      placeholder: "クイズ説明文検索",
-      quizProps: "quizIntroduction",
-      searchState: searchQuizIntroduction,
-      searchSetState: setSearchQuizIntroduction
-    },
-  ]
-
   const searchQuizzes = (prop :string, text :string) => {
     setQuizzes(
       quizzesForSearch.filter((quiz :any) => quiz?.[prop].indexOf(text) != -1 )
@@ -77,8 +84,8 @@ const QuizSearchForm :React.FC = () => {
   }
 
   return(
-    <>
-      {quizInfoList.map((quizInfo) =>
+    <div className={classes.searchForm}>
+    {quizInfoList.map((quizInfo) =>
       <div key={quizInfo.key}>
         <Paper
           component="form"
@@ -113,16 +120,42 @@ const QuizSearchForm :React.FC = () => {
         </Paper>
       </div>
       )}
-      <QuizNewArrivalsOrderButton />
-      <QuizBookmarkOrderButton />
-      <QuizResetSearchStatusButton />
-      {tagLists.map((tagList) =>
-        <QuizTagSearch
-          key={tagList}
-          tagName={tagList}
-          />
+      {searchButtonList.map((searchButton, index) =>
+        <motion.div
+          className={classes.searchForm}
+          whileHover={{ scale: 1.1 }}
+          transition={{
+            type: "spring",
+            stiffness: 400,
+            damping: 10
+          }}
+          variants={{
+            offscreen: {
+              y: 100,
+              opacity: 0,
+            },
+            onscreen: {
+              y: 0,
+              opacity: 1,
+              transition: {
+                duration: 0.5,
+              },
+            },
+          }}
+          initial="offscreen"
+          whileInView="onscreen"
+          viewport={{ once: false, amount: 0 }}
+          >
+          {typeof searchButton === "string"
+            ? <QuizTagSearch
+                key={index}
+                tagName={searchButton}
+                />
+            : searchButton
+          }
+        </motion.div>
         )}
-    </>
+    </div>
   )
 }
 

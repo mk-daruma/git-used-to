@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { useHistory } from "react-router-dom"
+import { motion } from "framer-motion"
 
 import { makeStyles, Theme } from "@material-ui/core/styles"
 import TextField from "@material-ui/core/TextField"
@@ -25,8 +26,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: "center"
   },
   card: {
-    padding: theme.spacing(2),
-    maxWidth: 400
+    padding: theme.spacing(6),
+    margin: theme.spacing(8),
+    maxWidth: 400,
+    borderRadius: "2rem",
   },
   box: {
     marginTop: "2rem"
@@ -80,32 +83,42 @@ const ForgetPassword: React.FC = () => {
   return (
     <>
       <form noValidate autoComplete="off">
-        <Card className={classes.card}>
-          <CardHeader className={classes.header} title="パスワード変更" />
-          <CardContent>
-          <TextField
-              variant="outlined"
-              required
-              fullWidth
-              label="Email"
-              value={email}
-              margin="dense"
-              onChange={event => setEmail(event.target.value)}
-            />
-            <Button
-              type="submit"
-              variant="contained"
-              size="large"
-              fullWidth
-              color="default"
-              disabled={!email ? true : false}
-              className={classes.submitBtn}
-              onClick={handleSubmit}
+        <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              duration: 0.8,
+              delay: 0.5,
+              ease: [0, 0.71, 0.2, 1.01]
+            }}
             >
-              Submit
-            </Button>
-          </CardContent>
-        </Card>
+          <Card className={classes.card}>
+            <CardHeader className={classes.header} title="パスワード変更" />
+            <CardContent>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                label="Email"
+                value={email}
+                margin="dense"
+                onChange={event => setEmail(event.target.value)}
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                size="large"
+                fullWidth
+                color="default"
+                disabled={!email ? true : false}
+                className={classes.submitBtn}
+                onClick={handleSubmit}
+              >
+                Submit
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
       </form>
       <AlertMessage
         open={alertMessageOpen}

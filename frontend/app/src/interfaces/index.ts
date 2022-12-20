@@ -168,3 +168,7 @@ export interface createQuizTagData {
   quizId: number
   tag: string
 }
+
+export interface getLessonQuizzes {
+  quizType: string
+}

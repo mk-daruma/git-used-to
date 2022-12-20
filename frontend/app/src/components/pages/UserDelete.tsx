@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react"
 import { useHistory } from "react-router-dom";
 import Cookies from "js-cookie";
+import { motion } from "framer-motion"
 
 import { makeStyles, Theme } from "@material-ui/core/styles"
 import Card from "@material-ui/core/Card"
@@ -28,7 +29,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   card: {
     padding: theme.spacing(2),
-    maxWidth: 400
+    maxWidth: 400,
+    borderRadius: "2rem",
   },
   box: {
     marginTop: "2rem"
@@ -82,58 +84,68 @@ const UserDelete: React.FC = () => {
 
   return (
     <>
-      <form noValidate autoComplete="off">
-        <Card className={classes.card}>
-          <CardHeader className={classes.header} title="アカウント削除" />
-          <CardContent>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={checkBtn.canNotRestore}
-                  onChange={handleChange}
-                  name="canNotRestore"
-                />}
-              label="一度削除すると復元できません。"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={checkBtn.deleteRelatedData}
-                  onChange={handleChange}
-                  name="deleteRelatedData"
-                />}
-              label={`${currentUser?.userName}さんが作成した問題も削除されます。`}
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={checkBtn.finalCheck}
-                  onChange={handleChange}
-                  name="finalCheck"
-                />}
-              label="アカウントを削除して良いですか？"
-            />
-            <Button
-              type="submit"
-              variant="contained"
-              size="large"
-              fullWidth
-              color="default"
-              disabled={!checkBtn.canNotRestore || !checkBtn.deleteRelatedData || !checkBtn.finalCheck ? true : false}
-              className={classes.submitBtn}
-              onClick={handleSubmit}
-            >
-              アカウントを削除します
-            </Button>
-          </CardContent>
-        </Card>
-      </form>
-      <AlertMessage
-        open={alertMessageOpen}
-        setOpen={setAlertMessageOpen}
-        severity="error"
-        message="Failed delete user"
-      />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{
+          duration: 0.8,
+          delay: 0.5,
+          ease: [0, 0.71, 0.2, 1.01]
+        }}
+        >
+        <form noValidate autoComplete="off">
+          <Card className={classes.card}>
+            <CardHeader className={classes.header} title="アカウント削除" />
+            <CardContent>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={checkBtn.canNotRestore}
+                    onChange={handleChange}
+                    name="canNotRestore"
+                  />}
+                label="一度削除すると復元できません。"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={checkBtn.deleteRelatedData}
+                    onChange={handleChange}
+                    name="deleteRelatedData"
+                  />}
+                label={`${currentUser?.userName}さんが作成した問題も削除されます。`}
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={checkBtn.finalCheck}
+                    onChange={handleChange}
+                    name="finalCheck"
+                  />}
+                label="アカウントを削除して良いですか？"
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                size="large"
+                fullWidth
+                color="default"
+                disabled={!checkBtn.canNotRestore || !checkBtn.deleteRelatedData || !checkBtn.finalCheck ? true : false}
+                className={classes.submitBtn}
+                onClick={handleSubmit}
+              >
+                アカウントを削除します
+              </Button>
+            </CardContent>
+          </Card>
+        </form>
+        <AlertMessage
+          open={alertMessageOpen}
+          setOpen={setAlertMessageOpen}
+          severity="error"
+          message="Failed delete user"
+        />
+      </motion.div>
     </>
   )
 }

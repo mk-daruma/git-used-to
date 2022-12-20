@@ -4,14 +4,23 @@ import { Container, Grid } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 
 import Header from "components/layouts/Header"
+import Footer from "./Footer"
+import { useLocation } from "react-router-dom"
 
 const useStyles = makeStyles(() => ({
-  main: {
+  backgroundColor: {
     backgroundColor: "#212121",
-    color: "#f5f5f5"
+    color: "#f5f5f5",
+    display: "flex",
+    flexDirection: "column",
+    minHeight: "100vh",
   },
   container: {
-    marginTop: "3rem"
+    marginTop: "8rem",
+    marginBottom: "2rem",
+  },
+  footer: {
+    marginTop: "auto"
   }
 }))
 
@@ -21,13 +30,14 @@ interface CommonLayoutProps {
 
 const CommonLayout = ({ children }: CommonLayoutProps) => {
   const classes = useStyles()
+  const location = useLocation()
 
   return (
-    <div className={classes.main}>
+    <div  className={classes.backgroundColor}>
       <header>
         <Header />
       </header>
-      <main className={classes.main}>
+      <main>
         <Container maxWidth="lg" className={classes.container} >
           <Grid container justifyContent="center">
             <Grid item>
@@ -36,6 +46,9 @@ const CommonLayout = ({ children }: CommonLayoutProps) => {
           </Grid>
         </Container>
       </main>
+      <footer className={classes.footer}>
+        <Footer />
+      </footer>
     </div>
   )
 }

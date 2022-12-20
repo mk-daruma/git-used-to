@@ -9,7 +9,6 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
-import Avatar from "@material-ui/core/Avatar";
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
 import { AuthContext } from "App";
@@ -47,7 +46,7 @@ const HeaderMenuList: React.FC = () => {
         Cookies.remove("_uid")
 
         setIsSignedIn(false)
-        histroy.push("/signin")
+        histroy.push("/")
 
         console.log("Succeeded in sign out")
       } else {
@@ -111,7 +110,7 @@ const HeaderMenuList: React.FC = () => {
                   <MenuItem
                       onClick={handleClose}
                       component={Link}
-                      to="/"
+                      to="/home"
                     >
                       Home
                     </MenuItem>

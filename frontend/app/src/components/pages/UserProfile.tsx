@@ -1,24 +1,64 @@
-import { Avatar, Button } from "@material-ui/core"
 import { AuthContext } from "App"
-import AvatarImage from "components/layouts/Avatar"
 import { getUserProfile } from "lib/api/users"
-import { useContext, useEffect, useState } from "react"
-import { Link, useParams } from "react-router-dom"
+import { createContext, useContext, useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
+import OtherUserProfile from "./OtherUserProfile"
 import UserEdit from "./UserEdit"
+
+export const UserProfileContext = createContext({} as {
+  userProfile: {
+    userId: number,
+    userName: string,
+    userSelfIntroduction: string,
+    userEmail: string,
+    userImage: {
+      url: string,
+    },
+    userNickname: string,
+    quizzesLength: number,
+    bookmarksLength: number,
+    answerRecordsLength: number,
+    quizAverage: number,
+    answerRecordAverage: number,
+    bookmarkAverage: number
+  }
+
+  setUserProfile: React.Dispatch<React.SetStateAction<{
+    userId: number,
+    userName: string,
+    userSelfIntroduction: string,
+    userEmail: string,
+    userImage: {
+      url: string,
+    },
+    userNickname: string,
+    quizzesLength: number,
+    bookmarksLength: number,
+    answerRecordsLength: number,
+    quizAverage: number,
+    answerRecordAverage: number,
+    bookmarkAverage: number
+  }>>
+})
 
 const UserProfile: React.FC = () => {
   const [userProfile, setUserProfile] = useState({
     userId: 0,
     userName: "",
     userSelfIntroduction: "",
+    userEmail: "",
     userImage: {
       url: "",
     },
     userNickname: "",
     quizzesLength: 0,
-    commentsLength: 0,
-    answerRecordsLength: 0
+    bookmarksLength: 0,
+    answerRecordsLength: 0,
+    quizAverage: 0,
+    answerRecordAverage: 0,
+    bookmarkAverage: 0
   })
+
   const { currentUser } = useContext(AuthContext)
   const { id } = useParams<{ id: string }>()
 
@@ -28,15 +68,24 @@ const UserProfile: React.FC = () => {
       userId: userProfileRes.data.userData.id,
       userName: userProfileRes.data.userData.userName,
       userSelfIntroduction: userProfileRes.data.userData.userSelfIntroduction,
+      userEmail: userProfileRes.data.userData.email,
       userImage: {
         url: userProfileRes.data.userData.image.url,
       },
       userNickname: userProfileRes.data.userData.nickname,
       quizzesLength: userProfileRes.data.quizzesLength,
-      commentsLength: userProfileRes.data.quizCommentsLength,
+      bookmarksLength: userProfileRes.data.quizBookmarksLength,
       answerRecordsLength: userProfileRes.data.quizAnswerRecordsLength,
+      quizAverage: userProfileRes.data.quizAverage,
+      answerRecordAverage: userProfileRes.data.quizAnswerRecordAverage,
+      bookmarkAverage: userProfileRes.data.quizBookmarkAverage,
     })
   }
+
+  const checkGuestUser = currentUser?.email === "guest_user@git-used-to.com"
+  const checkCurrentUser = id === String(currentUser?.id)
+  const checkEditUser = checkCurrentUser && !checkGuestUser
+  const checkGuestOrOtherUser = !checkCurrentUser || checkGuestUser
 
   useEffect(() => {
     handleGetUserProfile()
@@ -48,42 +97,14 @@ const UserProfile: React.FC = () => {
 
 
   return(
-    <>
-      {id === String(currentUser?.id) &&
-        <UserEdit />
-        }
-
-      {id !== String(currentUser?.id) &&
-        <>
-          <Button
-            type="submit"
-            color="default"
-            variant="contained"
-            component={Link}
-            to={`/user/${id}/quiz/list`}
-          >
-            userが作成したクイズ一覧
-          </Button>
-          <Button
-            type="submit"
-            color="default"
-            variant="contained"
-            component={Link}
-            to={`/user/${id}/quiz/bookmark/list`}
-          >
-            userがブックマークしたクイズ一覧
-          </Button>
-          <AvatarImage image={userProfile.userImage.url} rank={userProfile.userNickname} />
-          <p>{userProfile.userName}</p>
-          <p>{userProfile.userSelfIntroduction}</p>
-          <p>{userProfile.answerRecordsLength}</p>
-          <p>{userProfile.commentsLength}</p>
-          <p>{userProfile.quizzesLength}</p>
-          <p>{userProfile.userName}</p>
-          <p>{userProfile.userSelfIntroduction}</p>
-        </>
-        }
-    </>
+    <UserProfileContext.Provider
+      value={{
+        userProfile, setUserProfile
+      }}
+      >
+      {checkEditUser && <UserEdit />}
+      {checkGuestOrOtherUser && <OtherUserProfile />}
+    </UserProfileContext.Provider>
   )
 }
 

@@ -1,10 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { Checkbox, FormControlLabel } from '@material-ui/core';
+import { motion } from "framer-motion"
+import { Checkbox, FormControlLabel, makeStyles, Theme } from '@material-ui/core';
 import { getQuizTags } from 'lib/api/quizzes';
 import { createQuizTag, deleteQuizTag } from 'lib/api/quiz_tags';
 
-const QuizTag: React.FC<{ quizId: number }> = ({quizId}) => {
+const useStyles = makeStyles((theme: Theme) => ({
+  tagList: {
+    display: "flex",
+    flexFlow: "column",
+    border: "solid",
+    borderRadius: "2rem",
+    padding: theme.spacing(3),
+    margin: theme.spacing(2),
+    height: "10rem",
+    overflow: 'scroll',
+  }
+}))
 
+const QuizTag: React.FC<{ quizId: number }> = ({quizId}) => {
+  const classes = useStyles()
   const [commandTag, setCommandTag] = useState([{
     id: "",
     commandTag : ""
@@ -74,24 +88,27 @@ const QuizTag: React.FC<{ quizId: number }> = ({quizId}) => {
   },[])
 
   return (
-    <>
-      <p>{commandTag.map(commandTag => commandTag.commandTag)}</p>
+      <motion.div
+        className={classes.tagList}
+        whileHover={{ scale: 1.1 }}
+        transition={{ type: "spring", stiffness: 400, damping: 10 }}
+      >
       {tagList.map(tag =>
         <FormControlLabel
           control={
             <Checkbox
-                checked={checkTagExist(tag)}
-                onClick={e => {
-                  checkTagExist(tag)
-                  ? handleRemoveTags(tag)
-                  : handleAddTags(tag)
-                }}
-                />
+              checked={checkTagExist(tag)}
+              onClick={e => {
+                checkTagExist(tag)
+                ? handleRemoveTags(tag)
+                : handleAddTags(tag)
+              }}
+              />
             }
           label={tag}
         />
       )}
-    </>
+    </motion.div>
   );
 }
 

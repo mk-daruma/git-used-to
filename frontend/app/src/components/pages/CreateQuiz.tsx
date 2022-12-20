@@ -1,5 +1,6 @@
 import React, { useState, createContext, useEffect, useContext } from "react";
 import { useLocation, useParams } from "react-router-dom";
+import { motion } from "framer-motion"
 
 import AboutQuiz from "./AboutQuiz";
 
@@ -8,6 +9,7 @@ import Terminal from "./Terminal";
 import QuizBranchArea from "./QuizBranchArea";
 import { getQuizFirstOrLast } from "lib/api/quiz_first_or_lasts";
 import { getQuizBranch } from "lib/api/quiz_branches";
+import QuizWorktreeFiles from "./QuizWorkingTreeArea";
 
 import { getQuizCommitMessage } from "lib/api/quiz_commit_messages";
 import { getQuizRemoteBranch } from "lib/api/quiz_remote_branches";
@@ -16,6 +18,43 @@ import CreateOrUpdateQuizButton from "./CreateQuizButton";
 import { AuthContext } from "App";
 import ReccomendSignUpModal from "./RecommendSignUpModal";
 import { getUserQuizzes, updateUsertitle } from "lib/api/users";
+import { makeStyles } from "@material-ui/core";
+import QuizIndexArea from "./QuizIndexArea";
+import QuizCommitMessageArea from "./QuizCommitMessageArea";
+import QuizLocalRepositoryArea from "./QuizLocalRepositoryArea";
+import QuizRemoteRepositoryArea from "./QuizRemoteRepositoryArea";
+import QuizRemoteCoimmitMessageArea from "./QuizRemoteCommitMessageArea";
+import AboutAnswerQuiz from "./AboutAnswerQuiz";
+
+const useStyles = makeStyles(() => ({
+  position: {
+    display: "flex",
+    flexWrap: "wrap"
+  },
+  branch: {
+    maxWidth: "76rem",
+    width: "100%",
+    border: "solid",
+    borderRadius: "2rem",
+    backgroundColor: "black",
+  },
+  area: {
+    width: "19rem",
+    height: "25rem",
+    border: "solid",
+    borderRadius: "2rem",
+    backgroundColor: "black",
+    overflow: 'scroll',
+  },
+  borderForm: {
+    width: "19rem",
+    height: "25rem",
+    border: "solid",
+    borderRadius: "2rem",
+    backgroundColor: "#a9a9a9",
+    overflow: 'scroll',
+  },
+}))
 
 export const QuizContext = createContext({} as {
   userQuizzesCount: number
@@ -416,6 +455,7 @@ export const QuizContext = createContext({} as {
 
 const CreateQuiz: React.FC = () => {
   const location = useLocation()
+  const classes = useStyles()
   const { id } = useParams<{ id: string }>()
   const { currentUser } = useContext(AuthContext)
 
@@ -990,6 +1030,42 @@ const CreateQuiz: React.FC = () => {
     console.log("remoteadd", remoteAdd)
   },[remoteAdd])
 
+  const areaList = [
+    {
+      class: classes.area,
+      area: <QuizWorktreeFiles />
+    },
+    {
+      class: classes.area,
+      area: <QuizIndexArea />
+    },
+    {
+      class: classes.area,
+      area: <QuizCommitMessageArea />
+    },
+    {
+      class: classes.area,
+      area: <QuizLocalRepositoryArea />
+    },
+    {
+      class: classes.area,
+      area: <QuizRemoteCoimmitMessageArea />
+    },
+    {
+      class: classes.area,
+      area: <QuizRemoteRepositoryArea />
+    },
+    {
+      class: classes.area,
+      area: <Terminal />
+    },
+    {
+      class: classes.borderForm,
+      area: location.pathname === (`/quiz/answer/${id}`) ? <AboutAnswerQuiz /> : <AboutQuiz />,
+      area2: currentUser?.email === "guest_user@git-used-to.com" ? <ReccomendSignUpModal /> : <CreateOrUpdateQuizButton />
+    }
+  ]
+
   return(
     <QuizContext.Provider
       value={{
@@ -1029,66 +1105,45 @@ const CreateQuiz: React.FC = () => {
         answerRemoteRepositoryFiles, setAnswerRemoteRepositoryFiles,
         commands, setCommands
         }}>
-      <QuizBranchArea />
-    {/* <layout 5つのコンポーネントを横並びにする> */}
-      {/* <QuizWorktreeIndexArea />
-      <QuizCommitMessageArea />
-      <QuizRepositoryArea /> */}
-    {/* </layout> */}
-
-    {/* <layout 2つのコンポーネントを横並びにする> */}
-      <AboutQuiz />
-      <Terminal />
-    {/* </layout> */}
-      {currentUser?.email === "guest_user@git-used-to.com"
-      ? <ReccomendSignUpModal />
-      : <CreateOrUpdateQuizButton />
-        }
-        <>
-        {/* ↓配列の中身確認用 */}
-        <p>[branch]</p>
-        { branches.filter((branch) => currentBranch.currentBranchName === branch.branchName)
-          .map((branch) => (
-          <p>
-            { branch.branchName }
-          </p>
-          ))}
-          <p>[work]</p>
-        { worktreeFiles.filter((worktreeFile) => currentBranch.currentBranchName === worktreeFile.parentBranch)
-        .map((worktreeFile) => (
-          <p>
-            { worktreeFile.fileName } text: { worktreeFile.textStatus }
-          </p>
-          ))}
-          <p>[index]</p>
-        { indexFiles.filter((indexFile) => currentBranch.currentBranchName === indexFile.parentBranch)
-        .map((indexFile) => (
-          <p>
-            { indexFile.fileName } text: { indexFile.textStatus }
-          </p>
-          ))}
-          <p>[repo]</p>
-        { repositoryFiles.filter((repositoryFile) => currentBranch.currentBranchName === repositoryFile.parentBranch)
-        .map((repositoryFile) => (
-          <p>
-            { repositoryFile.fileName } text: { repositoryFile.textStatus }
-          </p>
-          ))}
-          <p>[commit]</p>
-        { commitMessages.filter((commitMessage) => currentBranch.currentBranchName === commitMessage.parentBranch)
-        .map((commitMessage) => (
-          <p>
-            { commitMessage.message }
-          </p>
-          ))}
-          <p>[remoteRepo]</p>
-        { remoteRepositoryFiles.filter((repositoryFile) => currentBranch.currentBranchName === repositoryFile.parentRemoteBranch)
-        .map((repositoryFile) => (
-          <p>
-            { repositoryFile.fileName } text: { repositoryFile.textStatus }
-          </p>
-          ))}
-      </>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{
+          duration: 1.5,
+          delay: 0.1,
+          ease: [0, 0.71, 0.2, 1.01]
+        }}
+        >
+        <motion.div
+          className={classes.branch}
+          whileHover={{ scale: 1.1 }}
+          transition={{ type: "spring", stiffness: 400, damping: 10 }}
+        >
+          <QuizBranchArea />
+        </motion.div>
+      </motion.div>
+      <div className={classes.position}>
+        {areaList.map((area, index) =>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              duration: 1.5,
+              delay: index/10 + 0.3,
+              ease: [0, 0.71, 0.2, 1.01]
+            }}
+          >
+            <motion.div
+              className={area.class}
+              whileHover={{ scale: 1.1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            >
+              {area.area}
+              {area.area2 && area.area2}
+            </motion.div>
+          </motion.div>
+        )}
+      </div>
     </QuizContext.Provider>
   )
 }

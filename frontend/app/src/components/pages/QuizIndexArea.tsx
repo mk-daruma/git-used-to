@@ -1,8 +1,7 @@
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@material-ui/core"
 import { makeStyles } from "@material-ui/styles"
 import { useContext } from "react"
 import { QuizContext } from "./CreateQuiz"
-import SmsIcon from '@material-ui/icons/Sms';
+import DescriptionIcon from '@material-ui/icons/Description';
 
 const useStyles = makeStyles(() => ({
   form: {
@@ -30,25 +29,27 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-const QuizCommitMessageArea :React.FC = () => {
+const QuizIndexArea :React.FC = () => {
   const classes = useStyles()
-  const { commitMessages, currentBranch } = useContext(QuizContext)
+  const { indexFiles, currentBranch } = useContext(QuizContext)
+  const currentBranchIndexFiles = indexFiles.filter((indexFile) => indexFile.fileName && currentBranch.currentBranchName === indexFile.parentBranch)
 
   return(
     <div className={classes.area}>
       <h4 className={classes.title}>
-        <SmsIcon className={classes.icon} />
-        commit message
+        <DescriptionIcon className={classes.icon} />
+        staging area (index)
       </h4>
-      {commitMessages.filter((commitMessage) => commitMessage.message && currentBranch.currentBranchName === commitMessage.parentBranch)
-        .map((commitMessage, index) => (
+      {currentBranchIndexFiles.map((indexFile, index) => (
           <div key={index} className={classes.form}>
-            <SmsIcon className={classes.icon} />
-            <div className={classes.fileName}> message: { commitMessage.message}</div>
+            <DescriptionIcon className={classes.icon} />
+            <div className={classes.fileName}>
+              { indexFile.fileName } : { indexFile.textStatus }
+            </div>
           </div>
           ))}
     </div>
   )
 }
 
-export default QuizCommitMessageArea
+export default QuizIndexArea

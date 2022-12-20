@@ -158,5 +158,13 @@ RSpec.describe User, type: :model do
         expect(User.title(user)).to eq "免許皆伝 git-used-to師範代"
       end
     end
+
+    context "userが管理者アカウントだった場合" do
+      let!(:admin_user) { create(:user, email: "admin@git-used-to.com") }
+
+      it "返ってくる値が'免許皆伝 git-used-to師範代'であること" do
+        expect(User.title(admin_user)).to eq "免許皆伝 git-used-to師範代"
+      end
+    end
   end
 end

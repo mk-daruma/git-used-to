@@ -7,26 +7,31 @@ import AppBar from "@material-ui/core/AppBar"
 import Toolbar from "@material-ui/core/Toolbar"
 import Typography from "@material-ui/core/Typography"
 import Button from "@material-ui/core/Button"
-import IconButton from "@material-ui/core/IconButton"
-import MenuIcon from "@material-ui/icons/Menu"
 
 import { AuthContext } from "App"
 import HeaderMenuList from "components/layouts/HeaderMenuList"
 
 const useStyles = makeStyles((theme: Theme) => ({
   appBar: {
-    backgroundColor: '#3a3a3a',
+    backgroundColor: "rgba(255, 0, 0, 0)",
+    borderBottom: "solid",
+    borderColor: "white",
+    position: "fixed",
+    top: 0,
+    width: "100%",
   },
   iconButton: {
     marginRight: theme.spacing(2),
   },
   title: {
     flexGrow: 1,
+    width: "8rem",
     textDecoration: "none",
     color: "inherit"
   },
   linkBtn: {
-    textTransform: "none"
+    textTransform: "none",
+    marginLeft: "auto"
   }
 }))
 
@@ -71,16 +76,9 @@ const Header: React.FC = () => {
     <>
       <AppBar position="static" className={classes.appBar}>
         <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.iconButton}
-            color="inherit"
-          >
-            <MenuIcon />
-          </IconButton>
           <Typography
             component={Link}
-            to="/"
+            to="/home"
             variant="h6"
             className={classes.title}
           >
