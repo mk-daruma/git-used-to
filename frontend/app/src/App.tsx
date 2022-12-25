@@ -21,6 +21,7 @@ import UserRanking from "components/pages/UserRanking"
 import UserUpdateTitleAlert from "components/utils/UserGetTitleAlert"
 import Top from "components/pages/Top"
 import { ScrollTop } from "components/utils/ScroollTop"
+import { isMobile } from "react-device-detect"
 
 export const AuthContext = createContext({} as {
   loading: boolean
@@ -72,39 +73,51 @@ const App: React.FC = () => {
     }
   }
 
+  const MobileLimit = ({ children }: { children: React.ReactElement }) =>{
+    if (isMobile) {
+      return <Redirect to="/" />
+    } else {
+      return children
+    }
+  }
+
   return (
     <BrowserRouter>
       <ScrollTop />
       <AuthContext.Provider value={{ loading, setLoading, isSignedIn, setIsSignedIn, currentUser, setCurrentUser}}>
         <CommonLayout>
-          <Switch>
-            <Route exact path="/" component={Top} />
-            <Route path="/api/v1/auth/password/reset/form" component={RedirectForgetPassword} />
-            <Route exact path="/signup" component={SignUp} />
-            <Route exact path="/signin" component={SignIn} />
-            <Route exact path="/password/reset" component={ForgetPassword} />
-            <Private>
-              <Switch>
-                <Route exact path="/home" component={Home} />
-                <Route exact path="/password" component={ChangePassword} />
-                <Route exact path="/user/:id/edit" component={UserProfile} />
-                <Route exact path="/user/delete" component={UserDelete} />
-                <Route exact path="/user/ranking" component={UserRanking} />
-                <Route exact path="/quiz/list" component={QuizListPage} />
-                <Route exact path="/quiz/lesson/elementary" component={QuizListPage} />
-                <Route exact path="/quiz/lesson/intermediate" component={QuizListPage} />
-                <Route exact path="/quiz/lesson/advanced" component={QuizListPage} />
-                <Route exact path="/quiz" component={CreateQuiz} />
-                <Route exact path="/quiz/ranking/weekly" component={QuizWeeklyRanking} />
-                <Route path="/user/:id/quiz/list" component={QuizListPage} />
-                <Route path="/user/:id/quiz/bookmark/list" component={QuizListPage} />
-                <Route path="/quiz/setup/:id" component={QuizSetUp} />
-                <Route path="/quiz/edit/:id" component={CreateQuiz} />
-                <Route path="/quiz/init/edit/:id" component={CreateQuiz} />
-                <Route path="/quiz/answer/:id" component={CreateQuiz} />
-              </Switch>
-            </Private>
-          </Switch>
+            <Switch>
+              <Route exact path="/" component={Top} />
+              <MobileLimit>
+                <Switch>
+                  <Route path="/api/v1/auth/password/reset/form" component={RedirectForgetPassword} />
+                  <Route exact path="/signup" component={SignUp} />
+                  <Route exact path="/signin" component={SignIn} />
+                  <Route exact path="/password/reset" component={ForgetPassword} />
+                  <Private>
+                    <Switch>
+                      <Route exact path="/home" component={Home} />
+                      <Route exact path="/password" component={ChangePassword} />
+                      <Route exact path="/user/:id/edit" component={UserProfile} />
+                      <Route exact path="/user/delete" component={UserDelete} />
+                      <Route exact path="/user/ranking" component={UserRanking} />
+                      <Route exact path="/quiz/list" component={QuizListPage} />
+                      <Route exact path="/quiz/lesson/elementary" component={QuizListPage} />
+                      <Route exact path="/quiz/lesson/intermediate" component={QuizListPage} />
+                      <Route exact path="/quiz/lesson/advanced" component={QuizListPage} />
+                      <Route exact path="/quiz" component={CreateQuiz} />
+                      <Route exact path="/quiz/ranking/weekly" component={QuizWeeklyRanking} />
+                      <Route path="/user/:id/quiz/list" component={QuizListPage} />
+                      <Route path="/user/:id/quiz/bookmark/list" component={QuizListPage} />
+                      <Route path="/quiz/setup/:id" component={QuizSetUp} />
+                      <Route path="/quiz/edit/:id" component={CreateQuiz} />
+                      <Route path="/quiz/init/edit/:id" component={CreateQuiz} />
+                      <Route path="/quiz/answer/:id" component={CreateQuiz} />
+                    </Switch>
+                  </Private>
+                </Switch>
+              </MobileLimit>
+            </Switch>
         </CommonLayout>
       </AuthContext.Provider>
     </BrowserRouter>
