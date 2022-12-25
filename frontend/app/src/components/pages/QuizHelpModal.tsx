@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const QuizCommandCheatModal :React.FC<{ modalType :string }> = (modalType) => {
+const QuizHelpModal :React.FC<{ modalType :string }> = (modalType) => {
   const classes = useStyles()
   const [modalStyle] = useState(getModalStyle);
   const [open, setOpen] = useState(false);
@@ -89,4 +89,4 @@ const QuizCommandCheatModal :React.FC<{ modalType :string }> = (modalType) => {
   )
 }
 
-export default QuizCommandCheatModal
+export default QuizHelpModal

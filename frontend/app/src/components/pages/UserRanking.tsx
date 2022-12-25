@@ -3,10 +3,12 @@ import { getUserRanking } from "lib/api/users"
 import { useEffect, useReducer, useState } from "react"
 import Ranking from "./Ranking"
 import { motion } from "framer-motion"
+import QuizHelpModal from "./QuizHelpModal";
 
 const useStyles = makeStyles((theme: Theme) => ({
   weeklyRankingTitle: {
-    fontSize: "3rem"
+    fontSize: "3rem",
+    display: "flex"
   },
   fullPage: {
     display: "flex",
@@ -20,6 +22,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   noQuiz: {
     fontSize: "2rem"
+  },
+  userRankingHelp: {
+    paddingLeft: theme.spacing(2)
   }
 }))
 
@@ -61,6 +66,9 @@ const UserRanking :React.FC = () => {
     <div className={classes.fullPage}>
       <div className={classes.weeklyRankingTitle}>
         USERランキング(ブックマーク数)
+        <div className={classes.userRankingHelp}>
+          <QuizHelpModal modalType="userRanking" />
+        </div>
       </div>
       <div>
       <motion.div

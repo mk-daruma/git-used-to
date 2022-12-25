@@ -5,7 +5,7 @@ import LaptopChromebookIcon from '@material-ui/icons/LaptopChromebook';
 import { AuthContext } from "App";
 import InputCommand from "./InputCommand";
 import { QuizContext } from "./CreateQuiz";
-import QuizCommandCheatModal from "./QuizCommandCheatModal";
+import QuizHelpModal from "./QuizHelpModal";
 
 const useStyles = makeStyles(() => ({
   userName: {
@@ -51,7 +51,7 @@ const Terminal: React.FC = () => {
         <LaptopChromebookIcon className={classes.icon} />
         Terminal
         <div className={classes.commandHelp}>
-          <QuizCommandCheatModal />
+          <QuizHelpModal modalType="commandList" />
         </div>
       </h4>
       <div className={classes.commandText}>
