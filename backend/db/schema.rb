@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2022_11_13_123950) do
 
-  create_table "quiz_answer_records", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "quiz_answer_records", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "quiz_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 2022_11_13_123950) do
     t.index ["user_id"], name: "index_quiz_answer_records_on_user_id"
   end
 
-  create_table "quiz_bookmarks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "quiz_bookmarks", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "quiz_id", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(version: 2022_11_13_123950) do
     t.index ["user_id"], name: "index_quiz_bookmarks_on_user_id"
   end
 
-  create_table "quiz_branches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "quiz_branches", charset: "utf8mb4", force: :cascade do |t|
     t.string "quiz_branch_name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(version: 2022_11_13_123950) do
     t.index ["quiz_first_or_last_id"], name: "index_quiz_branches_on_quiz_first_or_last_id"
   end
 
-  create_table "quiz_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "quiz_comments", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "quiz_id", null: false
     t.bigint "user_id", null: false
     t.text "comment", null: false
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 2022_11_13_123950) do
     t.index ["user_id"], name: "index_quiz_comments_on_user_id"
   end
 
-  create_table "quiz_commit_messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "quiz_commit_messages", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "quiz_branch_id", null: false
     t.text "quiz_commit_message"
     t.datetime "created_at", precision: 6, null: false
@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(version: 2022_11_13_123950) do
     t.index ["quiz_branch_id"], name: "index_quiz_commit_messages_on_quiz_branch_id"
   end
 
-  create_table "quiz_first_or_lasts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "quiz_first_or_lasts", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "quiz_id", null: false
     t.string "quiz_first_or_last_status"
     t.datetime "created_at", precision: 6, null: false
@@ -64,7 +64,7 @@ ActiveRecord::Schema.define(version: 2022_11_13_123950) do
     t.index ["quiz_id"], name: "index_quiz_first_or_lasts_on_quiz_id"
   end
 
-  create_table "quiz_history_of_committed_files", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "quiz_history_of_committed_files", charset: "utf8mb4", force: :cascade do |t|
     t.string "quiz_history_of_committed_file_name"
     t.string "quiz_history_of_committed_file_text_status"
     t.string "quiz_history_of_committed_file_past_text_status"
@@ -78,7 +78,7 @@ ActiveRecord::Schema.define(version: 2022_11_13_123950) do
     t.index ["quiz_commit_message_id"], name: "index_quiz_history_of_committed_files_on_quiz_commit_message_id"
   end
 
-  create_table "quiz_index_files", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "quiz_index_files", charset: "utf8mb4", force: :cascade do |t|
     t.string "quiz_index_file_name"
     t.string "quiz_index_file_text_status"
     t.bigint "quiz_branch_id", null: false
@@ -87,7 +87,7 @@ ActiveRecord::Schema.define(version: 2022_11_13_123950) do
     t.index ["quiz_branch_id"], name: "index_quiz_index_files_on_quiz_branch_id"
   end
 
-  create_table "quiz_remote_branches", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "quiz_remote_branches", charset: "utf8mb4", force: :cascade do |t|
     t.string "quiz_remote_branch_name"
     t.bigint "quiz_first_or_last_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -95,7 +95,7 @@ ActiveRecord::Schema.define(version: 2022_11_13_123950) do
     t.index ["quiz_first_or_last_id"], name: "index_quiz_remote_branches_on_quiz_first_or_last_id"
   end
 
-  create_table "quiz_remote_commit_messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "quiz_remote_commit_messages", charset: "utf8mb4", force: :cascade do |t|
     t.string "quiz_remote_commit_message"
     t.bigint "quiz_remote_branch_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -103,7 +103,7 @@ ActiveRecord::Schema.define(version: 2022_11_13_123950) do
     t.index ["quiz_remote_branch_id"], name: "index_quiz_remote_commit_messages_on_quiz_remote_branch_id"
   end
 
-  create_table "quiz_remote_repository_files", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "quiz_remote_repository_files", charset: "utf8mb4", force: :cascade do |t|
     t.string "quiz_remote_repository_file_name"
     t.string "quiz_remote_repository_file_text_status"
     t.bigint "quiz_remote_commit_message_id", null: false
@@ -114,7 +114,7 @@ ActiveRecord::Schema.define(version: 2022_11_13_123950) do
     t.index ["quiz_remote_commit_message_id"], name: "index_quiz_remote_repository_files_on_remote_commit_message_id"
   end
 
-  create_table "quiz_repository_files", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "quiz_repository_files", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "quiz_commit_message_id", null: false
     t.string "quiz_repository_file_name"
     t.string "quiz_repository_file_status"
@@ -126,7 +126,7 @@ ActiveRecord::Schema.define(version: 2022_11_13_123950) do
     t.index ["quiz_commit_message_id"], name: "index_quiz_repository_files_on_quiz_commit_message_id"
   end
 
-  create_table "quiz_tags", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "quiz_tags", charset: "utf8mb4", force: :cascade do |t|
     t.string "tag"
     t.bigint "quiz_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -134,7 +134,7 @@ ActiveRecord::Schema.define(version: 2022_11_13_123950) do
     t.index ["quiz_id"], name: "index_quiz_tags_on_quiz_id"
   end
 
-  create_table "quiz_worktree_files", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "quiz_worktree_files", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "quiz_branch_id", null: false
     t.string "quiz_worktree_file_name"
     t.string "quiz_worktree_file_status"
@@ -144,7 +144,7 @@ ActiveRecord::Schema.define(version: 2022_11_13_123950) do
     t.index ["quiz_branch_id"], name: "index_quiz_worktree_files_on_quiz_branch_id"
   end
 
-  create_table "quizzes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "quizzes", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "quiz_title"
     t.text "quiz_introduction"
@@ -154,7 +154,7 @@ ActiveRecord::Schema.define(version: 2022_11_13_123950) do
     t.index ["user_id"], name: "index_quizzes_on_user_id"
   end
 
-  create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "users", charset: "utf8mb4", force: :cascade do |t|
     t.string "provider", default: "email", null: false
     t.string "uid", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -199,7 +199,9 @@ ActiveRecord::Schema.define(version: 2022_11_13_123950) do
   add_foreign_key "quiz_index_files", "quiz_branches"
   add_foreign_key "quiz_remote_branches", "quiz_first_or_lasts"
   add_foreign_key "quiz_remote_commit_messages", "quiz_remote_branches"
+  add_foreign_key "quiz_remote_repository_files", "quiz_remote_branches"
   add_foreign_key "quiz_remote_repository_files", "quiz_remote_commit_messages"
+  add_foreign_key "quiz_repository_files", "quiz_branches"
   add_foreign_key "quiz_repository_files", "quiz_commit_messages"
   add_foreign_key "quiz_tags", "quizzes"
   add_foreign_key "quiz_worktree_files", "quiz_branches"
