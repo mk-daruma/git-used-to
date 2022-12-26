@@ -78,9 +78,11 @@ const QuizSearchForm :React.FC = () => {
   ];
 
   const searchQuizzes = (prop :string, text :string) => {
-    setQuizzes(
-      quizzesForSearch.filter((quiz :any) => quiz?.[prop].indexOf(text) !== -1 )
-    )
+    const checkExistQuiz = quizzesForSearch.filter((quiz :any) => quiz?.[prop].indexOf(text) !== -1)
+
+    checkExistQuiz.length > 0
+    ? setQuizzes(checkExistQuiz)
+    : alert(`"${text}"に一致するクイズはありません`)
   }
 
   return(
