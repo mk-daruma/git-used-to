@@ -79,7 +79,7 @@ const QuizSearchForm :React.FC = () => {
 
   const searchQuizzes = (prop :string, text :string) => {
     setQuizzes(
-      quizzesForSearch.filter((quiz :any) => quiz?.[prop].indexOf(text) != -1 )
+      quizzesForSearch.filter((quiz :any) => quiz?.[prop].indexOf(text) !== -1 )
     )
   }
 

@@ -1,6 +1,6 @@
 import { makeStyles, Theme } from "@material-ui/core"
 import { getUserRanking } from "lib/api/users"
-import { useEffect, useReducer, useState } from "react"
+import { useEffect, useState } from "react"
 import Ranking from "./Ranking"
 import { motion } from "framer-motion"
 import QuizHelpModal from "./QuizHelpModal";

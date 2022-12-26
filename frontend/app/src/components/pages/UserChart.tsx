@@ -1,4 +1,3 @@
-import { makeStyles, Theme } from "@material-ui/core";
 import {
   Chart as ChartJS,
   CategoryScale,

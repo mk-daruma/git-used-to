@@ -37,7 +37,7 @@ const QuizModalList :React.FC<{ modalType: string }> = (modalType) => {
     )
   }
 
-  const userTitleList = () => {{
+  const userTitleList = () => {
     return(
       userTitleLists.map((title) => (
         <TableRow key={title.userTitle}>
@@ -48,7 +48,7 @@ const QuizModalList :React.FC<{ modalType: string }> = (modalType) => {
         </TableRow>
       ))
     )
-  }}
+  }
 
   const ModalText =
     modalType.modalType === "commandList"

@@ -282,7 +282,7 @@ const CreateOrUpdateQuizButton: React.FC = () => {
       console.log(quizRemoteRepositoryFileRes)
       console.log("create quiz success!!")
 
-      {location.pathname === "/quiz" && history.push(`/quiz/setup/${aboutQuizRes?.data.data.id}`)}
+      location.pathname === "/quiz" && history.push(`/quiz/setup/${aboutQuizRes?.data.data.id}`)
 
     } catch (err) {
       console.log(err)
