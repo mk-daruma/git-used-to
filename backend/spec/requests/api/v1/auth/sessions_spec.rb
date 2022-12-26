@@ -91,7 +91,7 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
 
       it "ゲストログインデータの名前/自己紹介文/emailが指定した値であること" do
         res = JSON.parse(response.body)
-        expect(res["data"]["user_name"]).to eq("guestusergitusedto")
+        expect(res["data"]["user_name"]).to eq("guestuser")
         expect(res["data"]["user_self_introduction"]).to eq("これは自己紹介用のフォームです。ぜひアカウントを作成してご自身の自己紹介をしてみてください！")
         expect(res["data"]["email"]).to eq("guest_user@git-used-to.com")
         expect(res["data"]["nickname"]).to eq("git-used-to見習い")
@@ -125,7 +125,7 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
 
       it "ゲストログインデータの名前/自己紹介文/emailが指定した値に更新されること" do
         res = JSON.parse(response.body)
-        expect(res["data"]["user_name"]).to eq("guestusergitusedto")
+        expect(res["data"]["user_name"]).to eq("guestuser")
         expect(res["data"]["user_self_introduction"]).to eq("これは自己紹介用のフォームです。ぜひアカウントを作成してご自身の自己紹介をしてみてください！")
         expect(res["data"]["email"]).to eq("guest_user@git-used-to.com")
         expect(res["data"]["nickname"]).to eq("git-used-to見習い")

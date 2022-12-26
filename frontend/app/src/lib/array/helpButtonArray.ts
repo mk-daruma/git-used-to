@@ -1,26 +1,4 @@
-import React from "react";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import { makeStyles } from "@material-ui/core";
-
-const useStyles = makeStyles(() => ({
-  head: {
-    backgroundColor: "black",
-  },
-  column: {
-    color: "white"
-  },
-  commandName: {
-    whiteSpace: "nowrap"
-  }
-}))
-
-const commandLists = [
+export const commandLists = [
   {
     name: "git init",
     intro: "リポジトリを新規に作成するコマンドです。このコマンドを叩かないとgitコマンドを使用できないのでまずこのコマンドを叩きましょう。"
@@ -111,31 +89,45 @@ const commandLists = [
   },
 ];
 
-const QuizCommandList :React.FC = () => {
-  const classes = useStyles()
-
-  return (
-    <TableContainer component={Paper}>
-      <Table aria-label="simple table">
-        <TableHead className={classes.head}>
-          <TableRow color="white">
-            <TableCell className={classes.column}>command</TableCell>
-            <TableCell className={classes.column}>説明</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {commandLists.map((command) => (
-            <TableRow key={command.name}>
-              <TableCell className={classes.commandName} component="th" scope="row">
-                {command.name}
-              </TableCell>
-              <TableCell align="left">{command.intro}<br />{command.attention}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-}
-
-export default QuizCommandList
+export const userTitleLists = [
+  {
+    userTitle: "git-used-to見習い",
+    intro: "アカウント作成時の称号です",
+    limitCreateQuiz: "称号がgit-used-to見習いの場合、3個までクイズを作成できます。"
+  },
+  {
+    userTitle: "git-used-to初段",
+    intro: "作成/解答したクイズ数と作成したクイズにブックマークされた数の合計が3個以上の場合に'git-used-to初段'の称号になります。",
+    limitCreateQuiz: "称号がgit-used-to初段の場合、5個までクイズを作成できます。"
+  },
+  {
+    userTitle: "git-used-to二段",
+    intro: "作成/解答したクイズ数と作成したクイズにブックマークされた数の合計が5個以上の場合に'git-used-to二段'の称号になります。",
+    limitCreateQuiz: "称号がgit-used-to二段の場合、7個までクイズを作成できます。"
+  },
+  {
+    userTitle: "git-used-to三段",
+    intro: "作成/解答したクイズ数と作成したクイズにブックマークされた数の合計が10個以上の場合に'git-used-to三段'の称号になります。",
+    limitCreateQuiz: "称号がgit-used-to三段の場合、10個までクイズを作成できます。"
+  },
+  {
+    userTitle: "git-used-to四段",
+    intro: "作成/解答したクイズ数と作成したクイズにブックマークされた数の合計が15個以上の場合に'git-used-to四段'の称号になります。",
+    limitCreateQuiz: "称号がgit-used-to四段の場合、12個までクイズを作成できます。"
+  },
+  {
+    userTitle: "git-used-to五段",
+    intro: "作成/解答したクイズ数と作成したクイズにブックマークされた数の合計が30個以上の場合に'git-used-to五段'の称号になります。",
+    limitCreateQuiz: "称号がgit-used-to五段の場合、15個までクイズを作成できます。"
+  },
+  {
+    userTitle: "git-used-to達人",
+    intro: "作成/解答したクイズ数と作成したクイズにブックマークされた数の合計が50つ以上の場合に'git-used-to達人'の称号になります。",
+    limitCreateQuiz: "称号がgit-used-to達人の場合、20個までクイズを作成できます。"
+  },
+  {
+    userTitle: "免許皆伝 git-used-to師範代",
+    intro: "作成/解答したクイズ数と作成したクイズにブックマークされた数の合計が80つ以上の場合に'免許皆伝 git-used-to師範代'の称号になります。",
+    limitCreateQuiz: "称号が免許皆伝 git-used-to師範代の場合、30個までクイズを作成できます。"
+  },
+]

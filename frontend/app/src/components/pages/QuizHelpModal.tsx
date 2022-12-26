@@ -1,7 +1,7 @@
-import { Button, makeStyles, Modal } from "@material-ui/core"
+import { makeStyles, Modal } from "@material-ui/core"
 import { useState } from "react";
 import HelpOutlineRoundedIcon from '@material-ui/icons/HelpOutlineRounded';
-import QuizCommandList from "./QuizCommandList";
+import QuizModalList from "./QuizModalList";
 
 const rand = () => {
   return Math.round(Math.random() * 20) - 10;
@@ -22,18 +22,24 @@ const useStyles = makeStyles((theme) => ({
   modal: {
     overflow: 'scroll',
   },
-  paper: {
+  quizPaper: {
     position: 'absolute',
     height: 200,
     backgroundColor: theme.palette.background.paper,
   },
+  rankingPaper: {
+    position: 'absolute',
+    backgroundColor: theme.palette.background.paper,
+    padding: "2rem"
+  },
   modalIcon: {
     flexGrow: 1,
     textTransform: "none"
-  }
+  },
+
 }));
 
-const QuizCommandCheatModal :React.FC = () => {
+const QuizHelpModal :React.FC<{ modalType :string }> = (modalType) => {
   const classes = useStyles()
   const [modalStyle] = useState(getModalStyle);
   const [open, setOpen] = useState(false);
@@ -45,6 +51,22 @@ const QuizCommandCheatModal :React.FC = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const modalText = () => {
+    return(
+      modalType.modalType === "userRanking"
+      ? (
+        <div style={modalStyle} className={classes.rankingPaper}>
+          USERランキングは、userごとに作成したクイズのブックマーク数の合計が多い順に表示されます。ランキングに表示されるには、作成したクイズに合計で10個以上のブックマークが付いている必要があります。
+        </div>
+      )
+      : (
+        <div style={modalStyle} className={classes.quizPaper}>
+          <QuizModalList modalType={modalType.modalType} />
+        </div>
+      )
+    )
+  }
 
   return(
     <>
@@ -60,13 +82,11 @@ const QuizCommandCheatModal :React.FC = () => {
         onClose={handleClose}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
-      >
-        <div style={modalStyle} className={classes.paper}>
-          <QuizCommandList />
-        </div>
+        >
+        {modalText()}
       </Modal>
     </>
   )
 }
 
-export default QuizCommandCheatModal
+export default QuizHelpModal

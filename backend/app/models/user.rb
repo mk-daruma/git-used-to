@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
 
   def self.guest
     find_or_create_by!(email: "guest_user@git-used-to.com") do |user|
-      user.password = "guestusergitusedto"
+      user.password = "guestuser"
       user.user_name = "guest user"
     end
   end

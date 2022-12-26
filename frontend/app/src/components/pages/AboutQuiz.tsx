@@ -6,6 +6,7 @@ import { QuizContext } from "./CreateQuiz";
 import { TextField } from "@material-ui/core";
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import BackupOutlinedIcon from '@material-ui/icons/BackupOutlined';
+import QuizHelpModal from "./QuizHelpModal";
 
 
 const userStyles = makeStyles((theme: Theme) => createStyles({
@@ -29,6 +30,9 @@ const userStyles = makeStyles((theme: Theme) => createStyles({
     },
     icon: {
       marginRight: "1rem"
+    },
+    commandHelp: {
+      paddingLeft: "6rem"
     }
 }))
 
@@ -41,8 +45,11 @@ const AboutQuiz: React.FC = () => {
   return(
     <>
       <h4 className={classes.title}>
-          <BackupOutlinedIcon className={classes.icon} />
-          about quiz
+        <BackupOutlinedIcon className={classes.icon} />
+        about quiz
+        <div className={classes.commandHelp}>
+          <QuizHelpModal modalType="userTitleList" />
+        </div>
       </h4>
       <form className={classes.root} noValidate autoComplete="off">
         <TextField
