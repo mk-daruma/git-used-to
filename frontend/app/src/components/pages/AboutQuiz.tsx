@@ -4,7 +4,6 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles"
 import { AuthContext } from "App";
 import { QuizContext } from "./CreateQuiz";
 import { TextField } from "@material-ui/core";
-import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import BackupOutlinedIcon from '@material-ui/icons/BackupOutlined';
 import QuizHelpModal from "./QuizHelpModal";
 
@@ -69,7 +68,7 @@ const AboutQuiz: React.FC = () => {
           className={classes.form}
           minRows="6"
           id="outlined-required"
-          label="クイズ説明文"
+          label="クイズ説明文(文字数:30~200)"
           variant="outlined"
           value={quizIntroduction}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>{

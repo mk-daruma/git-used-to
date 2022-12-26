@@ -3,6 +3,7 @@ import { motion } from "framer-motion"
 import { Checkbox, FormControlLabel, makeStyles, Theme } from '@material-ui/core';
 import { getQuizTags } from 'lib/api/quizzes';
 import { createQuizTag, deleteQuizTag } from 'lib/api/quiz_tags';
+import { useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
   tagList: {
@@ -18,6 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 const QuizTag: React.FC<{ quizId: number }> = ({quizId}) => {
+  const location = useLocation()
   const classes = useStyles()
   const [commandTag, setCommandTag] = useState([{
     id: "",

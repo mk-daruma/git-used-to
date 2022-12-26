@@ -282,7 +282,7 @@ const CreateOrUpdateQuizButton: React.FC = () => {
       console.log(quizRemoteRepositoryFileRes)
       console.log("create quiz success!!")
 
-      {location.pathname === "/quiz" && history.push(`/quiz/setup/${aboutQuizRes?.data.data.id}`)}
+      location.pathname === "/quiz" && history.push(`/quiz/setup/${aboutQuizRes?.data.data.id}`)
 
     } catch (err) {
       console.log(err)
@@ -587,16 +587,15 @@ const CreateOrUpdateQuizButton: React.FC = () => {
     ) {
       const res = await getUserQuizzes(currentUser?.id)
 
-      !res.data.dataAnswerRecords.some((answerRecords :any) => answerRecords.userId === Number(currentUser?.id) && answerRecords.quizId === Number(id))
-      ? (
-        createQuizAnswerRecord(quizAnswerRecordData),
-        alert("正解!"),
+      if (!res.data.dataAnswerRecords.some((answerRecords :any) => answerRecords.userId === Number(currentUser?.id) && answerRecords.quizId === Number(id))) {
+        createQuizAnswerRecord(quizAnswerRecordData)
+        alert("正解!")
         history.push(`/home`)
-      )
-      : (
-        alert("正解!"),
+      } else {
+        alert("正解!")
         history.push(`/home`)
-      )
+      }
+
     } else {
       alert("不正解!")
     }

@@ -58,7 +58,7 @@ const SignUp: React.FC = () => {
   const [image, setImage] = useState<string>("")
   const [preview, setPreview] = useState<string>("")
   const [alertMessageOpen, setAlertMessageOpen] = useState<boolean>(false)
-  const confirmSuccessUrl = "http://localhost:4000/api/v1/auth/";
+  const confirmSuccessUrl = "http://localhost:3000/api/v1/auth/";
 
     const uploadImage = useCallback((e :any) => {
       const file = e.target.files[0]

@@ -5,7 +5,6 @@ import { makeStyles } from "@material-ui/core/styles"
 
 import Header from "components/layouts/Header"
 import Footer from "./Footer"
-import { useLocation } from "react-router-dom"
 
 const useStyles = makeStyles(() => ({
   backgroundColor: {
@@ -30,7 +29,6 @@ interface CommonLayoutProps {
 
 const CommonLayout = ({ children }: CommonLayoutProps) => {
   const classes = useStyles()
-  const location = useLocation()
 
   return (
     <div  className={classes.backgroundColor}>

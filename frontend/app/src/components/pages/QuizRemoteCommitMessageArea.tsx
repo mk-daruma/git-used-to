@@ -1,4 +1,3 @@
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@material-ui/core"
 import { makeStyles } from "@material-ui/styles"
 import { useContext } from "react"
 import { QuizContext } from "./CreateQuiz"
