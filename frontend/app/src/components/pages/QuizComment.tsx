@@ -116,6 +116,8 @@ const QuizComment: React.FC<{ quizId: number }> = ({quizId}) => {
     }
   }
 
+  const commentDeleteUser = (commentedUserId :number) => commentedUserId === currentUser?.id || currentUser?.email === "admin@git-used-to.com"
+
   return(
     <div >
       <Button
@@ -148,7 +150,7 @@ const QuizComment: React.FC<{ quizId: number }> = ({quizId}) => {
                 </div>
                 <div>
                   コメント:<br /> {comment.comment.comment}
-                  {comment.comment.userId === currentUser?.id &&
+                  {commentDeleteUser(comment.comment.userId) &&
                     <Button
                       onClick={e => handleDeleteQuizCommentSubmit(e, comment.comment.id)}
                       >

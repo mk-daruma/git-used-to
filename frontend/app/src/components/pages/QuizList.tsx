@@ -122,6 +122,8 @@ const QuizList: React.FC = () => {
     )
   }
 
+  const quizDeleteUser = (quizCreatedUser :number) => quizCreatedUser === currentUser?.id || currentUser?.email === "admin@git-used-to.com"
+
 
   return(
     <>
@@ -174,7 +176,7 @@ const QuizList: React.FC = () => {
               </div>
             </div>
             <div className={classes.rightPosition}>
-              {Number(quiz.userId) === currentUser?.id && <QuizEditButton quizId={Number(quiz.id)}/>}
+              {quizDeleteUser(Number(quiz.userId)) && <QuizEditButton quizId={Number(quiz.id)}/>}
               <Button
                 type="submit"
                 variant="contained"
