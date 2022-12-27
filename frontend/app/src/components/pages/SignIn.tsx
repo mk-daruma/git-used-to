@@ -135,9 +135,8 @@ const SignIn: React.FC = () => {
               </Button>
               <Box textAlign="center" className={classes.box}>
                 <Typography variant="body2">
-                  Don't have an account? &nbsp;
                   <Link to="/signup" className={classes.link}>
-                    Sign Up now!
+                    アカウント作成はこちら
                   </Link>
                 </Typography>
                 <Typography variant="body2">
