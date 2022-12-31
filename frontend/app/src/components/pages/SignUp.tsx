@@ -58,7 +58,10 @@ const SignUp: React.FC = () => {
   const [image, setImage] = useState<string>("")
   const [preview, setPreview] = useState<string>("")
   const [alertMessageOpen, setAlertMessageOpen] = useState<boolean>(false)
+  // 開発環境
   const confirmSuccessUrl = "http://localhost:3000/api/v1/auth/";
+  // 本番環境
+  // const confirmSuccessUrl = "https://web.git-used-to.com/";
 
     const uploadImage = useCallback((e :any) => {
       const file = e.target.files[0]
