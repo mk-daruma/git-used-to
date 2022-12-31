@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get '/health_check', to: 'health_checks#index'
+
   namespace :api do
     namespace :v1 do
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {
