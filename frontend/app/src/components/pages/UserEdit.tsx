@@ -73,11 +73,18 @@ const UserEdit: React.FC = () => {
   const [name, setName] = useState<string | undefined>(currentUser?.userName)
   const [introduction, setIntroduction] = useState<string | undefined>(currentUser?.userSelfIntroduction)
   const [image, setImage] = useState<string>("")
+  const [preview, setPreview] = useState<string>("")
 
   const uploadImage = useCallback((e :any) => {
     const file = e.target.files[0]
     setImage(file)
   }, [])
+
+  const previewImage = useCallback((e: any) => {
+    const file = e.target.files[0]
+    setPreview(window.URL.createObjectURL(file))
+  }, [])
+
 
   const createFormData = () => {
     const formData = new FormData()
@@ -134,6 +141,7 @@ const UserEdit: React.FC = () => {
                 type="file"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   uploadImage(e)
+                  previewImage(e)
                 }}
               />
               <label htmlFor="icon-button-file">
@@ -142,10 +150,16 @@ const UserEdit: React.FC = () => {
                   aria-label="upload picture"
                   component="span"
                 >
-                  <Avatar
-                    className={classes.image}
-                    src={currentUser?.image.url}
-                    />
+                  {preview
+                  ? <Avatar
+                      className={classes.image}
+                      src={preview}
+                      />
+                  : <Avatar
+                      className={classes.image}
+                      src={currentUser?.image.url}
+                      />
+                    }
                 </IconButton>
               </label>
             </div>
