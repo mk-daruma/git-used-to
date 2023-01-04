@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react"
+import React, { useState } from "react"
 import { motion } from "framer-motion"
 
 import { makeStyles, Theme } from "@material-ui/core/styles"
@@ -40,6 +40,7 @@ const SignUp: React.FC = () => {
   const [password, setPassword] = useState<string>("")
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>("")
   const [alertMessageOpen, setAlertMessageOpen] = useState<boolean>(false)
+  const userTitle = "git-used-to見習い"
   // 開発環境
   const confirmSuccessUrl = "http://localhost:3000/api/v1/auth/signin";
   // 本番環境
@@ -53,6 +54,7 @@ const SignUp: React.FC = () => {
       formData.append("password", password)
       formData.append("passwordConfirmation", passwordConfirmation)
       formData.append("confirmSuccessUrl", confirmSuccessUrl)
+      formData.append("nickname", userTitle)
 
       return formData
     }
