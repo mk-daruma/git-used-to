@@ -11,10 +11,6 @@ import Button from "@material-ui/core/Button"
 import AlertMessage from "components/utils/AlertMessage"
 import { signUp } from "lib/api/auth"
 import { SignUpFormData } from "interfaces/index"
-import { IconButton } from "@material-ui/core"
-import { PhotoCamera } from "@material-ui/icons"
-import Box from "@material-ui/core/Box"
-import CancelIcon from "@material-ui/icons/Cancel"
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -33,18 +29,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: theme.spacing(6),
     maxWidth: 400,
     borderRadius: "2rem",
-  },
-  imageUploadBtn: {
-    textAlign: "right"
-  },
-  input: {
-    display: "none"
-  },
-  box: {
-    marginBottom: "1.5rem"
-  },
-  preview: {
-    width: "100%"
   }
 }))
 
@@ -55,23 +39,11 @@ const SignUp: React.FC = () => {
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>("")
-  const [image, setImage] = useState<string>("")
-  const [preview, setPreview] = useState<string>("")
   const [alertMessageOpen, setAlertMessageOpen] = useState<boolean>(false)
   // 開発環境
   const confirmSuccessUrl = "http://localhost:3000/api/v1/auth/signin";
   // 本番環境
   // const confirmSuccessUrl = "https://web.git-used-to.com/signin";
-
-    const uploadImage = useCallback((e :any) => {
-      const file = e.target.files[0]
-      setImage(file)
-    }, [])
-
-    const previewImage = useCallback((e :any) => {
-      const file = e.target.files[0]
-      setPreview(window.URL.createObjectURL(file))
-    }, [])
 
     const createFormData = (): SignUpFormData => {
       const formData = new FormData()
@@ -80,7 +52,6 @@ const SignUp: React.FC = () => {
       formData.append("email", email)
       formData.append("password", password)
       formData.append("passwordConfirmation", passwordConfirmation)
-      formData.append("image", image)
       formData.append("confirmSuccessUrl", confirmSuccessUrl)
 
       return formData
@@ -158,46 +129,6 @@ const SignUp: React.FC = () => {
                 autoComplete="current-password"
                 onChange={event => setPasswordConfirmation(event.target.value)}
               />
-              <div className={classes.imageUploadBtn}>
-                <input
-                  accept="image/*"
-                  className={classes.input}
-                  id="icon-button-file"
-                  type="file"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    uploadImage(e)
-                    previewImage(e)
-                  }}
-                />
-                <label htmlFor="icon-button-file">
-                  <IconButton
-                    color="primary"
-                    aria-label="upload picture"
-                    component="span"
-                  >
-                      <PhotoCamera />
-                  </IconButton>
-                </label>
-              </div>
-              {
-                preview ? (
-                  <Box
-                    className={classes.box}
-                  >
-                    <IconButton
-                      color="inherit"
-                      onClick={() => setPreview("")}
-                    >
-                      <CancelIcon />
-                    </IconButton>
-                    <img
-                      src={preview}
-                      alt="preview img"
-                      className={classes.preview}
-                    />
-                  </Box>
-                ) : null
-              }
               <div>
                 <input
                   type="hidden"
