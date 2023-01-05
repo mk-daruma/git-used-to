@@ -2,6 +2,12 @@ import React, { useContext } from "react";
 import { QuizContext } from "./CreateQuiz";
 import { Input, makeStyles } from "@material-ui/core";
 import { AuthContext } from "App";
+import {
+  CheckDataCount,
+  UseStateCommitMessageData,
+  UseStateFileHistoryForCansellCommitData,
+  UseStateRepositoryFileData
+} from "interfaces";
 
 const useStyles = makeStyles(() => ({
   input: {
@@ -52,8 +58,8 @@ const InputCommand: React.FC = () => {
 
   const checkBranchCount = branches.filter(branch => branch.branchName).length
   const checkGitAddACount = currentBranchParentWorktreeFiles.filter(worktreeFile => !currentBranchParentIndexFiles.some(indexFile => indexFile.fileName === worktreeFile.fileName)).length
-  const checkDatacount = (datas: any, prop: string = "parentBranch") => datas.filter((data :any) => data?.[prop] === currentBranch.currentBranchName).length
-  const checkMultiData = (text :string, str :number,datas: any, prop: string = "parentBranch") => afterCommandMultipleStrings(text, str)?.length + checkDatacount(datas, prop)
+  const checkDatacount = (datas :any, prop: string = "parentBranch") => datas.filter((data :CheckDataCount) => data?.[prop] === currentBranch.currentBranchName).length
+  const checkMultiData = (text :string, str :number, datas: CheckDataCount[], prop: string = "parentBranch") => afterCommandMultipleStrings(text, str)?.length + checkDatacount(datas, prop)
 
   const gitAddA = () => {
     setIndexFiles(indexFiles.map(indexFile =>
@@ -189,7 +195,7 @@ const InputCommand: React.FC = () => {
           }}
         )
       setRepositoryFiles(repositoryFiles.map(repositoryFile =>
-        removeRepositoryFiles.some((removeRepositoryFile :any) => removeRepositoryFile.fileName === repositoryFile.fileName)
+        removeRepositoryFiles.some((removeRepositoryFile :UseStateRepositoryFileData) => removeRepositoryFile.fileName === repositoryFile.fileName)
         && repositoryFile.parentBranch === currentBranch.currentBranchName
         ? {
           fileName: "",
@@ -203,7 +209,7 @@ const InputCommand: React.FC = () => {
         : repositoryFile
         )
       )
-      removeRepositoryFiles.forEach((removeRepositoryFile :any) =>
+      removeRepositoryFiles.forEach((removeRepositoryFile :UseStateRepositoryFileData) =>
       setFileHistoryForCansellCommits (fileHistoryForCansellCommit => [...fileHistoryForCansellCommit,{
         fileName :removeRepositoryFile.fileName,
         textStatus: "",
@@ -842,10 +848,10 @@ const InputCommand: React.FC = () => {
       }
       setCommitMessages(commitMessage =>
         commitMessage.filter(commitMessage =>
-          !resetedCommitMessages.some((resetedCommitMessage :any) => resetedCommitMessage === commitMessage)))
+          !resetedCommitMessages.some((resetedCommitMessage :UseStateCommitMessageData) => resetedCommitMessage === commitMessage)))
       setFileHistoryForCansellCommits(fileHistoryForCansellCommit =>
         fileHistoryForCansellCommit.filter(historyFile =>
-          !resetedHistoryFiles.some((resetedHistoryFile :any) => resetedHistoryFile === historyFile)))
+          !resetedHistoryFiles.some((resetedHistoryFile :UseStateFileHistoryForCansellCommitData) => resetedHistoryFile === historyFile)))
     } else {
       setAddText('error: commit message not found.')
     }

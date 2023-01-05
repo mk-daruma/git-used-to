@@ -3,6 +3,7 @@ import { getWeeklyRankingQuizzes } from "lib/api/quizzes"
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import Ranking from "./Ranking"
+import { QuizWeeklyRankingData } from "interfaces"
 
 const useStyles = makeStyles((theme: Theme) => ({
   weeklyRankingTitle: {
@@ -38,7 +39,7 @@ const QuizWeeklyRanking :React.FC = () => {
 
   const handleGetWeeklyRankingData = async() => {
     const weeklyRankingQuizzesRes = await getWeeklyRankingQuizzes()
-    weeklyRankingQuizzesRes?.data.rankInQuizData.forEach((quiz :any) =>
+    weeklyRankingQuizzesRes?.data.rankInQuizData.forEach((quiz: QuizWeeklyRankingData) =>
       setRankingQuizzes(quizzes => [...quizzes,{
         id: quiz.rankInQuizData.id,
         userId: quiz.rankInQuizData.userId,

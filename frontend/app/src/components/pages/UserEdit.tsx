@@ -80,7 +80,7 @@ const UserEdit: React.FC = () => {
     setImage(file)
   }, [])
 
-  const previewImage = useCallback((e: any) => {
+  const previewImage = useCallback((e :any) => {
     const file = e.target.files[0]
     setPreview(window.URL.createObjectURL(file))
   }, [])

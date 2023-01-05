@@ -9,6 +9,7 @@ import { useLocation, useParams } from "react-router-dom";
 import QuizSearchForm from "./QuizSearchForm";
 import { motion } from "framer-motion"
 import QuizList from "./QuizList";
+import { LessonQuizListData, QuizListData, UserQuizListData } from "interfaces";
 
 export const QuizBookmarkContext = createContext({} as {
   quizzes:{
@@ -241,7 +242,7 @@ const QuizListPage: React.FC = () => {
       console.log(resUserQuizzes)
       if (resUserQuizzes?.status === 200) {
         resUserQuizzes.data.data
-          .map((resQuiz :any) =>
+          .map((resQuiz :UserQuizListData) =>
           quizStates.map(quizState =>
             quizState(quizzes => [...quizzes,{
               id: resQuiz.id,
@@ -275,7 +276,7 @@ const QuizListPage: React.FC = () => {
       console.log(resQuizzes)
       if (resQuizzes?.status === 200) {
         resQuizzes.data.data
-          .map((resQuiz :any) =>
+          .map((resQuiz :QuizListData) =>
           quizStates.map(quizState =>
             quizState(quizzes => [...quizzes,{
               id: resQuiz.quiz.id,
@@ -305,7 +306,7 @@ const QuizListPage: React.FC = () => {
 
     if (resUserSelf?.status === 200) {
       resUserSelf.data.data.selfBookmarkedQuizzes
-        .map((resUserSelf :any) =>
+        .map((resUserSelf :QuizListData) =>
         quizStates.map(quizState =>
           quizState(quizzes => [...quizzes,{
             id: resUserSelf.quiz.id,
@@ -336,7 +337,7 @@ const QuizListPage: React.FC = () => {
     console.log(resLessonQuizzes)
     if (resLessonQuizzes?.status === 200) {
       resLessonQuizzes.data.lessonQuizzesData
-        .map((resLessonQuiz :any) =>
+        .map((resLessonQuiz :LessonQuizListData) =>
         quizStates.map(quizState =>
           quizState(quizzes => [...quizzes,{
             id: resLessonQuiz.id,

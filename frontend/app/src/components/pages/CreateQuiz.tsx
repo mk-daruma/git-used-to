@@ -25,6 +25,33 @@ import QuizLocalRepositoryArea from "./QuizLocalRepositoryArea";
 import QuizRemoteRepositoryArea from "./QuizRemoteRepositoryArea";
 import QuizRemoteCoimmitMessageArea from "./QuizRemoteCommitMessageArea";
 import AboutAnswerQuiz from "./AboutAnswerQuiz";
+import {
+  QuizBranchData,
+  QuizCommitMessageData,
+  QuizIndexFileData,
+  QuizRepositoryFileData,
+  QuizWorktreeFileData,
+  UseStateBranchData,
+  UseStateCommitMessageData,
+  UseStateIndexFileData,
+  UseStateRepositoryFileData,
+  UseStateWorktreeFileData,
+  UseStateFileHistoryForCansellCommitData,
+  QuizHistoryOfCommittedFileData,
+  UseStateRemoteBranchData,
+  QuizRemoteBranchData,
+  QuizRemoteCommitMessageData,
+  UseStateRemoteRepositoryFileData,
+  QuizRemoteRepositoryFileData,
+  UseStateRemoteCommitMessageData,
+  AnswerBranchData,
+  AnswerWorktreeFileData,
+  AnswerIndexFileData,
+  AnswerRemoteBranchData,
+  AnswerCommitMessageData,
+  AnswerRepositoryFileData,
+  AnswerRemoteRepositoryFileData
+} from "interfaces";
 
 const useStyles = makeStyles(() => ({
   position: {
@@ -631,14 +658,14 @@ const CreateQuiz: React.FC = () => {
     addText:""
   }]);
 
-  const addBranches = (array :any, branchName :any, branchId :any) => {
-    array((branches :any) => [...branches,{
+  const addBranches = (array :any, branchName :string, branchId :number) => {
+    array((branches :UseStateBranchData[]) => [...branches,{
       branchName: branchName,
       branchId: branchId
     }])
   }
-  const addWorktreeFiles = (array :any, fileName :any, parentBranch :any, textStatus :any, parentBranchId :any,worktreeFileId :any) => {
-    array((worktreeFile :any) => [...worktreeFile,{
+  const addWorktreeFiles = (array :any, fileName :string, parentBranch :string, textStatus :string, parentBranchId :number, worktreeFileId :number) => {
+    array((worktreeFile :UseStateWorktreeFileData[]) => [...worktreeFile,{
       fileName: fileName,
       parentBranch: parentBranch,
       textStatus: textStatus,
@@ -646,8 +673,8 @@ const CreateQuiz: React.FC = () => {
       worktreeFileId: worktreeFileId
     }])
   }
-  const addIndexFile = (array :any, fileName :any, parentBranch :any, textStatus :any, parentBranchId :any, worktreeFileId :any) => {
-    array((indexFile :any) => [...indexFile,{
+  const addIndexFile = (array :any, fileName :string, parentBranch :string, textStatus :string, parentBranchId :number, worktreeFileId :number) => {
+    array((indexFile :UseStateIndexFileData[]) => [...indexFile,{
       fileName: fileName,
       parentBranch: parentBranch,
       textStatus: textStatus,
@@ -655,16 +682,16 @@ const CreateQuiz: React.FC = () => {
       indexFileId: worktreeFileId
     }])
   }
-  const addCommitMessages = (array :any, message :any, parentBranch :any, parentBranchId :any, commitMessageId :any) => {
-    array((commitMessage :any) => [...commitMessage,{
+  const addCommitMessages = (array :any, message :string, parentBranch :string, parentBranchId :number, commitMessageId :number) => {
+    array((commitMessage :UseStateCommitMessageData[]) => [...commitMessage,{
       message: message,
       parentBranch: parentBranch,
       parentBranchId: parentBranchId,
       commitMessageId: commitMessageId
     }])
   }
-  const addRepositoryFiles = (array :any, fileName :any, textStatus :any, parentBranch :any, parentCommitMessage :any, parentBranchId :any, parentCommitMessageId :any, repositoryFileId: any) => {
-    array((repositoryFile :any) => [...repositoryFile,{
+  const addRepositoryFiles = (array :any, fileName :string, textStatus :string, parentBranch :string, parentCommitMessage :string, parentBranchId :number, parentCommitMessageId :number, repositoryFileId: number) => {
+    array((repositoryFile :UseStateRepositoryFileData[]) => [...repositoryFile,{
       fileName: fileName,
       textStatus: textStatus,
       parentBranch: parentBranch,
@@ -674,8 +701,8 @@ const CreateQuiz: React.FC = () => {
       repositoryFileId: repositoryFileId
     }])
   }
-  const addFileHistoryForCansellCommits = (array :any, fileName :any, fileStatus :any, textStatus :any, pastTextStatus :any, parentBranch :any, parentCommitMessage :any, parentPastCommitMessage :any, parentBranchId :any, parentCommitMessageId :any, historyFileId: any) => {
-    array((historyFiles :any) => [...historyFiles,{
+  const addFileHistoryForCansellCommits = (array :any, fileName :string, fileStatus :string, textStatus :string, pastTextStatus :string, parentBranch :string, parentCommitMessage :string, parentPastCommitMessage :string, parentBranchId :number, parentCommitMessageId :number, historyFileId: number) => {
+    array((historyFiles :UseStateFileHistoryForCansellCommitData[]) => [...historyFiles,{
       fileName: fileName,
       fileStatus: fileStatus,
       textStatus: textStatus,
@@ -688,22 +715,22 @@ const CreateQuiz: React.FC = () => {
       historyFileId: historyFileId
     }])
   }
-  const addRemoteBranches = (array :any, remoteBranchName :any, remoteBranchId :any) => {
-    array((branches :any) => [...branches,{
+  const addRemoteBranches = (array :any, remoteBranchName :string, remoteBranchId :number) => {
+    array((branches :UseStateRemoteBranchData[]) => [...branches,{
       remoteBranchName: remoteBranchName,
       remoteBranchId: remoteBranchId
     }])
   }
-  const addRemoteCommitMessages = (array :any, remoteMessage :any, parentRemoteBranch :any, parentRemoteBranchId :any, remoteCommitMessageId :any) => {
-    array((commitMessage :any) => [...commitMessage,{
+  const addRemoteCommitMessages = (array :any, remoteMessage :string, parentRemoteBranch :string, parentRemoteBranchId :number, remoteCommitMessageId :number) => {
+    array((commitMessage :UseStateRemoteCommitMessageData[]) => [...commitMessage,{
       remoteMessage: remoteMessage,
       parentRemoteBranch: parentRemoteBranch,
       parentRemoteBranchId: parentRemoteBranchId,
       remoteCommitMessageId: remoteCommitMessageId
     }])
   }
-  const addRemoteRepositoryFiles = (array :any, fileName :any, textStatus :any, parentRemoteBranch :any, parentRemoteCommitMessage :any, parentRemoteBranchId :any, parentRemoteCommitMessageId :any, remoteRepositoryFileId: any) => {
-    array((repositoryFile :any) => [...repositoryFile,{
+  const addRemoteRepositoryFiles = (array :any, fileName :string, textStatus :string, parentRemoteBranch :string, parentRemoteCommitMessage :string, parentRemoteBranchId :number, parentRemoteCommitMessageId :number, remoteRepositoryFileId :number) => {
+    array((repositoryFile :UseStateRemoteRepositoryFileData[]) => [...repositoryFile,{
       fileName: fileName,
       textStatus: textStatus,
       parentRemoteBranch: parentRemoteBranch,
@@ -743,7 +770,7 @@ const CreateQuiz: React.FC = () => {
       }
 
       await Promise.all(
-        await ResQuizOfLast.data.dataBranches.map(async (branch :any) => {
+        await ResQuizOfLast.data.dataBranches.map(async (branch :QuizBranchData) => {
           getBranches.forEach(getBranch =>
             addBranches(
               getBranch,
@@ -752,7 +779,7 @@ const CreateQuiz: React.FC = () => {
             )
           )
           const ResQuizBranches = await getQuizBranch(branch.id)
-          ResQuizBranches.data.dataWorktreeFiles.forEach((worktree :any) => {
+          ResQuizBranches.data.dataWorktreeFiles.forEach((worktree :QuizWorktreeFileData) => {
             getWorktreeFiles.forEach(getWorktreeFile =>
               addWorktreeFiles(
                 getWorktreeFile,
@@ -764,7 +791,7 @@ const CreateQuiz: React.FC = () => {
               )
             )
           })
-          ResQuizBranches.data.dataIndexFiles.forEach((indexFile :any) => {
+          ResQuizBranches.data.dataIndexFiles.forEach((indexFile :QuizIndexFileData) => {
             getIndexFiles.forEach(getIndexFile =>
               addIndexFile(
                 getIndexFile,
@@ -776,7 +803,7 @@ const CreateQuiz: React.FC = () => {
               )
             )
           })
-          ResQuizBranches.data.dataMessages.forEach(async (message :any) => {
+          ResQuizBranches.data.dataMessages.forEach(async (message :QuizCommitMessageData) => {
             getCommitMessages.forEach(getCommitMessage =>
               addCommitMessages(
                 getCommitMessage,
@@ -788,7 +815,7 @@ const CreateQuiz: React.FC = () => {
             )
             const ResQuizCommitMessages = await getQuizCommitMessage(message.id)
             await Promise.all(
-              ResQuizCommitMessages.data.dataRepositoryFiles.map((data :any) => {
+              ResQuizCommitMessages.data.dataRepositoryFiles.map((data :QuizRepositoryFileData) => {
                 return getRepositoryFiles.forEach(getRepositoryFile =>
                   addRepositoryFiles(
                     getRepositoryFile,
@@ -804,7 +831,7 @@ const CreateQuiz: React.FC = () => {
               })
             )
             await Promise.all(
-              ResQuizCommitMessages.data.dataHistoryOfCommittedFiles.map((historyFile :any) => {
+              ResQuizCommitMessages.data.dataHistoryOfCommittedFiles.map((historyFile :QuizHistoryOfCommittedFileData) => {
                 return getFileHistoryForCansellCommits.forEach(getFileHistoryForCansellCommit =>
                   addFileHistoryForCansellCommits(
                     getFileHistoryForCansellCommit,
@@ -824,7 +851,7 @@ const CreateQuiz: React.FC = () => {
           }
         )})
       )
-      await ResQuizOfLast.data.dataRemoteBranches.map(async (remoteBranch :any) => {
+      await ResQuizOfLast.data.dataRemoteBranches.map(async (remoteBranch :QuizRemoteBranchData) => {
         getRemoteBranches.forEach(getRemoteBranch =>
           addRemoteBranches(
             getRemoteBranch,
@@ -833,7 +860,7 @@ const CreateQuiz: React.FC = () => {
           )
         )
         const ResQuizRemoteBranches = await getQuizRemoteBranch(remoteBranch.id)
-        ResQuizRemoteBranches.data.dataRemoteMessages.map(async (message :any) => {
+        ResQuizRemoteBranches.data.dataRemoteMessages.map(async (message :QuizRemoteCommitMessageData) => {
           getRemoteCommitMessages.forEach(getRemoteCommitMessage =>
             addRemoteCommitMessages(
               getRemoteCommitMessage,
@@ -845,7 +872,7 @@ const CreateQuiz: React.FC = () => {
           )
           const ResQuizRemoteCommitMessages = await getQuizRemoteCommitMessage(message.id)
           await Promise.all(
-            ResQuizRemoteCommitMessages.data.dataRemoteRepositoryFiles.map((data :any) => {
+            ResQuizRemoteCommitMessages.data.dataRemoteRepositoryFiles.map((data :QuizRemoteRepositoryFileData) => {
               return getRemoteRepositoryFiles.forEach(getRemoteRepositoryFile =>
                 addRemoteRepositoryFiles(
                   getRemoteRepositoryFile,
@@ -877,29 +904,29 @@ const CreateQuiz: React.FC = () => {
       console.log("ResQuiz",ResQuiz)
       console.log("ResQuizOfLast",ResQuizOfLast)
 
-      await ResQuizOfLast.data.dataBranches.forEach(async (branch :any) => {
+      await ResQuizOfLast.data.dataBranches.forEach(async (branch :AnswerBranchData) => {
         setAnswerBranches(branches => [...branches,{
           branchName: branch.quizBranchName,
         }])
         const ResQuizBranches = await getQuizBranch(branch.id)
-        ResQuizBranches.data.dataWorktreeFiles.forEach((worktree :any) => {
+        ResQuizBranches.data.dataWorktreeFiles.forEach((worktree :AnswerWorktreeFileData) => {
           setAnswerWorktreeFiles(worktreeFile => [...worktreeFile,{
             fileName: worktree.quizWorktreeFileName,
             parentBranch: branch.quizBranchName,
             textStatus: worktree.quizWorktreeFileTextStatus
           }])
         })
-        ResQuizBranches.data.dataIndexFiles.forEach((indexFile :any) => {
+        ResQuizBranches.data.dataIndexFiles.forEach((indexFile :AnswerIndexFileData) => {
           setAnswerIndexFiles(indexFiles => [...indexFiles,{
             fileName: indexFile.quizIndexFileName,
             parentBranch: branch.quizBranchName,
             textStatus: indexFile.quizIndexFileTextStatus
           }])
         })
-        ResQuizBranches.data.dataMessages.forEach(async (message :any) => {
+        ResQuizBranches.data.dataMessages.forEach(async (message :AnswerCommitMessageData) => {
           const ResQuizCommitMessages = await getQuizCommitMessage(message.id)
           await Promise.all(
-            ResQuizCommitMessages.data.dataRepositoryFiles.map((data :any) => {
+            ResQuizCommitMessages.data.dataRepositoryFiles.map((data :AnswerRepositoryFileData) => {
               return setAnswerRepositoryFiles(repositoryFile => [...repositoryFile,{
                 fileName: data.quizRepositoryFileName,
                 textStatus: data.quizRepositoryFileTextStatus,
@@ -909,15 +936,15 @@ const CreateQuiz: React.FC = () => {
           )
         }
       )})
-      await ResQuizOfLast.data.dataRemoteBranches.map(async (remoteBranch :any) => {
-        setAnswerRemoteBranches((branches :any) => [...branches,{
+      await ResQuizOfLast.data.dataRemoteBranches.map(async (remoteBranch :AnswerRemoteBranchData) => {
+        setAnswerRemoteBranches(branches => [...branches,{
           remoteBranchName: remoteBranch.quizRemoteBranchName
         }])
         const ResQuizRemoteBranches = await getQuizRemoteBranch(remoteBranch.id)
-        ResQuizRemoteBranches.data.dataRemoteMessages.map(async (message :any) => {
+        ResQuizRemoteBranches.data.dataRemoteMessages.map(async (message :AnswerCommitMessageData) => {
           const ResQuizRemoteCommitMessages = await getQuizRemoteCommitMessage(message.id)
           await Promise.all(
-            ResQuizRemoteCommitMessages.data.dataRemoteRepositoryFiles.map((data :any) => {
+            ResQuizRemoteCommitMessages.data.dataRemoteRepositoryFiles.map((data :AnswerRemoteRepositoryFileData) => {
               return setAnswerRemoteRepositoryFiles(repositoryFile => [...repositoryFile,{
                 fileName: data.quizRemoteRepositoryFileName,
                 textStatus: data.quizRemoteRepositoryFileTextStatus,

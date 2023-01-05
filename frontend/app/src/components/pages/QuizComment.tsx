@@ -107,7 +107,7 @@ const QuizComment: React.FC<{ quizId: number }> = ({quizId}) => {
     }
   }
 
-  const handleDeleteQuizCommentSubmit = async(e: React.MouseEvent<HTMLButtonElement>,commentId :any) => {
+  const handleDeleteQuizCommentSubmit = async(e: React.MouseEvent<HTMLButtonElement>,commentId :number) => {
     try {
       deleteQuizComment(commentId)
       setQuizCommentHistory(quizCommentHistory.filter(comment => comment.comment.id !== commentId))
