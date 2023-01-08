@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import Ranking from "./Ranking"
 import { motion } from "framer-motion"
 import QuizHelpModal from "./QuizHelpModal";
+import { UserRankingData } from "interfaces"
 
 const useStyles = makeStyles((theme: Theme) => ({
   weeklyRankingTitle: {
@@ -41,7 +42,7 @@ const UserRanking :React.FC = () => {
 
   const handleGetUserRankingData = async() => {
     const weeklyRankingQuizzesRes = await getUserRanking()
-    weeklyRankingQuizzesRes?.data.userRanking.forEach((user :any) =>
+    weeklyRankingQuizzesRes?.data.userRanking.forEach((user :UserRankingData) =>
       setRankingUSers(users => [...users,{
         userId: user.createUserId,
         userName: user.createUserName,

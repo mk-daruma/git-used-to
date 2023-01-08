@@ -7,7 +7,7 @@ class Api::V1::Auth::RegistrationsController < DeviseTokenAuth::RegistrationsCon
       :password,
       :password_confirmation,
       :user_name,
-      :image,
+      :nickname,
     )
   end
 end

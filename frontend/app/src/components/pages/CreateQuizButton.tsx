@@ -1,7 +1,28 @@
 import React, { useContext } from "react";
 import { QuizContext } from "./CreateQuiz";
 import { Button, makeStyles, Theme } from "@material-ui/core"
-import { AboutQuizData } from "interfaces";
+import {
+  AboutQuizData,
+  AnswerRecords,
+  CheckTheAnswer,
+  QuizBranchData,
+  QuizCommitMessageData,
+  QuizFirtsOrLastData,
+  QuizHistoryOfCommittedFileData,
+  QuizRemoteBranchData,
+  QuizRemoteCommitMessageData,
+  QuizRemoteRepositoryFileData,
+  QuizRepositoryFileData,
+  UseStateBranchData,
+  UseStateCommitMessageData,
+  UseStateFileHistoryForCansellCommitData,
+  UseStateIndexFileData,
+  UseStateRemoteBranchData,
+  UseStateRemoteCommitMessageData,
+  UseStateRemoteRepositoryFileData,
+  UseStateRepositoryFileData,
+  UseStateWorktreeFileData
+} from "interfaces";
 import { createQuiz, updateQuiz } from "lib/api/quizzes";
 import { createQuizFirstOrLast } from "lib/api/quiz_first_or_lasts";
 import { createQuizBranch, deleteQuizBranch, updateQuizBranch } from "lib/api/quiz_branches";
@@ -87,12 +108,12 @@ const CreateOrUpdateQuizButton: React.FC = () => {
     }
   : undefined
 
-  const handleCreateQuizSubmit = (argBranches :any, argsWorktreeFiles :any, argIndexFiles :any, argCommitMessages :any, argFileHistoryForCansellCommits :any, argRepositoryFiles :any, argRemoteBranches :any, argRemoteCommitMessages :any, argRemoteRepositoryFiles :any) => async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleCreateQuizSubmit = (argBranches :UseStateBranchData[], argsWorktreeFiles :UseStateWorktreeFileData[], argIndexFiles :UseStateIndexFileData[], argCommitMessages :UseStateCommitMessageData[], argFileHistoryForCansellCommits :UseStateFileHistoryForCansellCommitData[], argRepositoryFiles :UseStateRepositoryFileData[], argRemoteBranches :UseStateRemoteBranchData[], argRemoteCommitMessages :UseStateRemoteCommitMessageData[], argRemoteRepositoryFiles :UseStateRemoteRepositoryFileData[]) => async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     try {
       const aboutQuizRes = await createQuiz(aboutQuizData)
 
-      const quizFirtsOrLastData: any =
+      const quizFirtsOrLastData: QuizFirtsOrLastData[] | undefined =
         location.pathname === "/quiz"
         ? [
             {
@@ -108,7 +129,7 @@ const CreateOrUpdateQuizButton: React.FC = () => {
 
       const quizFirtsOrLastRes = await createQuizFirstOrLast(quizFirtsOrLastData)
 
-      const quizBranchData = argBranches.map((branch :any) => ({
+      const quizBranchData = argBranches.map((branch :UseStateBranchData) => ({
         quizBranchName: branch.branchName,
         quizFirstOrLastId: location.pathname === "/quiz" ? quizFirtsOrLastRes?.data.data[0].id : quizFirstOrLastId
       }))
@@ -116,10 +137,10 @@ const CreateOrUpdateQuizButton: React.FC = () => {
       const quizBranchRes = await createQuizBranch(quizBranchData)
 
       const quizWorktreeFileData = quizBranchRes !== undefined
-      ? quizBranchRes.data.data.map((branch :any) =>(
+      ? quizBranchRes.data.data.map((branch :QuizBranchData) =>(
           argsWorktreeFiles
-          .filter((worktreeFile :any) => worktreeFile.parentBranch === branch.quizBranchName)
-          .map((filteredWorktreeFile :any) =>({
+          .filter((worktreeFile :UseStateWorktreeFileData) => worktreeFile.parentBranch === branch.quizBranchName)
+          .map((filteredWorktreeFile :UseStateWorktreeFileData) =>({
             quizWorktreeFileName: filteredWorktreeFile.fileName,
             quizWorktreeFileTextStatus: filteredWorktreeFile.textStatus,
             quizBranchId: branch.id
@@ -130,10 +151,10 @@ const CreateOrUpdateQuizButton: React.FC = () => {
       const quizWorktreeFileRes = await createQuizWorktreeFile(quizWorktreeFileData.flat())
 
       const quizIndexFileData = quizBranchRes !== undefined
-      ? quizBranchRes.data.data.map((branch :any) =>(
+      ? quizBranchRes.data.data.map((branch :QuizBranchData) =>(
           argIndexFiles
-          .filter((indexFile :any) => indexFile.parentBranch === branch.quizBranchName)
-          .map((filteredIndexFile :any) =>({
+          .filter((indexFile :UseStateIndexFileData) => indexFile.parentBranch === branch.quizBranchName)
+          .map((filteredIndexFile :UseStateIndexFileData) =>({
             quizIndexFileName: filteredIndexFile.fileName,
             quizIndexFileTextStatus: filteredIndexFile.textStatus,
             quizBranchId: branch.id
@@ -144,10 +165,10 @@ const CreateOrUpdateQuizButton: React.FC = () => {
       const quizIndexFileRes = await createQuizIndexFile(quizIndexFileData.flat())
 
       const QuizCommitMessageData = quizBranchRes !== undefined
-      ? quizBranchRes.data.data.map((branch :any) =>(
+      ? quizBranchRes.data.data.map((branch :QuizBranchData) =>(
           argCommitMessages
-          .filter((commitMessage :any) => commitMessage.parentBranch === branch.quizBranchName)
-          .map((commitMessage :any) =>({
+          .filter((commitMessage :UseStateCommitMessageData) => commitMessage.parentBranch === branch.quizBranchName)
+          .map((commitMessage :UseStateCommitMessageData) =>({
             quizCommitMessage: commitMessage.message,
             quizBranchId: branch.id
           }))
@@ -157,12 +178,12 @@ const CreateOrUpdateQuizButton: React.FC = () => {
       const QuizCommitMessageRes = await createQuizCommitMessage(QuizCommitMessageData.flat())
 
       const quizHistoryOfCommittedFileData = QuizCommitMessageRes !== undefined
-      ? QuizCommitMessageRes.data.data.map((commitMessage :any) =>(
+      ? QuizCommitMessageRes.data.data.map((commitMessage :QuizCommitMessageData) =>(
         argFileHistoryForCansellCommits
-        .filter((historyFile :any) =>
+        .filter((historyFile :UseStateFileHistoryForCansellCommitData) =>
           historyFile.parentCommitMessage === commitMessage.quizCommitMessage
           && historyFile.fileName !== "")
-        .map((filteredHistoryFile :any) =>({
+        .map((filteredHistoryFile :UseStateFileHistoryForCansellCommitData) =>({
           quizHistoryOfCommittedFileName: filteredHistoryFile.fileName,
           quizHistoryOfCommittedFileStatus: filteredHistoryFile.fileStatus,
           quizHistoryOfCommittedFileTextStatus: filteredHistoryFile.textStatus,
@@ -176,8 +197,8 @@ const CreateOrUpdateQuizButton: React.FC = () => {
 
       const flatedQuizHistoryOfCommittedFileData = quizHistoryOfCommittedFileData.flat()
 
-      const removeDuplicateQuizHistoryOfCommittedFileData = flatedQuizHistoryOfCommittedFileData.filter((e :any, index :any, self :any) => {
-        return self.findIndex((el :any) =>
+      const removeDuplicateQuizHistoryOfCommittedFileData = flatedQuizHistoryOfCommittedFileData.filter((e :QuizHistoryOfCommittedFileData, index :number, self :QuizHistoryOfCommittedFileData[]) => {
+        return self.findIndex((el :QuizHistoryOfCommittedFileData) =>
           el.quizHistoryOfCommittedFileName === e.quizHistoryOfCommittedFileName
           && el.quizHistoryOfCommittedFileTextStatus === e.quizHistoryOfCommittedFileTextStatus
           && el.quizHistoryOfCommittedFilePastTextStatus === e.quizHistoryOfCommittedFilePastTextStatus
@@ -190,12 +211,12 @@ const CreateOrUpdateQuizButton: React.FC = () => {
       const quizHistoryOfCommittedFileRes = await CreateQuizHistoryOfCommittedFile(removeDuplicateQuizHistoryOfCommittedFileData)
 
       const quizRepositoryFileData = QuizCommitMessageRes !== undefined
-      ? QuizCommitMessageRes.data.data.map((commitMessage :any) =>(
+      ? QuizCommitMessageRes.data.data.map((commitMessage :QuizCommitMessageData) =>(
         argRepositoryFiles
-        .filter((repositoryFile :any) =>
+        .filter((repositoryFile :UseStateRepositoryFileData) =>
           repositoryFile.parentCommitMessage === commitMessage.quizCommitMessage
           && repositoryFile.fileName !== "")
-        .map((filteredRepositoryFile :any) =>({
+        .map((filteredRepositoryFile :UseStateRepositoryFileData) =>({
           quizRepositoryFileName: filteredRepositoryFile.fileName,
           quizRepositoryFileTextStatus: filteredRepositoryFile.textStatus,
           quizCommitMessageId: commitMessage.id,
@@ -206,8 +227,8 @@ const CreateOrUpdateQuizButton: React.FC = () => {
 
       const flatedQuizRepositoryFileData = quizRepositoryFileData.flat()
 
-      const removeDuplicateQuizRepositoryFileData = flatedQuizRepositoryFileData.filter((e :any, index :any, self :any) => {
-        return self.findIndex((el :any) =>
+      const removeDuplicateQuizRepositoryFileData = flatedQuizRepositoryFileData.filter((e :QuizRepositoryFileData, index :number, self :QuizRepositoryFileData[]) => {
+        return self.findIndex((el :QuizRepositoryFileData) =>
           el.quizRepositoryFileName === e.quizRepositoryFileName
           && el.quizRepositoryFileTextStatus === e.quizRepositoryFileTextStatus
           && el.quizCommitMessageId === e.quizCommitMessageId
@@ -219,8 +240,8 @@ const CreateOrUpdateQuizButton: React.FC = () => {
 
       const quizRemoteBranchData =
         argRemoteBranches
-        .filter((branch :any) => branch.remoteBranchName)
-        .map((branch :any) => ({
+        .filter((branch :UseStateRemoteBranchData) => branch.remoteBranchName)
+        .map((branch :UseStateRemoteBranchData) => ({
           quizRemoteBranchName: branch.remoteBranchName,
           quizFirstOrLastId: quizFirtsOrLastRes === undefined ? quizFirstOrLastId : quizFirtsOrLastRes.data.data[0].id
         }
@@ -229,10 +250,10 @@ const CreateOrUpdateQuizButton: React.FC = () => {
       const quizRemoteBranchRes = await createQuizRemoteBranch(quizRemoteBranchData)
 
       const QuizRemoteCommitMessageData = quizRemoteBranchRes !== undefined
-      ? quizRemoteBranchRes.data.data.map((branch :any) =>(
+      ? quizRemoteBranchRes.data.data.map((branch :QuizRemoteBranchData) =>(
           argRemoteCommitMessages
-          .filter((commitMessage :any) => commitMessage.parentRemoteBranch === branch.quizRemoteBranchName)
-          .map((commitMessage :any) =>({
+          .filter((commitMessage :UseStateRemoteCommitMessageData) => commitMessage.parentRemoteBranch === branch.quizRemoteBranchName)
+          .map((commitMessage :UseStateRemoteCommitMessageData) =>({
             quizRemoteCommitMessage: commitMessage.remoteMessage,
             quizRemoteBranchId: branch.id
           }))
@@ -242,12 +263,12 @@ const CreateOrUpdateQuizButton: React.FC = () => {
       const QuizRemoteCommitMessageRes = await createQuizRemoteCommitMessage(QuizRemoteCommitMessageData.flat())
 
       const quizRemoteRepositoryFileData = QuizRemoteCommitMessageRes !== undefined
-      ? QuizRemoteCommitMessageRes.data.data.map((commitMessage :any) =>(
+      ? QuizRemoteCommitMessageRes.data.data.map((commitMessage :QuizRemoteCommitMessageData) =>(
         argRemoteRepositoryFiles
-        .filter((repositoryFile :any) =>
+        .filter((repositoryFile :UseStateRemoteRepositoryFileData) =>
           repositoryFile.parentRemoteCommitMessage === commitMessage.quizRemoteCommitMessage
           && repositoryFile.fileName !== "")
-        .map((filteredRepositoryFile :any) =>({
+        .map((filteredRepositoryFile :UseStateRemoteRepositoryFileData) =>({
           quizRemoteRepositoryFileName: filteredRepositoryFile.fileName,
           quizRemoteRepositoryFileTextStatus: filteredRepositoryFile.textStatus,
           quizRemoteCommitMessageId: commitMessage.id,
@@ -258,8 +279,8 @@ const CreateOrUpdateQuizButton: React.FC = () => {
 
       const flatedQuizRemoteRepositoryFileData = quizRemoteRepositoryFileData.flat()
 
-      const removeDuplicateQuizRemoteRepositoryFileData = flatedQuizRemoteRepositoryFileData.filter((e :any, index :any, self :any) => {
-        return self.findIndex((el :any) =>
+      const removeDuplicateQuizRemoteRepositoryFileData = flatedQuizRemoteRepositoryFileData.filter((e :QuizRemoteRepositoryFileData, index :number, self :QuizRemoteRepositoryFileData[]) => {
+        return self.findIndex((el :QuizRemoteRepositoryFileData) =>
           el.quizRemoteRepositoryFileName === e.quizRemoteRepositoryFileName
           && el.quizRemoteRepositoryFileTextStatus === e.quizRemoteRepositoryFileTextStatus
           && el.quizRemoteCommitMessageId === e.quizRemoteCommitMessageId
@@ -321,14 +342,14 @@ const CreateOrUpdateQuizButton: React.FC = () => {
   const createNewBranchCommitMessages =
     commitMessages
     .filter(commitMessage => !commitMessage.commitMessageId && commitMessage.parentBranchId)
-    .map((filtedcommitMessage :any) =>({
+    .map(filtedcommitMessage =>({
       quizCommitMessage: filtedcommitMessage.message,
       quizBranchId: filtedcommitMessage.parentBranchId
     }))
   const createNewBranchRemoteCommitMessages =
     remoteCommitMessages
     .filter(remoteCommitMessage => !remoteCommitMessage.remoteCommitMessageId && remoteCommitMessage.parentRemoteBranchId)
-    .map((filtedcommitMessage :any) =>({
+    .map(filtedcommitMessage =>({
       quizRemoteCommitMessage: filtedcommitMessage.remoteMessage,
       quizRemoteBranchId: filtedcommitMessage.parentRemoteBranchId
     }))
@@ -443,15 +464,15 @@ const CreateOrUpdateQuizButton: React.FC = () => {
 
       const createNewBranchFileHistoryForCansellCommits =
         QuizCommitMessageRes !== undefined
-        ? QuizCommitMessageRes.data.data.map((commitMessage :any) =>(
+        ? QuizCommitMessageRes.data.data.map((commitMessage :QuizCommitMessageData) =>(
             fileHistoryForCansellCommits
-            .filter((historyFile :any) =>
+            .filter((historyFile :UseStateFileHistoryForCansellCommitData) =>
               historyFile.parentCommitMessage === commitMessage.quizCommitMessage
               && historyFile.fileName !== ""
               && historyFile.parentBranchId
               && !historyFile.historyFileId
               && !historyFile.parentCommitMessageId)
-            .map((filteredHistoryFile :any) =>({
+            .map((filteredHistoryFile :UseStateFileHistoryForCansellCommitData) =>({
               quizHistoryOfCommittedFileName: filteredHistoryFile.fileName,
               quizHistoryOfCommittedFileStatus: filteredHistoryFile.fileStatus,
               quizHistoryOfCommittedFileTextStatus: filteredHistoryFile.textStatus,
@@ -466,15 +487,15 @@ const CreateOrUpdateQuizButton: React.FC = () => {
 
       const createNewBranchRepositoryFiles =
         QuizCommitMessageRes !== undefined
-        ? QuizCommitMessageRes.data.data.map((commitMessage :any) =>(
+        ? QuizCommitMessageRes.data.data.map((commitMessage :QuizCommitMessageData) =>(
             repositoryFiles
-            .filter((repositoryFile :any) =>
+            .filter((repositoryFile :UseStateRepositoryFileData) =>
               repositoryFile.parentCommitMessage === commitMessage.quizCommitMessage
               && repositoryFile.fileName !== ""
               && repositoryFile.parentBranchId
               && !repositoryFile.repositoryFileId
               && !repositoryFile.parentCommitMessageId)
-            .map((filteredRepositoryFile :any) =>({
+            .map((filteredRepositoryFile :UseStateRepositoryFileData) =>({
               quizRepositoryFileName: filteredRepositoryFile.fileName,
               quizRepositoryFileTextStatus: filteredRepositoryFile.textStatus,
               quizCommitMessageId: commitMessage.id,
@@ -488,15 +509,15 @@ const CreateOrUpdateQuizButton: React.FC = () => {
 
       const createNewBranchRemoteRepositoryFiles =
       QuizRemoteCommitMessageRes !== undefined
-      ? QuizRemoteCommitMessageRes.data.data.map((commitMessage :any) =>(
+      ? QuizRemoteCommitMessageRes.data.data.map((commitMessage :QuizRemoteCommitMessageData) =>(
           remoteRepositoryFiles
-          .filter((repositoryFile :any) =>
+          .filter((repositoryFile :UseStateRemoteRepositoryFileData) =>
             repositoryFile.parentRemoteCommitMessage === commitMessage.quizRemoteCommitMessage
             && repositoryFile.fileName !== ""
             && repositoryFile.parentRemoteBranchId
             && !repositoryFile.remoteRepositoryFileId
             && !repositoryFile.parentRemoteCommitMessageId)
-          .map((filteredRepositoryFile :any) =>({
+          .map((filteredRepositoryFile :UseStateRemoteRepositoryFileData) =>({
             quizRemoteRepositoryFileName: filteredRepositoryFile.fileName,
             quizRemoteRepositoryFileTextStatus: filteredRepositoryFile.textStatus,
             quizRemoteCommitMessageId: commitMessage.id,
@@ -558,11 +579,11 @@ const CreateOrUpdateQuizButton: React.FC = () => {
       quizId: Number(id)
     }
 
-    const checkTheAnswer = (objs :any) => (prop1 :string, prop2 :string, prop3 :string) => (answerObjs :any) =>
-      answerObjs.every((answerObj :any) => objs.some((obj :any) => obj?.[prop1] === answerObj?.[prop1] && obj?.[prop2] === answerObj?.[prop2] && obj?.[prop3] === answerObj?.[prop3]))
-      && objs.every((obj :any) => answerObjs.some((answerObj :any) => obj?.[prop1] === answerObj?.[prop1] && obj?.[prop2] === answerObj?.[prop2] && obj?.[prop3] === answerObj?.[prop3]))
+    const checkTheAnswer = (objs :CheckTheAnswer[]) => (prop1 :string, prop2 :string, prop3 :string) => (answerObjs :CheckTheAnswer[]) =>
+      answerObjs.every((answerObj :CheckTheAnswer) => objs.some((obj :CheckTheAnswer) => obj?.[prop1] === answerObj?.[prop1] && obj?.[prop2] === answerObj?.[prop2] && obj?.[prop3] === answerObj?.[prop3]))
+      && objs.every((obj :CheckTheAnswer) => answerObjs.some((answerObj :CheckTheAnswer) => obj?.[prop1] === answerObj?.[prop1] && obj?.[prop2] === answerObj?.[prop2] && obj?.[prop3] === answerObj?.[prop3]))
 
-    const removeEmptyArray = (objs :any, prop :string) => objs.filter((obj :any) => obj?.[prop])
+    const removeEmptyArray = (objs :CheckTheAnswer[], prop :string) => objs.filter((obj :CheckTheAnswer) => obj?.[prop])
 
     const removeEmptyBranches = removeEmptyArray(branches, "branchName")
     const removeEmptyAnsBranches = removeEmptyArray(answerBranches, "branchName")
@@ -587,7 +608,7 @@ const CreateOrUpdateQuizButton: React.FC = () => {
     ) {
       const res = await getUserQuizzes(currentUser?.id)
 
-      if (!res.data.dataAnswerRecords.some((answerRecords :any) => answerRecords.userId === Number(currentUser?.id) && answerRecords.quizId === Number(id))) {
+      if (!res.data.dataAnswerRecords.some((answerRecords :AnswerRecords) => answerRecords.userId === Number(currentUser?.id) && answerRecords.quizId === Number(id))) {
         createQuizAnswerRecord(quizAnswerRecordData)
         alert("正解!")
         history.push(`/home`)

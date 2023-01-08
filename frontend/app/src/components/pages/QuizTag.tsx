@@ -4,6 +4,7 @@ import { Checkbox, FormControlLabel, makeStyles, Theme } from '@material-ui/core
 import { getQuizTags } from 'lib/api/quizzes';
 import { createQuizTag, deleteQuizTag } from 'lib/api/quiz_tags';
 import { useLocation } from 'react-router-dom';
+import { QuizTagData } from 'interfaces';
 
 const useStyles = makeStyles((theme: Theme) => ({
   tagList: {
@@ -47,7 +48,7 @@ const QuizTag: React.FC<{ quizId: number }> = ({quizId}) => {
     "reset --hard"
   ];
 
-  const handleAddTags = async(commandName :any) => {
+  const handleAddTags = async(commandName :string) => {
     const TagRes = await createQuizTag({
       quizId: quizId,
       tag: commandName
@@ -59,7 +60,7 @@ const QuizTag: React.FC<{ quizId: number }> = ({quizId}) => {
     console.log(TagRes)
   }
 
-  const handleRemoveTags = (commandName :any) => {
+  const handleRemoveTags = (commandName :string) => {
     setCommandTag(
       commandTag.filter(command =>
         command.commandTag !== commandName
@@ -72,7 +73,7 @@ const QuizTag: React.FC<{ quizId: number }> = ({quizId}) => {
   const handleGetQuizTags = async() => {
     const QuizRes = await getQuizTags(quizId)
     console.log(QuizRes)
-    QuizRes.data.quizTagsData.forEach((tag :any) =>
+    QuizRes.data.quizTagsData.forEach((tag :QuizTagData) =>
     setCommandTag(commandTag => [...commandTag,{
       id: tag.id,
       commandTag: tag.tag
@@ -87,6 +88,7 @@ const QuizTag: React.FC<{ quizId: number }> = ({quizId}) => {
 
   useEffect(() => {
     location.pathname === `/quiz/setup/${quizId}` && handleGetQuizTags()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
   return (

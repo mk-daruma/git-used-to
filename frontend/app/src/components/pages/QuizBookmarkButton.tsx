@@ -6,6 +6,7 @@ import BookmarkIcon from '@material-ui/icons/Bookmark';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import { createQuizBookmark, deleteQuizBookmark } from "lib/api/quiz_boolmarks";
 import { QuizBookmarkContext } from "./QuizListPage";
+import { QuizBookmarkData } from "interfaces";
 
 const useStyles = makeStyles((theme: Theme) => ({
   submitBtn: {
@@ -21,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }))
 
-const QuizBookmarkButton: React.FC<{ quizId: number, bookmarkId: any | undefined }> = ({quizId, bookmarkId}) => {
+const QuizBookmarkButton: React.FC<{ quizId: number, bookmarkId: string | undefined }> = ({quizId, bookmarkId}) => {
   const { currentUser } = useContext(AuthContext)
   const { quizBookmarks, setQuizBookmarks } = useContext(QuizBookmarkContext)
 
@@ -35,7 +36,7 @@ const QuizBookmarkButton: React.FC<{ quizId: number, bookmarkId: any | undefined
 
   const handleCreateQuizBookmarkData = async(e: React.MouseEvent<HTMLButtonElement>) => {
     const createRes = await createQuizBookmark(createQuizBookmarkData)
-    setQuizBookmarks((bookmarks :any) => [...bookmarks,{
+    setQuizBookmarks((bookmarks :QuizBookmarkData[]) => [...bookmarks,{
       id: createRes.data.data.id,
       quizId: createRes.data.data.quizId,
       userId:createRes.data.data.userId
@@ -68,7 +69,7 @@ const QuizBookmarkButton: React.FC<{ quizId: number, bookmarkId: any | undefined
           variant="contained"
           color="default"
           className={classes.bookmarkedBtn}
-          onClick={e => handleDeleteQuizBookmarkData(e, bookmarkId)}
+          onClick={e => handleDeleteQuizBookmarkData(e, Number(bookmarkId))}
         >
           <BookmarkIcon />
           {quizBookmarks.filter(bookmark => Number(bookmark.quizId) === quizId).length}

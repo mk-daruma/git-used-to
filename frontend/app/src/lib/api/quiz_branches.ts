@@ -1,13 +1,13 @@
-import { QuizBranch } from "interfaces"
+import { CreateQuizBranch } from "interfaces"
 import client from "lib/api/client"
 
-export const createQuizBranch = (data :QuizBranch) => {
+export const createQuizBranch = (data :CreateQuizBranch[]) => {
   if (Object.keys(data).length > 0) {
     return client.post("quiz_branches", data)
   }
 }
 
-export const updateQuizBranch = (id: number | undefined | null, data: QuizBranch) => {
+export const updateQuizBranch = (id: number | undefined | null, data: CreateQuizBranch) => {
   return client.patch(`quiz_branches/${id}`, data)
 }
 

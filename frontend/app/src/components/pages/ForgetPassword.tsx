@@ -45,7 +45,10 @@ const ForgetPassword: React.FC = () => {
 
   const [email, setEmail] = useState<string>("")
   const [alertMessageOpen, setAlertMessageOpen] = useState<boolean>(false)
-  const redirectUrl = "http://localhost:4000/api/v1/auth/password/reset/form";
+  // 開発環境
+  const redirectUrl = "http://localhost:3000/api/v1/auth/password/reset/form";
+  // 本番環境
+  // const redirectUrl = "https://web.git-used-to.com/api/v1/auth/password/reset/form";
 
   const createFormData = (): ChangeUserPasswordFormData => {
     const formData = new FormData()

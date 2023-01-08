@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const UserDelete: React.FC = () => {
   const classes = useStyles()
   const history = useHistory()
-  const { currentUser } = useContext(AuthContext)
+  const { setIsSignedIn, currentUser } = useContext(AuthContext)
 
   const [alertMessageOpen, setAlertMessageOpen] = useState<boolean>(false)
   const [checkBtn, setCheckBtn] = React.useState({
@@ -69,6 +69,8 @@ const UserDelete: React.FC = () => {
         Cookies.remove("_access_token")
         Cookies.remove("_client")
         Cookies.remove("_uid")
+
+        setIsSignedIn(false)
 
         history.push("/signin")
 
