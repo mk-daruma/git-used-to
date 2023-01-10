@@ -15,13 +15,13 @@ GIT USED TOは僕自身が、「__こんなサービスがあったらもっと�
 - **gitとは何をするものなのか**
 - **コマンドを叩いたらどうなるのか**
 - **何をしてはいけないのか**
-- **ネットの記事も何を書いてるのかわからない**
+- **ネットの記事も何が書いてるのかわからない**
   
 等わからないことだらけで勉強にとても時間がかかってしまいました。  
 
 そしてなんとかgitコマンドを恐る恐る叩いたりしてようやくgitに慣れてきた際に改めて感じたことは、
-- **実際に手を動かしてコマンドを叩くことがgitを理解するための近道である**
-- **gitが何者かを理解するのが一番大変。理解した後であれば、ネットでの検索でどんどん知識を深められる**
+- **実際に手を動かしてコマンドを叩くことがgitを理解するための近道である。**
+- **gitが何者かを理解するのが一番大変。理解した後であれば、ネットでの検索でどんどん知識を深められる。**
 
 ということです。
 
@@ -82,22 +82,22 @@ GIT USED TOは僕自身が、「__こんなサービスがあったらもっと�
 # ER図
 ![git-used-to_ER drawio (2)](https://user-images.githubusercontent.com/98959840/211330648-c1f7c782-65cf-469a-a543-d58aa6200576.png)
 各テーブルの説明
-- user: ログインするユーザー用のテーブル
-- quiz: userが作成するクイズ用のテーブル
-- quiz comment: クイズごとにユーザーが行うコメント用のテーブル
-- quiz command tag: クイズに紐づけるタグ用のテーブル
-- quiz bookmark: クイズのブックマーク用のテーブル
-- quiz answer records： クイズを解答済みかの判別用テーブル
-- quiz first or last：　クイズの解答か解答開始時の状態かの判別用テーブル
-- quiz branch：　クイズ内のブランチ用テーブル
-- quiz worktree file：　クイズ内のワークツリーファイル用のテーブル
-- quiz index file：　クイズ内のインデックスファイル用のテーブル
-- quiz commit message： クイズ内のコミットメッセージ用テーブル
-- quiz repository file：クイズ内のローカルレポジトリファイル用テーブル
-- quiz remote branch：　クイズ内のリモートブランチ用テーブル
-- quiz remote commit message： クイズ内のリモートコミットメッセージ用テーブル
-- quiz remote repository file：クイズ内のリモートレポジトリファイル用テーブル
-- quiz history of committed file:クイズ内で"git reset"コマンドを叩き過去の状態に戻す際に参照するデータを記録するためのテーブル
+- user:ログインするユーザー用のテーブル
+- quiz:userが作成するクイズ用のテーブル
+- quiz_comment:クイズごとにユーザーが行うコメント用のテーブル
+- quiz_command_tag:クイズに紐づけるタグ用のテーブル
+- quiz_bookmark:クイズのブックマーク用のテーブル
+- quiz_answer_records：クイズを解答済みかの判別用テーブル
+- quiz_first_or_last：クイズの解答か解答開始時の状態かの判別用テーブル
+- quiz_branch：クイズ内のブランチ用テーブル
+- quiz_worktree_file：クイズ内のワークツリーファイル用のテーブル
+- quiz_index_file：クイズ内のインデックスファイル用のテーブル
+- quiz_commit_message：クイズ内のコミットメッセージ用テーブル
+- quiz_repository_file：クイズ内のローカルレポジトリファイル用テーブル
+- quiz_remote_branch：クイズ内のリモートブランチ用テーブル
+- quiz_remote_commit_message：クイズ内のリモートコミットメッセージ用テーブル
+- quiz_remote_repository_file：クイズ内のリモートレポジトリファイル用テーブル
+- quiz_history_of_committed_file:クイズ内で"git reset"コマンドを叩き過去の状態に戻す際に参照するデータを記録するためのテーブル
 
 
 # 実装機能一覧
@@ -131,15 +131,15 @@ GIT USED TOは僕自身が、「__こんなサービスがあったらもっと�
  - git push origin :{ブランチ名}
  - git branch -m {変更前ブランチ名} {変更後ブランチ名}
  - git branch -d {ブランチ名}
- - git branch {ブランチ名}",
- - git checkout -b {ブランチ名}",
- - rm {ファイル名}",
- - git rm {ファイル名}",
- - git rm --cashed {ファイル名}",
- - git reset",
- - git reset --mixed HEAD~{数字}",
- - git reset --hard HEAD~{数字}",
- - git reset --soft HEAD~{数字}",
+ - git branch {ブランチ名}"
+ - git checkout -b {ブランチ名}"
+ - rm {ファイル名}"
+ - git rm {ファイル名}"
+ - git rm --cashed {ファイル名}"
+ - git reset"
+ - git reset --mixed HEAD~{数字}"
+ - git reset --hard HEAD~{数字}"
+ - git reset --soft HEAD~{数字}"
 
 # デモ動画
 ### クイズの説明の通りにコマンドを用いて、ファイルを作成/削除/ステージングにあげる/コミットする/プッシュを行い解答します。
