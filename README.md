@@ -99,7 +99,29 @@ GIT USED TOは僕自身が、「__こんなサービスがあったらもっと�
 - quiz_remote_repository_file：クイズ内のリモートレポジトリファイル用テーブル
 - quiz_history_of_committed_file:クイズ内で"git reset"コマンドを叩き過去の状態に戻す際に参照するデータを記録するためのテーブル
 
-
+# GIT USED TOで使用できるコマンド一覧
+ - git init
+ - touch {ファイル名}
+ - git remote add ~
+ - git add {ファイル名}
+ - git add .(-A)
+ - git commit -m
+ - git commit --amend -m ~
+ - git push origin {current branch}
+ - git push --delete origin {ブランチ名}
+ - git push origin :{ブランチ名}
+ - git branch -m {変更前ブランチ名} {変更後ブランチ名}
+ - git branch -d {ブランチ名}
+ - git branch {ブランチ名}
+ - git checkout -b {ブランチ名}
+ - rm {ファイル名}
+ - git rm {ファイル名}
+ - git rm --cashed {ファイル名}
+ - git reset
+ - git reset --mixed HEAD~{数字}
+ - git reset --hard HEAD~{数字}
+ - git reset --soft HEAD~{数字}
+ 
 # 実装機能一覧
 - 管理者ユーザー機能(管理者のみ他ユーザーのデータを削除が可能/GIT USED TOが事前に用意しているクイズを作成/編集ができる)
 - ログイン機能
@@ -118,42 +140,58 @@ GIT USED TOは僕自身が、「__こんなサービスがあったらもっと�
 - 作成したクイズのブックマーク数が多いユーザーのランキング機能
 - 称号機能（作成/解答クイズや作成したクイズのブックマーク数によってランクアップ。作成できるクイズが増える&プロフィール画像のフチの色が変化)
 
-# GIT USED TOで使用できるコマンド一覧
- - git init
- - touch {ファイル名}
- - git remote add ~
- - git add {ファイル名}
- - git add .(-A)
- - git commit -m
- - git commit --amend -m ~
- - git push origin {current branch}
- - git push --delete origin {ブランチ名}
- - git push origin :{ブランチ名}
- - git branch -m {変更前ブランチ名} {変更後ブランチ名}
- - git branch -d {ブランチ名}
- - git branch {ブランチ名}"
- - git checkout -b {ブランチ名}"
- - rm {ファイル名}"
- - git rm {ファイル名}"
- - git rm --cashed {ファイル名}"
- - git reset"
- - git reset --mixed HEAD~{数字}"
- - git reset --hard HEAD~{数字}"
- - git reset --soft HEAD~{数字}"
-
 # デモ動画
-### クイズの説明の通りにコマンドを用いて、ファイルを作成/削除/ステージングにあげる/コミットする/プッシュを行い解答します。
+## クイズ作成について
+### git initでリポジトリを新規に作成
+git initコマンドを叩かないとコマンドが叩けない仕組みになっています。
+![git initの説明](https://user-images.githubusercontent.com/98959840/211511707-f26aac73-1acc-4017-b619-c03c42247270.gif)
+
+### gitコマンドを叩く
+クイズの説明の通りにコマンドを用いて、ファイルを作成/削除/ステージングにあげる/コミットする/プッシュを行い解答します。
 ![クイズを解くgif](https://user-images.githubusercontent.com/98959840/211310615-0cfecd9c-a16c-42aa-b881-303ce671de18.gif)
 
-### プロフィールではクイズ作成数/正解したクイズ数/作成クイズにブックマークされた数の合計と全体の平均数がグラフで表示されます。
-![プロフィールの説明](https://user-images.githubusercontent.com/98959840/211310966-72fe163f-1675-4597-960b-5da4e3c3481d.gif)
+### git remote addでリモートレポジトリを登録
+remote addコマンドを叩かなければ、pushコマンドが叩けない仕組みになっています。
+![remote addの説明gif](https://user-images.githubusercontent.com/98959840/211511465-576aae78-5b5f-4e5f-9c5e-5e270619797c.gif)
 
-### クイズを解くだけでなく、クイズを作成することができます。
-![クイズ作成demo](https://user-images.githubusercontent.com/98959840/211311238-2c6689e6-c2ed-4558-b276-8b61a18dcdd6.gif)
+## クイズ解答開始時点の状態を設定
+### クイズ解答開始時点の状態を設定可能
+①クイズの初期値を設定します。
+![クイズ初期値の設定](https://user-images.githubusercontent.com/98959840/211511994-46a0adca-c180-475a-bb9d-f05eaa8dbd75.gif)
 
-### 道場という名前で初級/中級/上級の難易度別に事前にクイズを用意しています。
+②設定した値がクイズ解答開始時点で表示されます。
+![初期値設定後のクイズを開く](https://user-images.githubusercontent.com/98959840/211511969-0fbd5354-8abe-40f5-8287-e05eea68ee0a.gif)
+
+### クイズ解答開始時点が未設定の場合
+git initを叩く前の状態でスタートします。
+![クイズ初期値を設定していないクイズ](https://user-images.githubusercontent.com/98959840/211512535-769b9d40-6742-47f1-b162-d5396c589a18.gif)
+
+### GIT USED TOが事前に用意しているクイズ
+道場という名前で初級/中級/上級の難易度別に事前にクイズを用意しています。
 ![道場２](https://user-images.githubusercontent.com/98959840/211326624-97952bb2-69c6-4828-bf96-74f1c8aa3da7.gif)
 
+## クイズ以外の機能について
+### コメント機能
+コメントの投稿と削除をモーダル画面で行えます。
+![コメント投稿と削除機能2](https://user-images.githubusercontent.com/98959840/211516107-9df67401-00ed-4557-b92c-fe893a1598c2.gif)
+
+### ブックマーク機能
+ブックマークをしたクイズをまとめて確認することができます。
+![クイズのブックマークをする説明](https://user-images.githubusercontent.com/98959840/211513065-238faee3-362c-4f1f-86df-b0823c1e9644.gif)
+
+### ユーザーの実績グラフ
+プロフィールではクイズ作成数/正解したクイズ数/作成クイズにブックマークされた数の合計と全体の平均数がグラフで表示されます。
+![プロフィールの説明](https://user-images.githubusercontent.com/98959840/211310966-72fe163f-1675-4597-960b-5da4e3c3481d.gif)
+
+### 別ユーザーのプロフィール確認
+クイズ一覧でユーザー名をクリックするとクイズを作成したユーザーのプロフィールが確認できます。
+(プロフィールからそのユーザーが作成したクイズと、ブックマークしたクイズを確認することができます。）
+![クイズ一覧から別ユーザーのプロフィール](https://user-images.githubusercontent.com/98959840/211514481-6b1e9aeb-4ea5-4a40-bb18-43474b672438.gif)
+
+### ログイン前のパスワードリセット機能
+パスワードを忘れてしまった場合に備えて、パスワード変更URLをメールに送ることができます。  
+他にもログイン中のパスワード変更機能/アカウント削除機能/メール認証を完了させないとログインができない機能などがあります。
+![ログイン前パスワードリセット](https://user-images.githubusercontent.com/98959840/211514066-24a2cebf-4a35-4680-81be-266b93f9c2ca.gif)
 
 # 使用技術詳細
 # frontend: React + TypeScript
