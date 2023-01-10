@@ -148,7 +148,7 @@ git initコマンドを叩かないとコマンドが叩けない仕組みにな
 
 ### gitコマンドを叩く
 クイズの説明の通りにコマンドを用いて、ファイルを作成/削除/ステージングにあげる/コミットする/プッシュを行い解答します。
-![クイズを解くgif](https://user-images.githubusercontent.com/98959840/211310615-0cfecd9c-a16c-42aa-b881-303ce671de18.gif)
+![git_used_to_readme_demo](https://user-images.githubusercontent.com/98959840/211309969-29e71828-5e22-4421-a794-d9a6604d359d.gif)
 
 ### git remote addでリモートレポジトリを登録
 remote addコマンドを叩かなければ、pushコマンドが叩けない仕組みになっています。
